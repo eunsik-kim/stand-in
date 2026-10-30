@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stand-In</title>
+<style>
+:root{--bg:#0f1115;--panel:#181b22;--line:#2a2f3a;--fg:#eef0f4;--mute:#8d94a3;--acc:#f2c14e;--good:#4cc38a;--bad:#ef6b5b;--think:#7aa2ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "Apple SD Gothic Neo",system-ui,sans-serif}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:10px 16px;background:#2a2f3a;color:var(--fg)}
+button.primary{background:var(--acc);color:#111;font-weight:700}
+button:disabled{opacity:.4;cursor:default}
+textarea,input[type=text]{font:inherit;width:100%;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:12px}
+.hidden{display:none!important}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px}
+h1{font-size:34px;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:left;display:grid;gap:6px}
+.card:hover{border-color:var(--acc)}
+.card b{font-size:17px}.card small{color:var(--mute)}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.devices{display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:start;margin:24px 0}
+video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;aspect-ratio:4/3;object-fit:cover}
+.badge{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--mute);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.dot{width:9px;height:9px;border-radius:50%;background:#555}.dot.on{background:var(--good)}.dot.warn{background:var(--bad)}
+
+/* stage */
+#stage{min-height:100vh;display:grid;grid-template-rows:auto 1fr auto}
+.top{display:flex;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.top .setting{color:var(--mute);font-size:14px;max-width:760px}
+.room{display:grid;align-content:center;gap:28px;padding:28px 20px;background:radial-gradient(ellipse at top,#232838 0%,var(--bg) 70%);background-size:cover;background-position:center}
+.cast{display:flex;justify-content:center;gap:28px;flex-wrap:wrap}
+.person{width:calc(var(--face,150px) + 40px);text-align:center;transition:opacity .3s,transform .3s}
+.person.dim{opacity:.45}.person.speaking{transform:translateY(-6px)}
+.person.left{opacity:.15}
+.face{width:var(--face,150px);height:var(--face,150px);margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;font-size:54px;font-weight:700;position:relative;overflow:hidden;border:3px solid transparent;background-size:cover;background-position:center}
+.person.speaking .face{border-color:var(--acc);box-shadow:0 0 30px #f2c14e55}
+.expr{position:absolute;right:6px;bottom:6px;font-size:30px;line-height:1}
+.person .name{font-weight:700}.person .role{color:var(--mute);font-size:13px}
+.thinking .face::after{content:"···";position:absolute;inset:auto 0 12px;font-size:26px;color:var(--think);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.2}}
+.caption{max-width:780px;margin:0 auto;min-height:92px;background:#0009;border-radius:14px;padding:16px 20px;font-size:20px;text-align:center}
+.caption .who{display:block;font-size:13px;color:var(--acc);margin-bottom:4px}
+.caption.narr{font-style:italic;color:var(--mute);font-size:17px}
+.dock{display:grid;grid-template-columns:200px 1fr auto;gap:16px;align-items:end;padding:14px 20px;border-top:1px solid var(--line);background:var(--panel)}
+.me{position:relative}
+.me .cam-state{position:absolute;left:8px;top:8px}
+.mic{display:grid;gap:8px}
+.mic .status{font-size:14px;color:var(--mute)}
+.mic .heard{min-height:30px;font-size:18px}
+.mic .heard i{color:var(--mute)}
+.log{max-width:780px;margin:0 auto;max-height:180px;overflow:auto;font-size:14px;color:var(--mute);display:grid;gap:4px}
+.log b{color:var(--fg)}
+
+/* intake + briefing */
+.q{display:grid;gap:6px;padding:14px 0;border-bottom:1px solid var(--line)}
+.q small{color:var(--mute)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{padding:4px 12px;border-radius:999px;font-size:14px}
+.chips button.on{background:var(--acc);color:#111}
+.field{display:grid;gap:4px}.field label{font-size:13px;color:var(--mute)}
+.bgbox{aspect-ratio:16/9;max-height:300px;border-radius:14px;background:radial-gradient(ellipse at top,#232838 0%,var(--bg) 70%);background-size:cover;background-position:center;border:1px solid var(--line)}
+.who-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;grid-template-columns:120px 1fr;gap:14px}
+.who-card .face{--face:120px;margin:0}
+details{background:#13161c;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+details summary{cursor:pointer;color:var(--mute)}
+details[open] summary{margin-bottom:8px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border-radius:0;background:var(--panel)}.seg button.on{background:var(--acc);color:#111;font-weight:700}
+.warnbox{border-left:4px solid var(--bad);background:var(--panel);padding:10px 14px;border-radius:8px;font-size:14px}
+@media(max-width:700px){.who-card{grid-template-columns:1fr}}
+
+/* debrief */
+.verdict{font-size:19px;background:var(--panel);border-left:4px solid var(--acc);padding:16px 20px;border-radius:8px}
+.crit{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.crit .ok{color:var(--good);font-weight:700}.crit .no{color:var(--bad);font-weight:700}
+.secret{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:6px}
+.tl{display:grid;gap:2px}
+.tl .l{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:8px 10px;border-radius:8px}
+.tl .l.user{background:#1d2230}
+.tl .who{color:var(--mute);font-size:13px}
+.tl .inner{color:#f0a493;font-size:14px;margin-top:4px}
+.tl .cue{display:inline-block;font-size:12px;color:var(--think);border:1px solid #7aa2ff55;border-radius:6px;padding:0 6px;margin:4px 4px 0 0}
+.tp{background:var(--panel);border-radius:12px;padding:14px 16px;display:grid;gap:6px}
+.tp .try{color:var(--good)}
+section{margin:28px 0;display:grid;gap:12px}
+h2{margin:0;font-size:22px}
+@media(max-width:700px){.dock{grid-template-columns:1fr}.devices{grid-template-columns:1fr}.tl .l{grid-template-columns:1fr}}
+</style>
+
+<!-- HOME -->
+<div id="home" class="wrap">
+  <h1>Stand-In</h1>
+  <p class="sub">어떤 사람 앞이든, 미리 한 번 서 보기. 상대는 각자 속마음과 숨은 목표를 가진 AI입니다.</p>
+
+  <div class="devices">
+    <div><video id="preview" class="self" autoplay muted playsinline></video></div>
+    <div style="display:grid;gap:10px">
+      <div class="row">
+        <span class="badge"><span id="camDot" class="dot"></span><span id="camText">카메라 꺼짐</span></span>
+        <span class="badge"><span id="micDot" class="dot"></span><span id="micText">음성 인식 확인 중</span></span>
+      </div>
+      <div class="row">
+        <button id="camBtn">카메라 켜기</button>
+        <label class="badge"><input type="checkbox" id="voiceOut" checked> 상대 목소리 듣기</label>
+        <label class="badge"><input type="checkbox" id="voiceIn" checked> 말로 답하기</label>
+      </div>
+      <small style="color:var(--mute)">카메라는 시선·고개 방향만 이 브라우저 안에서 계산하고, 영상은 어디에도 보내지 않습니다. 음성 인식은 Chrome에서 동작합니다.</small>
+    </div>
+  </div>
+
+  <h2 style="margin-bottom:12px">준비된 장면</h2>
+  <div id="presets" class="grid"></div>
+
+  <h2 style="margin:28px 0 12px">직접 만들기</h2>
+  <textarea id="situation" rows="3" placeholder="예: 다음 주 집주인한테 보증금에서 수리비 80만원 빼겠다는 거 못 받아들인다고 말해야 함"></textarea>
+  <div class="row" style="margin-top:10px"><button id="askBtn" class="primary">질문 받고 자세히 만들기</button>
+    <button id="quickBtn">이 한 문장으로 바로 만들기</button><span id="makeState" class="sub" style="margin:0"></span></div>
+</div>
+
+<!-- INTAKE -->
+<div id="intake" class="wrap hidden">
+  <h1>몇 가지만 물어볼게요</h1>
+  <p class="sub" id="intakeSit"></p>
+  <p class="sub">추천 답이 미리 채워져 있어요. 그대로 두거나 내 상황으로 바꾸세요. 비워 두면 일반적인 설정으로 만듭니다.</p>
+  <div id="qs"></div>
+  <div class="q"><b>참고 자료 (선택)</b><small>이력서, 논문 초록, 계약서 문구 등. 상대가 이 내용을 근거로 파고듭니다.</small>
+    <textarea id="material" rows="4" placeholder="붙여 넣기"></textarea></div>
+  <div class="row" style="margin-top:16px"><button id="compileBtn" class="primary">장면 만들기</button>
+    <button onclick="location.reload()">처음으로</button><span id="compileState" class="sub" style="margin:0"></span></div>
+</div>
+
+<!-- BRIEFING: everything is editable before entering -->
+<div id="brief" class="wrap hidden"></div>
+
+<!-- STAGE -->
+<div id="stage" class="hidden">
+  <div class="top">
+    <div><b id="title"></b><div class="setting" id="setting"></div></div>
+    <div style="text-align:right;white-space:nowrap"><div id="turnText" class="sub" style="margin:0"></div><button id="endBtn">끝내고 복기</button></div>
+  </div>
+  <div class="room" id="room">
+    <div class="cast" id="cast"></div>
+    <div class="caption" id="caption"></div>
+    <div class="log" id="log"></div>
+  </div>
+  <div class="dock">
+    <div class="me"><video id="selfView" class="self" autoplay muted playsinline></video>
+      <span class="badge cam-state"><span id="eyeDot" class="dot"></span><span id="eyeText">카메라 없음</span></span></div>
+    <div class="mic">
+      <div class="status" id="micStatus"></div>
+      <div class="heard" id="heard"></div>
+      <div class="row"><input type="text" id="typed" placeholder="말 대신 입력해도 됩니다 (Enter)" style="flex:1"></div>
+    </div>
+    <div style="display:grid;gap:8px"><button id="doneBtn" class="primary">말 다 했어요</button></div>
+  </div>
+</div>
+
+<!-- DEBRIEF -->
+<div id="debrief" class="wrap hidden"></div>
+
+<script type="module">
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const EMOJI = {neutral:"😐", pleased:"🙂", skeptical:"🤨", annoyed:"😠"};
+const LANG = {ko:"ko-KR", en:"en-US", ja:"ja-JP", zh:"zh-CN"};
+
+let S = null;          // {id, scenario, assets}
+let state = "idle";    // idle | cast | listen | wait | over
+let turn = 0;
+
+// ---------- camera: MediaPipe face landmarks, computed locally ----------
+const cam = {on:false, ready:false, stream:null, lm:null, base:null, calib:[], rec:false,
+             n:0, present:0, contact:0, down:0, now:{present:false, contact:false, down:false}};
+
+async function startCamera(){
+  try{
+    cam.stream = await navigator.mediaDevices.getUserMedia({video:{width:640,height:480}, audio:false});
+  }catch(e){ $("camText").textContent = "카메라 권한 없음"; return; }
+  $("preview").srcObject = cam.stream; $("selfView").srcObject = cam.stream;
+  cam.on = true; $("camText").textContent = "얼굴 인식 모델 불러오는 중"; $("camBtn").disabled = true;
+  try{
+    const v = await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs");
+    const files = await v.FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+    cam.lm = await v.FaceLandmarker.createFromOptions(files, {
+      baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task", delegate:"CPU"},
+      outputFaceBlendshapes:true, runningMode:"VIDEO", numFaces:1});
+    cam.ready = true; $("camText").textContent = "정면(화면)을 봐 주세요: 기준 잡는 중";
+    loop();
+  }catch(e){ console.error(e); $("camText").textContent = "얼굴 인식 불러오기 실패: 카메라 영상만 사용"; }
+}
+
+let lastT = 0;
+function loop(){
+  const video = $("preview");
+  const t = performance.now();
+  if(video.readyState >= 2 && t - lastT > 100){
+    lastT = t;
+    const r = cam.lm.detectForVideo(video, t);
+    measure(r);
+  }
+  requestAnimationFrame(loop);
+}
+
+function measure(r){
+  const now = {present:false, contact:false, down:false};
+  const f = r.faceLandmarks?.[0];
+  if(f){
+    now.present = true;
+    const L = f[33], R = f[263], N = f[1];
+    const d = Math.hypot(R.x-L.x, R.y-L.y) || 1;
+    const yaw = (N.x - (L.x+R.x)/2)/d, pitch = (N.y - (L.y+R.y)/2)/d;
+    const bs = Object.fromEntries((r.faceBlendshapes?.[0]?.categories||[]).map(c => [c.categoryName, c.score]));
+    const eyeDown = ((bs.eyeLookDownLeft||0) + (bs.eyeLookDownRight||0))/2;
+    const eyeSide = Math.max(bs.eyeLookOutLeft||0, bs.eyeLookOutRight||0, bs.eyeLookInLeft||0, bs.eyeLookInRight||0);
+    if(!cam.base){
+      cam.calib.push({yaw, pitch});
+      if(cam.calib.length >= 30){
+        const med = k => cam.calib.map(c => c[k]).sort((a,b)=>a-b)[15];
+        cam.base = {yaw:med("yaw"), pitch:med("pitch")};
+        $("camText").textContent = "카메라 준비됨"; $("camDot").className = "dot on";
+      }
+    }else{
+      now.down = pitch - cam.base.pitch > 0.12 || eyeDown > 0.5;
+      now.contact = !now.down && Math.abs(yaw - cam.base.yaw) < 0.25 && eyeSide < 0.6;
+    }
+  }
+  cam.now = now;
+  if(cam.base){
+    $("eyeDot").className = "dot " + (now.contact ? "on" : now.present ? "warn" : "");
+    $("eyeText").textContent = !now.present ? "얼굴이 안 보임" : now.contact ? "눈 맞춤" : now.down ? "아래를 봄" : "다른 곳을 봄";
+  }
+  if(cam.rec){ cam.n++; cam.present += now.present; cam.contact += now.contact; cam.down += now.down; }
+}
+
+$("camBtn").onclick = startCamera;
+
+// ---------- voice out: speechSynthesis, one voice per character ----------
+let voices = [];
+const loadVoices = () => { voices = speechSynthesis.getVoices(); };
+loadVoices(); speechSynthesis.onvoiceschanged = loadVoices;
+
+function speak(text, who){
+  if(!$("voiceOut").checked || !text) return sleep(Math.min(6000, 1200 + text.length * 45));
+  const lang = LANG[S.scenario.language] || S.scenario.language;
+  const pool = voices.filter(v => v.lang.replace("_","-").startsWith(lang.slice(0,2)));
+  const idx = Math.max(0, S.scenario.cast.findIndex(c => c.name === who));
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang;
+  if(pool.length) u.voice = pool[idx % pool.length];
+  u.pitch = [1.0, 0.75, 1.25, 0.9][idx % 4];
+  u.rate = 1.05;
+  return new Promise(res => {
+    const guard = setTimeout(res, 2500 + text.length * 160);  // Chrome sometimes never fires onend
+    u.onend = u.onerror = () => { clearTimeout(guard); res(); };
+    speechSynthesis.speak(u);
+  });
+}
+
+// ---------- voice in: Web Speech API ----------
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+$("micText").textContent = SR ? "음성 인식 사용 가능" : "이 브라우저는 음성 인식 미지원 (Chrome 권장): 입력으로 진행";
+$("micDot").className = "dot " + (SR ? "on" : "warn");
+if(!SR) $("voiceIn").checked = false;
+
+const ear = {rec:null, final:"", interim:"", t0:0, first:0, last:0, firstKey:0, timer:null};
+
+function listen(){
+  state = "listen";
+  ear.final = ""; ear.interim = ""; ear.t0 = performance.now(); ear.first = 0; ear.last = 0; ear.firstKey = 0;
+  Object.assign(cam, {rec:true, n:0, present:0, contact:0, down:0});
+  $("heard").innerHTML = ""; $("doneBtn").disabled = false; $("typed").disabled = false;
+  setPeople(null);
+  if($("voiceIn").checked && SR){
+    $("micStatus").textContent = "🎙 듣고 있어요. 말씀하세요 (잠시 멈추면 자동으로 넘어갑니다)";
+    startRec();
+    ear.timer = setInterval(() => {
+      if((ear.final || ear.interim) && ear.last && performance.now() - ear.last > 1900) finish();
+    }, 250);
+  }else{
+    $("micStatus").textContent = "⌨ 답을 입력하세요"; $("typed").focus();
+  }
+}
+
+function startRec(){
+  const r = new SR();
+  r.lang = LANG[S.scenario.language] || "ko-KR"; r.continuous = true; r.interimResults = true;
+  r.onresult = e => {
+    const t = performance.now();
+    if(!ear.first) ear.first = t;
+    ear.last = t;
+    let interim = "";
+    for(let i = e.resultIndex; i < e.results.length; i++){
+      const x = e.results[i];
+      if(x.isFinal) ear.final += x[0].transcript + " "; else interim += x[0].transcript;
+    }
+    ear.interim = interim;
+    $("heard").innerHTML = esc(ear.final) + "<i>" + esc(interim) + "</i>";
+  };
+  r.onend = () => { if(state === "listen" && ear.rec === r) startRec(); };  // Chrome stops on its own after silence
+  r.onerror = e => { if(e.error === "not-allowed"){ $("micStatus").textContent = "마이크 권한이 없어 입력으로 진행"; } };
+  ear.rec = r;
+  try{ r.start(); }catch(e){}
+}
+
+function stopRec(){
+  clearInterval(ear.timer);
+  const r = ear.rec; ear.rec = null;
+  if(r){ r.onend = null; try{ r.stop(); }catch(e){} }
+}
+
+$("typed").addEventListener("keydown", e => {
+  if(!ear.firstKey) ear.firstKey = performance.now();
+  if(e.key === "Enter" && !e.isComposing && $("typed").value.trim()) finish($("typed").value);
+});
+$("doneBtn").onclick = () => finish();
+
+function measureSignals(text, typed){
+  const start = typed ? ear.firstKey : ear.first;
+  const sig = {fillers:0, camera: !!(cam.on && cam.base && cam.n > 5)};
+  if(start) sig.hesitation_s = +((start - ear.t0)/1000).toFixed(1);
+  if(!typed && ear.first && ear.last > ear.first){
+    sig.speak_s = +((ear.last - ear.first)/1000).toFixed(1);
+    const syl = (text.match(/[가-힣ぁ-んァ-ン一-龯]/g) || []).length || text.split(/\s+/).length * 1.4;
+    sig.syllables_per_s = +(syl / Math.max(sig.speak_s, 0.5)).toFixed(1);
+  }
+  sig.fillers = (text.match(/(^|\s)(어+|음+|그+|저+|아+|um+|uh+|えー|あの)(?=[\s,.]|$)/gi) || []).length;
+  if(sig.camera){
+    sig.eye_contact_pct = Math.round(100 * cam.contact / cam.n);
+    sig.looking_down_pct = Math.round(100 * cam.down / cam.n);
+    sig.face_missing_pct = Math.round(100 * (cam.n - cam.present) / cam.n);
+  }
+  return sig;
+}
+
+async function finish(typedText){
+  if(state !== "listen") return;
+  const typed = typedText !== undefined || (!ear.final.trim() && !ear.interim.trim() && $("typed").value.trim());
+  const text = (typed ? (typedText ?? $("typed").value) : (ear.final + " " + ear.interim)).trim();
+  if(!text){ return; }
+  stopRec(); cam.rec = false;
+  const signals = measureSignals(text, typed);
+  state = "wait"; $("typed").value = ""; $("typed").disabled = true; $("doneBtn").disabled = true;
+  $("micStatus").textContent = "상대가 생각하는 중…";
+  addLog("나", text);
+  setThinking(true);
+  turn++; $("turnText").textContent = `${turn} / ${S.scenario.max_turns}`;
+  let res;
+  try{
+    res = await (await fetch("/api/turn", {method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({id:S.id, say:text, signals})})).json();
+  }catch(e){ setThinking(false); $("micStatus").textContent = "서버 오류: " + e; state = "listen"; return; }
+  setThinking(false);
+  if(res.cues) addLog("관찰", res.cues, true);
+  await play(res.lines || []);
+  if(res.ended){ over(res.ended); } else listen();
+}
+
+// ---------- stage ----------
+function portrait(c, expression){
+  const p = S.assets?.portraits?.[c.name];
+  return p ? (p[expression] || p.neutral) : null;
+}
+
+function renderCast(){
+  $("cast").innerHTML = S.scenario.cast.map((c, i) => {
+    const hue = (i * 97 + 20) % 360;
+    return `<div class="person" id="p${i}"><div class="face" style="background-color:hsl(${hue} 35% 32%)">
+      <span class="ini">${esc(c.name.slice(0,1))}</span><span class="expr">${EMOJI.neutral}</span></div>
+      <div class="name">${esc(c.name)}</div><div class="role">${esc(c.role)}</div></div>`;
+  }).join("");
+  S.scenario.cast.forEach((c, i) => setFace(i, "neutral"));
+}
+
+function setFace(i, expression){
+  const el = $("p" + i); if(!el) return;
+  const img = portrait(S.scenario.cast[i], expression);
+  const face = el.querySelector(".face");
+  if(img){ face.style.backgroundImage = `url(${img})`; face.querySelector(".ini").textContent = ""; }
+  el.querySelector(".expr").textContent = img ? "" : (EMOJI[expression] || EMOJI.neutral);  // the photo shows it
+}
+
+function setPeople(speaker){
+  S.scenario.cast.forEach((c, i) => {
+    const el = $("p" + i); if(!el || el.classList.contains("left")) return;
+    el.classList.toggle("speaking", c.name === speaker);
+    el.classList.toggle("dim", !!speaker && c.name !== speaker);
+  });
+}
+function setThinking(on){ document.querySelectorAll(".person").forEach(el => el.classList.toggle("thinking", on)); }
+
+function addLog(who, text, cue){
+  const d = document.createElement("div");
+  d.innerHTML = cue ? `<span style="color:var(--think)">👁 ${esc(text)}</span>` : `<b>${esc(who)}</b> ${esc(text)}`;
+  $("log").appendChild(d); $("log").scrollTop = 1e9;
+}
+
+async function play(lines){
+  state = "cast";
+  for(const ln of lines){
+    if(ln.speaker === "narration"){
+      $("caption").className = "caption narr"; $("caption").textContent = ln.say;
+      addLog("*", ln.say);
+      const leaver = S.scenario.cast.findIndex(c => ln.say.includes(c.name) && /(자리를 뜬다|leaves|席を立つ)/.test(ln.say));
+      if(leaver >= 0) $("p" + leaver).classList.add("left");
+      await sleep(Math.min(5000, 1500 + ln.say.length * 40));
+      continue;
+    }
+    const i = S.scenario.cast.findIndex(c => c.name === ln.speaker);
+    setFace(i, ln.expression); setPeople(ln.speaker);
+    $("caption").className = "caption";
+    $("caption").innerHTML = `<span class="who">${esc(ln.speaker)}</span>${esc(ln.say)}`;
+    addLog(ln.speaker, ln.say);
+    await speak(ln.say, ln.speaker);
+    await sleep(250);
+  }
+}
+
+// ---------- intake ----------
+let SIT = "";
+async function askQuestions(situation){
+  SIT = situation;
+  setHomeBusy(true, "질문을 고르는 중…");
+  let r;
+  try{ r = await post("/api/intake", {situation}); }catch(e){ setHomeBusy(false, "실패: " + e); return; }
+  show("intake"); $("intakeSit").textContent = "“" + situation + "”";
+  $("qs").innerHTML = r.questions.map((q, i) => `<div class="q" data-i="${i}">
+    <b>${esc(q.ask)}</b>${q.hint ? `<small>${esc(q.hint)}</small>` : ""}
+    ${q.options?.length ? `<div class="chips">${q.options.map(o => `<button type="button" class="${o===q.suggested?"on":""}">${esc(o)}</button>`).join("")}</div>` : ""}
+    <input type="text" value="${esc(q.suggested)}"></div>`).join("");
+  document.querySelectorAll("#qs .q").forEach(el => {
+    const input = el.querySelector("input");
+    el.querySelectorAll(".chips button").forEach(b => b.onclick = () => {
+      el.querySelectorAll(".chips button").forEach(x => x.classList.remove("on")); b.classList.add("on");
+      input.value = b.textContent;
+    });
+  });
+  $("compileBtn").onclick = () => compileScene(SIT, r.questions.map((q, i) => ({id:q.id, ask:q.ask,
+    answer: document.querySelector(`#qs .q[data-i="${i}"] input`).value})), $("material").value);
+}
+
+async function compileScene(situation, answers, material){
+  const busy = msg => { $("compileState").textContent = msg; $("makeState").textContent = msg; };
+  busy("장면을 짜고 검사하는 중… (30초 안팎)");
+  document.querySelectorAll("#intake button, #home button").forEach(b => b.disabled = true);
+  let d;
+  try{ d = await post("/api/compile", {situation, answers, material}); }
+  catch(e){ busy("실패: " + e); document.querySelectorAll("#intake button, #home button").forEach(b => b.disabled = false); return; }
+  openBrief(d);
+}
+
+// ---------- briefing / editor ----------
+let D = null;          // draft: {preset, scenario, assets, gate1, background_prompt}
+let REVEAL = "profile"; // names | profile | all
+const REVEALS = {names:"이름·역할만", profile:"인물 소개까지", all:"속마음까지 (쉬움)"};
+const lines = a => (a || []).join("\n");
+const unlines = s => s.split("\n").map(x => x.trim()).filter(Boolean);
+
+function openBrief(d){
+  D = d; D.assets = D.assets || {}; D.assets.portraits = D.assets.portraits || {};
+  show("brief"); renderBrief();
+}
+
+function fieldHTML(label, path, value, rows){
+  const v = esc(value ?? "");
+  return `<div class="field"><label>${label}</label>${rows ? `<textarea rows="${rows}" data-path="${path}">${v}</textarea>` : `<input type="text" data-path="${path}" value="${v}">`}</div>`;
+}
+
+function renderBrief(){
+  const s = D.scenario, open = REVEAL === "all";
+  const left = (D.gate1?.length ? D.gate1[D.gate1.length - 1].problems : []) || [];
+  $("brief").innerHTML = `
+    <div class="row" style="justify-content:space-between"><h1 style="margin:0">브리핑</h1>
+      <div class="row"><button onclick="location.reload()">처음으로</button><button id="enterBtn" class="primary">입장하기</button></div></div>
+    <p class="sub">들어가기 전에 확인하고, 마음에 안 드는 건 고치세요. 모든 칸을 수정할 수 있어요.</p>
+    ${left.length ? `<div class="warnbox">자동 검사에서 남은 지적: ${left.map(esc).join(" / ")}</div>` : ""}
+    <section>
+      <div class="row"><b>상대 정보를 얼마나 미리 볼까요?</b>
+        <div class="seg">${Object.entries(REVEALS).map(([k, v]) => `<button data-reveal="${k}" class="${k===REVEAL?"on":""}">${v}</button>`).join("")}</div></div>
+      <small style="color:var(--mute)">실전처럼 하려면 ‘이름·역할만’. ‘속마음까지’는 상대의 목표와 비밀을 알고 들어가는 연습 모드입니다. 어느 쪽이든 복기에서 전부 공개돼요.</small>
+    </section>
+    <section><h2>장면</h2>
+      ${fieldHTML("제목", "title", s.title)}
+      <div class="bgbox" id="bgbox"></div>
+      <div class="row"><button id="bgBtn">${D.assets.background ? "배경 다시 만들기" : "배경 이미지 만들기"} <small>(약 $0.07)</small></button>
+        <span id="bgState" class="sub" style="margin:0"></span></div>
+      <details><summary>배경 이미지 설명 고치기</summary><textarea id="bgPrompt" rows="3">${esc(D.background_prompt)}</textarea></details>
+      ${fieldHTML("장소·시간·분위기", "setting", s.setting, 3)}
+    </section>
+    <section><h2>나</h2>
+      ${fieldHTML("내 역할", "user_role", s.user_role, 2)}
+      ${fieldHTML("내 목표", "user_goal", s.user_goal, 2)}
+      ${fieldHTML("내가 알고 들어가는 것 (한 줄에 하나)", "user_knows", lines(s.user_knows), 3)}
+    </section>
+    <section><h2>만날 사람</h2>${s.cast.map((c, i) => `<div class="who-card">
+      <div><div class="face" id="bf${i}" style="background-color:hsl(${(i*97+20)%360} 35% 32%)"><span class="ini">${esc(c.name.slice(0,1))}</span></div>
+        <button data-face="${i}" style="margin-top:8px;width:120px;font-size:13px">${D.assets.portraits[c.name] ? "얼굴 다시" : "얼굴 만들기"} ($0.07)</button></div>
+      <div style="display:grid;gap:8px">
+        ${fieldHTML("이름", `cast.${i}.name`, c.name)}
+        ${fieldHTML("역할", `cast.${i}.role`, c.role)}
+        ${REVEAL !== "names" ? fieldHTML("외모", `cast.${i}.appearance`, c.appearance, 2) + fieldHTML("말투·성격", `cast.${i}.voice`, c.voice, 2) : ""}
+        <details ${open ? "open" : ""}><summary>${open ? "속마음" : "속마음 (스포일러: 열면 비밀을 알고 들어갑니다)"}</summary>
+          <div style="display:grid;gap:8px">
+          ${fieldHTML("숨은 목표", `cast.${i}.goal`, c.goal, 2)}
+          ${fieldHTML("비밀", `cast.${i}.secret`, c.secret, 2)}
+          ${fieldHTML("비밀을 털어놓는 조건", `cast.${i}.reveal_when`, c.reveal_when, 2)}
+          ${fieldHTML("절대 받아들이지 않는 것 (한 줄에 하나)", `cast.${i}.red_lines`, lines(c.red_lines), 3)}
+          <div class="row">${fieldHTML("신뢰 0-100", `cast.${i}.mood.trust`, c.mood.trust)}${fieldHTML("인내 0-100", `cast.${i}.mood.patience`, c.mood.patience)}</div>
+          </div></details>
+      </div></div>`).join("")}</section>
+    <section><h2>이번 연습의 체크포인트</h2>
+      ${fieldHTML("성공 기준 (한 줄에 하나, 2-4개)", "success_criteria", lines(s.success_criteria), 4)}
+      <details><summary>연출 (첫 대사, 돌발 상황, 길이)</summary><div style="display:grid;gap:8px">
+        ${fieldHTML(`첫 대사 (${esc(s.opening_speaker)})`, "opening_line", s.opening_line, 2)}
+        ${fieldHTML("돌발 상황 (한 줄에 하나, ‘턴: 내용’)", "events", s.events.map(e => `${e.at_turn}: ${e.description}`).join("\n"), 4)}
+        ${fieldHTML("최대 턴 수 (4-30)", "max_turns", s.max_turns)}
+      </div></details>
+    </section>
+    <div class="row"><button id="enterBtn2" class="primary">입장하기</button><span id="enterState" class="sub" style="margin:0"></span></div>`;
+
+  paintBrief();
+  document.querySelectorAll("#brief [data-path]").forEach(el => el.addEventListener("change", () => setPath(el.dataset.path, el.value)));
+  document.querySelectorAll("#brief [data-reveal]").forEach(b => b.onclick = () => { REVEAL = b.dataset.reveal; renderBrief(); });
+  $("bgBtn").onclick = makeBackground;
+  document.querySelectorAll("#brief [data-face]").forEach(b => b.onclick = () => makeFace(+b.dataset.face, b));
+  $("enterBtn").onclick = $("enterBtn2").onclick = enter;
+}
+
+function paintBrief(){
+  if(D.assets.background) $("bgbox").style.backgroundImage = `url(${D.assets.background})`;
+  D.scenario.cast.forEach((c, i) => {
+    const p = D.assets.portraits[c.name];
+    if(p){ $("bf" + i).style.backgroundImage = `url(${p.neutral})`; $("bf" + i).querySelector(".ini").textContent = ""; }
+  });
+}
+
+function setPath(path, raw){
+  const s = D.scenario, keys = path.split(".");
+  if(path === "events"){
+    s.events = unlines(raw).map(l => { const m = l.match(/^(\d+)\s*[:：]\s*(.+)$/); return m ? {at_turn:+m[1], description:m[2]} : null; }).filter(Boolean);
+    return;
+  }
+  let o = s; for(const k of keys.slice(0, -1)) o = o[k];
+  const k = keys[keys.length - 1];
+  let v = raw;
+  if(["user_knows", "red_lines", "success_criteria"].includes(k)) v = unlines(raw);
+  if(["trust", "patience", "max_turns"].includes(k)) v = parseInt(raw, 10) || 0;
+  if(k === "name" && keys[0] === "cast"){  // keep portraits and the opening speaker attached to the renamed person
+    const old = o.name;
+    if(D.assets.portraits[old]){ D.assets.portraits[v] = D.assets.portraits[old]; delete D.assets.portraits[old]; }
+    if(s.opening_speaker === old) s.opening_speaker = v;
+  }
+  o[k] = v;
+}
+
+async function makeBackground(){
+  $("bgBtn").disabled = true; $("bgState").textContent = "그리는 중… (10-20초)";
+  try{
+    const r = await post("/api/image", {scenario:D.scenario, kind:"background", prompt:$("bgPrompt").value});
+    D.assets.background = r.background; D.background_prompt = $("bgPrompt").value;
+    $("bgState").textContent = ""; paintBrief(); $("bgBtn").firstChild.textContent = "배경 다시 만들기 ";
+  }catch(e){ $("bgState").textContent = "실패: " + e; }
+  $("bgBtn").disabled = false;
+}
+
+async function makeFace(i, btn){
+  btn.disabled = true; const label = btn.textContent; btn.textContent = "그리는 중…";
+  try{
+    const c = D.scenario.cast[i];
+    const r = await post("/api/image", {scenario:D.scenario, kind:"portrait", name:c.name});
+    D.assets.portraits[c.name] = r.portrait; paintBrief(); btn.textContent = "얼굴 다시 ($0.07)";
+  }catch(e){ btn.textContent = label; alert("실패: " + e); }
+  btn.disabled = false;
+}
+
+async function enter(){
+  document.activeElement?.blur?.();  // flush the field being edited
+  $("enterState").textContent = "";
+  try{ S = await post("/api/start", {scenario:D.scenario, assets:D.assets, preset:D.preset, reveal:REVEAL}); }
+  catch(e){ $("enterState").textContent = "시작할 수 없어요: " + e; return; }
+  turn = 0; show("stage");
+  $("title").textContent = S.scenario.title;
+  $("setting").textContent = `목표: ${S.scenario.user_goal}`;
+  $("turnText").textContent = `0 / ${S.scenario.max_turns}`;
+  if(S.assets?.background){ $("room").style.backgroundImage = `linear-gradient(#0f111577,#0f1115dd),url(${S.assets.background})`; }
+  if(!cam.on){ $("eyeText").textContent = "카메라 꺼짐"; }
+  renderCast();
+  $("cast").style.setProperty("--face", S.scenario.cast.length <= 2 ? "210px" : "160px");
+  await sleep(600);
+  await play(S.lines);
+  listen();
+}
+
+function over(reason){
+  state = "over"; stopRec(); cam.rec = false;
+  $("micStatus").textContent = "장면이 끝났습니다: " + reason;
+  $("doneBtn").textContent = "복기 보기"; $("doneBtn").disabled = false; $("doneBtn").onclick = showDebrief;
+}
+
+$("endBtn").onclick = () => { speechSynthesis.cancel(); over("직접 종료"); showDebrief(); };
+
+async function showDebrief(){
+  if(state === "debrief") return;
+  state = "debrief"; speechSynthesis.cancel();
+  show("debrief");
+  $("debrief").innerHTML = `<h1>복기</h1><p class="sub">상대들의 속마음을 정리하는 중… (20~40초)</p>`;
+  let d;
+  try{
+    const r = await fetch("/api/end", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({id:S.id})});
+    if(!r.ok) throw new Error(await r.text());
+    d = await r.json();
+  }catch(e){ $("debrief").innerHTML += `<p>실패: ${esc(e)}</p><button onclick="location.reload()">처음으로</button>`; return; }
+  const db = d.debrief;
+  $("debrief").innerHTML = `
+    <h1>${esc(S.scenario.title)} · 복기</h1><p class="sub">${esc(d.ended)}</p>
+    <div class="verdict">${esc(db.verdict)}</div>
+    <section><h2>성공 기준</h2>${db.criteria.map(c => `<div class="crit"><span class="${c.met?"ok":"no"}">${c.met?"O":"X"}</span>
+      <div><b>${esc(c.criterion)}</b> <small style="color:var(--mute)">(${c.turn}턴)</small><div>${esc(c.why)}</div></div></div>`).join("")}</section>
+    <section><h2>그들이 숨기고 있던 것</h2>${d.cast.map(c => `<div class="secret">
+      <b>${esc(c.name)} · ${esc(c.role)} ${c.revealed ? '<span class="badge" style="color:var(--good)">털어놓음</span>' : '<span class="badge" style="color:var(--bad)">끝까지 숨김</span>'}</b>
+      <div><small style="color:var(--mute)">목표</small> ${esc(c.goal)}</div>
+      <div><small style="color:var(--mute)">비밀</small> ${esc(c.secret)}</div>
+      <div><small style="color:var(--mute)">털어놓을 조건</small> ${esc(c.reveal_when)}</div>
+      <div><small style="color:var(--mute)">신뢰</small> ${c.start_mood.trust} → ${c.end_mood.trust} · <small style="color:var(--mute)">인내</small> ${c.start_mood.patience} → ${c.end_mood.patience}</div></div>`).join("")}</section>
+    <section><h2>흐름이 바뀐 순간</h2>${db.turning_points.map(t => `<div class="tp">
+      <small style="color:var(--mute)">${t.turn}턴 · ${esc(t.character)}</small>
+      <div>나: “${esc(t.what_user_said)}”</div><div class="inner" style="color:#f0a493">속마음: ${esc(t.what_they_thought)}</div>
+      <div class="try">이렇게 말해 보기: ${esc(t.try_instead)}</div></div>`).join("")}</section>
+    <section><h2>전체 기록 (속마음 포함)</h2><div class="tl">${d.lines.map(l => `<div class="l ${l.speaker==="user"?"user":""}">
+      <span class="who">${l.turn}턴 · ${esc(l.speaker==="user"?"나":l.speaker==="narration"?"상황":l.speaker)}</span>
+      <div>${esc(l.say)}${l.cues ? `<div>${l.cues.split("; ").map(c => `<span class="cue">👁 ${esc(c)}</span>`).join("")}</div>` : ""}
+      ${l.inner ? `<div class="inner">💭 ${esc(l.inner)} <small>(신뢰 ${l.mood?.trust} · 인내 ${l.mood?.patience})</small></div>` : ""}</div></div>`).join("")}</div></section>
+    <div class="row"><button class="primary" onclick="location.reload()">다른 장면</button></div>`;
+}
+
+// ---------- home ----------
+async function post(url, body){
+  const r = await fetch(url, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+  if(!r.ok){ let m = await r.text(); try{ m = JSON.parse(m).detail; }catch(e){} throw new Error(m); }
+  return r.json();
+}
+function show(id){ ["home", "intake", "brief", "stage", "debrief"].forEach(x => $(x).classList.toggle("hidden", x !== id)); window.scrollTo(0, 0); }
+function setHomeBusy(on, msg){ document.querySelectorAll("#home button").forEach(b => b.disabled = on); $("makeState").textContent = msg || ""; }
+
+fetch("/api/presets").then(r => r.json()).then(list => {
+  $("presets").innerHTML = list.map(p => `<button class="card" data-id="${esc(p.id)}"><b>${esc(p.title)}</b>
+    <small>${esc(p.situation)}</small><small>👥 ${p.cast.map(esc).join(", ")}</small></button>`).join("");
+  document.querySelectorAll("#presets .card").forEach(b => b.onclick = async () => {
+    setHomeBusy(true, "불러오는 중…");
+    try{ openBrief(await (await fetch("/api/preset/" + b.dataset.id)).json()); }catch(e){ setHomeBusy(false, "실패: " + e); }
+  });
+});
+$("askBtn").onclick = () => { const s = $("situation").value.trim(); if(s) askQuestions(s); };
+$("quickBtn").onclick = () => { const s = $("situation").value.trim(); if(s) compileScene(s, [], ""); };
+</script>
+</html>

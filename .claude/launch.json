@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {"name": "stand-in", "runtimeExecutable": "uv", "runtimeArgs": ["run", "server.py"], "port": 8010}
+  ]
+}
