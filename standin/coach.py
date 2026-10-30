@@ -38,7 +38,8 @@ def coach_turn(llm: LLM, scene: Scene, said: str, goals: list[str], ui: str) -> 
         "goals: one entry per goal, in order. done = clearly achieved in the transcript; partial = real progress; "
         "todo = not yet. A goal already marked done stays done. Be honest, not generous.\n"
         "good: name the specific thing that worked in the latest line, or leave it empty.\n"
-        "hint: the one next move, at most 15 words, concrete to this conversation. Do not guess what others are hiding.\n"
+        "hint: the one next move, at most 15 words, concrete to this conversation. If someone just hesitated, trailed off "
+        "or mentioned a vague constraint, the best next move is to ask about exactly that. Never claim to know what they hide.\n"
         "better: rewrite the latest line the way a skilled person would say it, keeping their facts and intent, "
         f"in language '{s.language}'. Leave it empty if the line was already good.\n"
         + ("If their line had language mistakes, fix them in `better` and explain the main one in `why`.\n" if foreign else "")

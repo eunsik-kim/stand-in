@@ -303,7 +303,7 @@ def rewind(req: RewindReq):
         del sc.lines[size:]
         sc.moods, sc.revealed, sc.left, sc.ended = moods, revealed, left, ""
         s.turn, s.goals = turn, goals
-    return {"turn": s.turn, "goals": s.goals}
+    return {"turn": s.turn, "goals": s.goals, "found": len(sc.revealed)}
 
 
 class SpeakReq(BaseModel):

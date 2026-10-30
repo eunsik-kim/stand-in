@@ -25,7 +25,7 @@ from standin.intake import DIFFICULTY, questions
 from standin.llm import LLM, Spend
 
 MODEL = "muse-spark-1.3"
-STRONG = "준비가 잘 된 사람. 구체적 사실과 수치로 말하고, 상대의 입장과 이해관계를 먼저 묻고, 감정적으로 반응하지 않으며, 필요한 약속을 구체적으로 받아 낸다."
+STRONG = "준비가 잘 된 사람. 구체적 사실과 수치로 말하고, 상대의 입장과 이해관계를 먼저 묻고, 상대가 머뭇거리거나 말을 흐리면 그 부분을 바로 되묻고, 감정적으로 반응하지 않으며, 필요한 약속을 구체적으로 받아 낸다."
 WEAK = "준비가 안 된 사람. 두루뭉술하게 말하고, 곤란하면 변명하거나 같은 말을 되풀이하며, 상대의 말을 듣기보다 자기 사정만 호소한다."
 SCENES = {
     "surgery": "전공의 3년차로서 보호자에게 복강경 담낭 절제술 중 담관 손상이 생겨 재수술이 필요하다고 설명해야 함. 보호자는 아들과 딸 두 명이고 딸은 간호사임",
@@ -121,9 +121,10 @@ def main() -> None:
 
     def run(item: tuple[str, str]) -> dict:
         sid, situation = item
-        qs = questions(player, situation)
+        ui = "en" if situation.isascii() else "ko"
+        qs = questions(player, situation, ui)
         answers = detailed_answers(player, situation, qs)
-        scenario, gate1 = compile_scenario(writer, checker, situation, answers=answers, difficulty=DIFFICULTY["현실적으로"], log=lambda _: None)
+        scenario, gate1 = compile_scenario(writer, checker, situation, answers=answers, difficulty=DIFFICULTY["현실적으로"], ui=ui, log=lambda _: None)
         result = {"id": sid, "situation": situation, "answers": answers, "gate1": gate1, "scenario": scenario.model_dump(),
                   "strong": play(scenario, STRONG, actor, checker, player, coach, args.turns),
                   "weak": play(scenario, WEAK, actor, checker, player, coach, args.turns)}

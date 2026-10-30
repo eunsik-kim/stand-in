@@ -108,12 +108,25 @@ def _bible(s: Scenario) -> str:
     )
 
 
+CLUE_TRUST, OPEN_TRUST = 50, 70
+
+
+def _openness(m: Mood) -> str:
+    """Code decides when someone starts to open up, so a good conversation always leads somewhere."""
+    if m.trust >= OPEN_TRUST:
+        return " (trusts the user now: if the user asks anything near their secret, they tell it plainly)"
+    if m.trust >= CLUE_TRUST:
+        return (" (warming up: let one small unprompted clue slip that something is behind their position, a hesitation, "
+                "a half-finished thought, a constraint named vaguely, without stating the secret itself)")
+    return ""
+
+
 def take_prompt(scene: Scene, turn: int) -> str:
     s = scene.scenario
     names = [c.name for c in s.cast if c.name not in scene.left]
     moods = "\n".join(
         f"- {n}: trust {scene.moods[n].trust}, patience {scene.moods[n].patience}"
-        + (" (secret already out, may refer to it)" if n in scene.revealed else "") for n in names)
+        + (" (secret already out, may refer to it)" if n in scene.revealed else _openness(scene.moods[n])) for n in names)
     return (
         f"Turn {turn} of at most {s.max_turns}. Mood now:\n{moods}\n\n"
         f"Transcript:\n{scene.public(viewer='*')}\n\n"
@@ -216,11 +229,11 @@ def open_scene(scenario: Scenario) -> Scene:
 _checks = ThreadPoolExecutor(max_workers=4)
 
 
-def _verdict(chk: LeakCheck, say: str) -> str:
+def _verdict(chk: LeakCheck, say: str, trust: int) -> str:
     """'' = no leak, 'early' = must be replaced, 'earned' = the secret is now out."""
     if not (chk.reveals and chk.quote.strip() and chk.quote.strip() in say):  # no quote, no leak
         return ""
-    return "earned" if chk.earned else "early"
+    return "earned" if chk.earned or trust >= OPEN_TRUST else "early"
 
 
 def stream_step(scene: Scene, turn: int, said: str, actor: LLM, checker: LLM, cues: str = "",
@@ -251,13 +264,14 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, checker: LLM, cu
         """Hold a sentence with the secret's numbers until the checker has seen it."""
         if c.name not in scene.revealed and (facts(c.secret) - spoken) & facts(sentence):
             chk = leak_check(checker, scene, c, sentence)
-            verdict = _verdict(chk, sentence)
+            verdict = _verdict(chk, sentence, scene.moods[c.name].trust)
             if verdict == "early":
                 replaced[i] = chk.why
                 return
             if verdict == "earned":
                 scene.revealed.add(c.name)
                 gates[i] = f"secret revealed, earned ({chk.why})"
+                yield {"type": "secret", "speaker": c.name}
         yield {"type": "sentence", "index": i, "speaker": c.name, "text": sentence}
 
     for piece in stream:
@@ -301,12 +315,13 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, checker: LLM, cu
         why = replaced.get(i)
         if i in checks:
             chk = checks[i].result()
-            verdict = _verdict(chk, beat.say)
+            verdict = _verdict(chk, beat.say, scene.moods[c.name].trust)
             if verdict == "early":
                 why = chk.why
             elif verdict == "earned":
                 scene.revealed.add(c.name)
                 gate = f"secret revealed, earned ({chk.why})"
+                yield {"type": "secret", "speaker": c.name}
         if why:
             beat = rewrite(actor, scene, c, beat.say, why)
             gate = f"rewritten: early leak ({why})"
@@ -333,7 +348,7 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, checker: LLM, cu
         scene.ended = take.end_reason or "the conversation reached its end"
     elif turn >= s.max_turns:
         scene.ended = "time is up"
-    yield {"type": "done", "ended": scene.ended, "cues": cues}
+    yield {"type": "done", "ended": scene.ended, "cues": cues, "found": len(scene.revealed)}
 
 
 def step(scene: Scene, turn: int, said: str, actor: LLM, checker: LLM, cues: str = "") -> list[Line]:
