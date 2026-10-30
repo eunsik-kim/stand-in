@@ -21,10 +21,10 @@ from standin.debrief import debrief
 from standin.engine import Line, Scene, run_scene, simulated_user
 from standin.llm import LLM, Spend, preflight
 
-WRITER_MODEL = "anthropic/claude-sonnet-5.5"  # compiler + debrief: few calls, quality matters
-ACTOR_MODEL = "anthropic/claude-haiku-5.5"  # director + cast: every turn, latency matters
-CHECK_MODEL = "google/gemini-2.5-flash"  # gates: a different model family than the writer
-USER_MODEL = "meta-llama/llama-4-maverick"  # simulated player for --auto
+WRITER_MODEL = "muse-spark-1.3"  # compiler + debrief: few calls, quality matters
+ACTOR_MODEL = "muse-spark-1.3"  # the live scene: every turn, latency matters
+CHECK_MODEL = "muse-spark-1.3"  # gates
+USER_MODEL = "muse-spark-1.3"  # simulated player for --auto
 
 
 def main() -> None:
@@ -44,9 +44,8 @@ def main() -> None:
     spend = Spend(args.budget)
     env = os.getenv
     writer = LLM(env("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.7, "writer")
-    director = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.3, "director")
-    actor = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.8, "actor")
-    checker = LLM(env("STANDIN_CHECK_MODEL", CHECK_MODEL), spend, cache, 0.0, "checker")
+    actor = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.8, "actor", "minimal")
+    checker = LLM(env("STANDIN_CHECK_MODEL", CHECK_MODEL), spend, cache, 0.0, "checker", "minimal")
     coach = LLM(env("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.2, "coach")
     player = LLM(env("STANDIN_USER_MODEL", USER_MODEL), spend, cache, 0.7, "player") if args.auto else None
 
@@ -83,7 +82,7 @@ def main() -> None:
         def user_turn(scene: Scene, n: int) -> str:
             return input(f"\n[{n}/{scenario.max_turns}] YOU> ")
 
-    scene = run_scene(scenario, director, actor, checker, user_turn, show)
+    scene = run_scene(scenario, actor, checker, user_turn, show)
     print(f"\n-- scene ended: {scene.ended} --\nwriting debrief...")
     d = debrief(coach, scene)
 

@@ -1,0 +1,127 @@
+{
+  "situation": "Series A pitch to three VC partners in San Francisco. Our startup sells inventory forecasting software to independent cafes: 35k dollars in monthly revenue and 120 paying customers.",
+  "ui": "en",
+  "scenario": {
+    "title": "Series A Pitch: Cafe Forecasting Bet",
+    "language": "en",
+    "setting": "Late-morning partner meeting in a glass conference room at a mid-size VC firm in SoMa, San Francisco. Deck on screen, three partners across the table, 20 minutes on the clock.",
+    "user_role": "Founder of a startup selling inventory forecasting software to independent cafes, pitching for Series A.",
+    "user_goal": "Convince the three partners the business can be venture-scale and secure a concrete next step toward investment.",
+    "user_knows": [
+      "Monthly revenue is $35,000",
+      "There are 120 paying customers who are independent cafes",
+      "The product is inventory forecasting software",
+      "This is a Series A pitch to three VC partners in San Francisco"
+    ],
+    "cast": [
+      {
+        "name": "Sarah Klein",
+        "role": "Managing Partner, market skeptic",
+        "appearance": "Mid-40s, dark blazer, short brown hair, MacBook open",
+        "voice": "Direct, fast-paced, cuts in with math questions",
+        "gender": "f",
+        "goal": "Test if independent cafes can ever support a venture-scale outcome and push the founder toward multi-location or enterprise",
+        "secret": "The firm lost $2.1M on a single-location restaurant SaaS last year and now requires over 110% net revenue retention for any SMB food deal",
+        "reveal_when": "asks what specific proof or metrics would make a cafe SMB bet fundable for their firm",
+        "red_lines": [
+          "will not give a valuation or term sheet in the room",
+          "will not accept TAM based on cafe count without revenue math"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Marcus Webb",
+        "role": "Partner, unit economics and retention",
+        "appearance": "Late-30s Black man, light button-down with sleeves rolled, notebook",
+        "voice": "Calm, analytical, presses on churn and acquisition cost",
+        "gender": "m",
+        "goal": "Expose weakness in retention and sales efficiency and force the founder to prove sticky, efficient growth",
+        "secret": "Spoke last week with two ex-customers who said onboarding took 3+ weeks and that is why they quit",
+        "reveal_when": "asks directly what negative feedback or churn reasons they have heard about the product",
+        "red_lines": [
+          "will not be swayed by logos or anecdotes without numbers",
+          "will not drop churn if the founder deflects"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 70
+        }
+      },
+      {
+        "name": "David Park",
+        "role": "Partner, go-to-market and founder focus",
+        "appearance": "Early-40s Asian man, gray sweater, leans back with coffee",
+        "voice": "Friendly but probing, asks about distribution and focus",
+        "gender": "m",
+        "goal": "Push the founder to show a scalable way to acquire hundreds more cafes beyond founder-led sales",
+        "secret": "The investment committee meets next Tuesday and this is the last Series A slot for the quarter, so the data room is needed by Monday to stay in contention",
+        "reveal_when": "asks directly about their decision timeline or process for next steps",
+        "red_lines": [
+          "will not offer network intros without a specific ask",
+          "will not extend past the hard stop"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 65
+        }
+      }
+    ],
+    "opening_speaker": "Sarah Klein",
+    "opening_line": "Alright, you've got us for twenty minutes. $35k MRR from cafes — walk us through why this is a Series A company and not just a nice small business tool?",
+    "phases": [
+      "Quick pitch and hook",
+      "Traction and unit economics grilling",
+      "Market size and go-to-market debate",
+      "Ask and close on next steps"
+    ],
+    "events": [
+      {
+        "at_turn": 4,
+        "description": "Sarah checks her phone and says they now have only 10 minutes left and need to get to the numbers."
+      },
+      {
+        "at_turn": 8,
+        "description": "An associate knocks and hands Marcus a note: a direct competitor in cafe tech just announced a $12M raise this morning."
+      }
+    ],
+    "success_criteria": [
+      "States a clear Series A ask and planned use of funds",
+      "Addresses retention and acquisition costs with specific numbers when pressed",
+      "Makes a venture-scale case beyond the current 120 cafes",
+      "Secures a concrete follow-up with owner, materials, and deadline"
+    ],
+    "max_turns": 12
+  },
+  "gate1": [
+    {
+      "attempt": 0,
+      "problems": []
+    }
+  ],
+  "assets": {
+    "background": "/presets/img/en_pitch_bg.jpg",
+    "portraits": {
+      "Sarah Klein": {
+        "neutral": "/presets/img/en_pitch_0_neutral.jpg",
+        "pleased": "/presets/img/en_pitch_0_pleased.jpg",
+        "skeptical": "/presets/img/en_pitch_0_skeptical.jpg",
+        "annoyed": "/presets/img/en_pitch_0_annoyed.jpg"
+      },
+      "Marcus Webb": {
+        "neutral": "/presets/img/en_pitch_1_neutral.jpg",
+        "pleased": "/presets/img/en_pitch_1_pleased.jpg",
+        "skeptical": "/presets/img/en_pitch_1_skeptical.jpg",
+        "annoyed": "/presets/img/en_pitch_1_annoyed.jpg"
+      },
+      "David Park": {
+        "neutral": "/presets/img/en_pitch_2_neutral.jpg",
+        "pleased": "/presets/img/en_pitch_2_pleased.jpg",
+        "skeptical": "/presets/img/en_pitch_2_skeptical.jpg",
+        "annoyed": "/presets/img/en_pitch_2_annoyed.jpg"
+      }
+    }
+  }
+}

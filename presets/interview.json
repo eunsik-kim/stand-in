@@ -23,7 +23,8 @@
         "mood": {
           "trust": 40,
           "patience": 55
-        }
+        },
+        "gender": "m"
       },
       {
         "name": "윤세아",
@@ -41,7 +42,8 @@
         "mood": {
           "trust": 30,
           "patience": 40
-        }
+        },
+        "gender": "f"
       }
     ],
     "opening_speaker": "박정훈",
@@ -96,5 +98,6 @@
         "annoyed": "/presets/img/interview_1_annoyed.jpg"
       }
     }
-  }
+  },
+  "ui": "ko"
 }

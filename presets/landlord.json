@@ -22,7 +22,8 @@
         "mood": {
           "trust": 30,
           "patience": 45
-        }
+        },
+        "gender": "f"
       },
       {
         "name": "박상철",
@@ -38,7 +39,8 @@
         "mood": {
           "trust": 50,
           "patience": 40
-        }
+        },
+        "gender": "m"
       }
     ],
     "opening_speaker": "김영숙",
@@ -93,5 +95,6 @@
         "annoyed": "/presets/img/landlord_1_annoyed.jpg"
       }
     }
-  }
+  },
+  "ui": "ko"
 }

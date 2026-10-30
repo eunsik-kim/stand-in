@@ -23,7 +23,8 @@
         "mood": {
           "trust": 55,
           "patience": 45
-        }
+        },
+        "gender": "m"
       }
     ],
     "opening_speaker": "한재석",
@@ -66,5 +67,6 @@
         "annoyed": "/presets/img/salary_0_annoyed.jpg"
       }
     }
-  }
+  },
+  "ui": "ko"
 }

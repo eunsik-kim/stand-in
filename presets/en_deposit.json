@@ -1,0 +1,76 @@
+{
+  "situation": "Moving out of my Chicago apartment after two years. The landlord wants to keep 900 dollars of my deposit for wall stains and bathroom mold. I think it's normal wear and I need to push back.",
+  "ui": "en",
+  "scenario": {
+    "title": "Chicago Deposit Dispute After Two Years",
+    "language": "en",
+    "setting": "Final walkthrough in the Chicago apartment living room with packed boxes; the landlord has move-out photos of wall stains and bathroom mold on his phone and a checkout form.",
+    "user_role": "Tenant moving out of a Chicago apartment after two years and discussing the deposit return",
+    "user_goal": "Push back on the $900 deduction for wall stains and bathroom mold as normal wear and get more of the deposit back",
+    "user_knows": [
+      "You lived in the Chicago apartment for two years and are now moving out",
+      "The landlord wants to keep $900 from the deposit for wall stains and bathroom mold",
+      "You believe the issues are normal wear and want to dispute the charge"
+    ],
+    "cast": [
+      {
+        "name": "Dave Rinaldi",
+        "role": "Landlord and owner of the building",
+        "appearance": "Mid-50s in a work jacket with a clipboard and phone photos",
+        "voice": "Direct, flat, businesslike Chicago accent",
+        "gender": "m",
+        "goal": "Keep the $900 deduction to cover turnover repaint and cleaning and finish the move-out quickly without extra cost",
+        "secret": "He has not paid anyone yet and his handyman verbally quoted $400 for repaint and mold treatment, so the $900 is a padded estimate with room to negotiate",
+        "reveal_when": "asks directly to see an itemized bill, receipt, or contractor quote for the $900",
+        "red_lines": [
+          "shouting or personal insults",
+          "threats to leave the apartment damaged or stop cooperating with move-out"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 60
+        }
+      }
+    ],
+    "opening_speaker": "Dave Rinaldi",
+    "opening_line": "Okay, I did the walkthrough — I'm taking $900 out of the deposit for the wall stains and the mold in the bathroom. That's what I need to get it fixed for the next guy.",
+    "phases": [
+      "Review of the claimed stains and mold",
+      "Dispute over normal wear versus damage",
+      "Negotiation on the final deduction and return"
+    ],
+    "events": [
+      {
+        "at_turn": 4,
+        "description": "The landlord checks his phone and says the incoming tenant is pressing him on move-in date, so he needs to wrap this up in a few minutes."
+      },
+      {
+        "at_turn": 7,
+        "description": "The landlord receives a call from his cleaner and steps aside briefly, then returns more rushed to finalize."
+      }
+    ],
+    "success_criteria": [
+      "Dispute the $900 with specific reasons why wall stains and mold are normal wear and ask for photos or breakdown",
+      "Propose a specific lower deduction or refund amount instead of just rejecting the charge",
+      "Get a concrete written next step for the deposit return with amount and timeline"
+    ],
+    "max_turns": 12
+  },
+  "gate1": [
+    {
+      "attempt": 0,
+      "problems": []
+    }
+  ],
+  "assets": {
+    "background": "/presets/img/en_deposit_bg.jpg",
+    "portraits": {
+      "Dave Rinaldi": {
+        "neutral": "/presets/img/en_deposit_0_neutral.jpg",
+        "pleased": "/presets/img/en_deposit_0_pleased.jpg",
+        "skeptical": "/presets/img/en_deposit_0_skeptical.jpg",
+        "annoyed": "/presets/img/en_deposit_0_annoyed.jpg"
+      }
+    }
+  }
+}

@@ -22,7 +22,8 @@
         "mood": {
           "trust": 65,
           "patience": 60
-        }
+        },
+        "gender": "m"
       },
       {
         "name": "이수진",
@@ -39,7 +40,8 @@
         "mood": {
           "trust": 40,
           "patience": 45
-        }
+        },
+        "gender": "f"
       },
       {
         "name": "최동욱",
@@ -56,7 +58,8 @@
         "mood": {
           "trust": 55,
           "patience": 35
-        }
+        },
+        "gender": "m"
       }
     ],
     "opening_speaker": "박정훈",
@@ -117,5 +120,6 @@
         "annoyed": "/presets/img/thesis_2_annoyed.jpg"
       }
     }
-  }
+  },
+  "ui": "ko"
 }

@@ -4,9 +4,8 @@ Usage:
   uv run make_preset.py landlord "집주인이 보증금에서 수리비 80만원을 빼겠다고 함. 못 받아들인다고 말해야 함"
   uv run make_preset.py salary            # existing preset: only (re)make missing images
 
-Portraits: one image per character holding a 2x2 sheet of the same face
-(neutral, pleased, skeptical, annoyed), cut into four. One call keeps the face
-identical across expressions and costs a quarter of four separate calls.
+Portraits: a neutral photo per character, with the other expressions edited from
+it. Add --portraits to remake them for an existing preset.
 """
 
 import argparse
@@ -24,9 +23,9 @@ from standin.spec import Scenario
 ROOT = Path(__file__).parent
 PRESETS = ROOT / "presets"
 IMG = PRESETS / "img"
-WRITER_MODEL = "anthropic/claude-sonnet-5.5"
-CHECK_MODEL = "google/gemini-2.5-flash"
-IMAGE_MODEL = "google/gemini-3.1-flash-image"  # stand-in for Muse Image
+WRITER_MODEL = "muse-spark-1.3"
+CHECK_MODEL = "muse-spark-1.3"
+IMAGE_MODEL = "muse-image-1.0"
 
 
 def main() -> None:
@@ -34,7 +33,9 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("id")
     ap.add_argument("situation", nargs="?")
+    ap.add_argument("--ui", default="en", help="language the user reads")
     ap.add_argument("--no-images", action="store_true")
+    ap.add_argument("--portraits", action="store_true", help="remake all portraits")
     ap.add_argument("--budget", type=float, default=0.60)
     args = ap.parse_args()
 
@@ -48,9 +49,9 @@ def main() -> None:
         if not args.situation:
             raise SystemExit(f"no preset '{args.id}' yet; give a situation")
         writer = LLM(os.getenv("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.7, "writer")
-        checker = LLM(os.getenv("STANDIN_CHECK_MODEL", CHECK_MODEL), spend, cache, 0.0, "checker")
-        scenario, gate1 = compile_scenario(writer, checker, args.situation)
-        preset = {"situation": args.situation, "scenario": scenario.model_dump(), "gate1": gate1}
+        checker = LLM(os.getenv("STANDIN_CHECK_MODEL", CHECK_MODEL), spend, cache, 0.0, "checker", "low")
+        scenario, gate1 = compile_scenario(writer, checker, args.situation, ui=args.ui)
+        preset = {"situation": args.situation, "ui": args.ui, "scenario": scenario.model_dump(), "gate1": gate1}
         path.write_text(json.dumps(preset, indent=2, ensure_ascii=False))
         print(f"scenario: {scenario.title} ({len(scenario.cast)} people) | {spend.summary()}")
 
@@ -62,7 +63,8 @@ def main() -> None:
             background(painter, background_prompt(s), IMG / f"{args.id}_bg.jpg")
             assets["background"] = f"/presets/img/{args.id}_bg.jpg"
             print(f"background | {spend.summary()}")
-        faces = assets.setdefault("portraits", {})
+        faces = {} if args.portraits else assets.setdefault("portraits", {})
+        assets["portraits"] = faces
         for i, c in enumerate(s.cast):
             if c.name not in faces:
                 faces[c.name] = portraits(painter, s, c, IMG, f"{args.id}_{i}", "/presets/img")

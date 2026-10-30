@@ -22,7 +22,8 @@
         "mood": {
           "trust": 45,
           "patience": 35
-        }
+        },
+        "gender": "f"
       },
       {
         "name": "사토 켄타 (佐藤 健太)",
@@ -39,7 +40,8 @@
         "mood": {
           "trust": 50,
           "patience": 40
-        }
+        },
+        "gender": "m"
       },
       {
         "name": "기무라 (木村)",
@@ -55,7 +57,8 @@
         "mood": {
           "trust": 30,
           "patience": 20
-        }
+        },
+        "gender": "m"
       }
     ],
     "opening_speaker": "다나카 미사키 (田中 美咲)",
@@ -116,5 +119,6 @@
         "annoyed": "/presets/img/tokyo_2_annoyed.jpg"
       }
     }
-  }
+  },
+  "ui": "ko"
 }

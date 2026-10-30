@@ -22,7 +22,8 @@
         "mood": {
           "trust": 30,
           "patience": 35
-        }
+        },
+        "gender": "m"
       },
       {
         "name": "박서연",
@@ -39,7 +40,8 @@
         "mood": {
           "trust": 35,
           "patience": 50
-        }
+        },
+        "gender": "f"
       },
       {
         "name": "이도윤",
@@ -56,7 +58,8 @@
         "mood": {
           "trust": 60,
           "patience": 55
-        }
+        },
+        "gender": "m"
       }
     ],
     "opening_speaker": "김재훈",
@@ -111,5 +114,6 @@
         "annoyed": "/presets/img/pitch_2_annoyed.jpg"
       }
     }
-  }
+  },
+  "ui": "ko"
 }

@@ -44,14 +44,15 @@ def full_record(scene: Scene) -> str:
     return f"Characters' private side:\n{secrets}\n\nTranscript:\n" + "\n".join(lines)
 
 
-def debrief(coach: LLM, scene: Scene) -> Debrief:
+def debrief(coach: LLM, scene: Scene, ui: str = "") -> Debrief:
     s = scene.scenario
     turns = {ln.turn for ln in scene.lines}
     ask = (
         f"Situation: {s.setting}\nUser played: {s.user_role}; goal: {s.user_goal}\n"
         f"Success criteria:\n" + "\n".join(f"- {c}" for c in s.success_criteria) + "\n\n"
         f"{full_record(scene)}\n\nScene ended: {scene.ended}\n\n"
-        f"Write the debrief in language '{s.language}'. Be specific and honest, quote the transcript.\n"
+        f"Write the debrief in language '{ui or s.language}', but keep quotes and try_instead in '{s.language}'. "
+        "Be specific and honest, quote the transcript.\n"
         "- criteria: one entry per success criterion, with the turn number that decides it.\n"
         "- turning_points: 2-4 moments where a user line changed a character's private thinking or mood "
         "(for better or worse). Show what they thought, and a concrete line the user could have said instead.\n"

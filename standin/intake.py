@@ -22,13 +22,20 @@ class Intake(BaseModel):
     questions: list[Question]
 
 
-DIFFICULTY_Q = Question(
-    id="difficulty", ask="난이도는 어느 정도로 할까요?", hint="상대가 얼마나 마음을 쉽게 여는지",
-    suggested="현실적으로", options=["편하게", "현실적으로", "빡세게"])
-DIFFICULTY = {"편하게": "easy", "현실적으로": "real", "빡세게": "hard"}
+LEVELS = {
+    "en": ("How tough should it be?", "how easily they open up", ["Easy", "Realistic", "Tough"]),
+    "ko": ("난이도는 어느 정도로 할까요?", "상대가 얼마나 마음을 쉽게 여는지", ["편하게", "현실적으로", "빡세게"]),
+    "ja": ("難易度はどうしますか?", "相手がどれだけ心を開きやすいか", ["やさしめ", "現実的", "厳しめ"]),
+}
+DIFFICULTY = {label: level for _, _, labels in LEVELS.values() for label, level in zip(labels, ("easy", "real", "hard"))}
 
 
-def questions(llm: LLM, situation: str) -> list[Question]:
+def difficulty_question(ui: str) -> Question:
+    ask, hint, labels = LEVELS.get(ui, LEVELS["en"])
+    return Question(id="difficulty", ask=ask, hint=hint, suggested=labels[1], options=labels)
+
+
+def questions(llm: LLM, situation: str, ui: str = "en") -> list[Question]:
     got = llm.ask(
         Intake, "You prepare rehearsal scenes. Reply with a single JSON object and nothing else.",
         f'The user wants to rehearse this situation:\n"{situation}"\n\n'
@@ -39,8 +46,8 @@ def questions(llm: LLM, situation: str) -> list[Question]:
         "- what the user already knows about the other side's position\n"
         "- the outcome they want and the least they would accept\n"
         "- the moment they are most worried about\n"
-        "Write in the language of the request. For each question give `suggested`: a concrete, plausible answer "
+        f"Write in language '{ui}'. For each question give `suggested`: a concrete, plausible answer "
         "for a typical person in this situation (the user may keep it), and `options` (2-4 short picks) when a quick choice fits.\n"
         'Return {"questions": [{"id": "short_snake_id", "ask": "...", "hint": "...", "suggested": "...", "options": []}]}',
     )
-    return got.questions[:6] + [DIFFICULTY_Q]
+    return got.questions[:6] + [difficulty_question(ui)]

@@ -1,18 +1,25 @@
-"""Scene images: a background and one 2x2 expression sheet per character.
+"""Scene images: a background and four expressions per character.
 
-The sheet holds the same face four times (neutral, pleased, skeptical, annoyed)
-and is cut into tiles, so expressions stay consistent and cost one call.
+One neutral portrait is generated, then each other expression is an edit of that
+photo, which keeps the person identical. The prompt asks for an unretouched phone
+snapshot because polished, centered studio faces are what read as generated.
 """
 
 import io
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+from openai import BadRequestError
 from PIL import Image
 
-from .llm import LLM, generate_image
+from .llm import LLM, edit_image, generate_image
 from .spec import Character, Scenario
 
-EXPRESSIONS = ["neutral", "pleased", "skeptical", "annoyed"]  # sheet order: TL, TR, BL, BR
+EXPRESSIONS = {
+    "pleased": "a small, polite, natural smile",
+    "skeptical": "openly doubtful: one eyebrow clearly raised, eyes narrowed, a slight one-sided smirk, head tilted back a little",
+    "annoyed": "irritated: brows pulled hard together, eyes narrowed, mouth a tight flat line, not sad, not pouting",
+}
 
 
 def background_prompt(s: Scenario) -> str:
@@ -26,23 +33,41 @@ def background(painter: LLM, prompt: str, path: Path) -> None:
     img.save(path, quality=85)
 
 
+def portrait_prompt(s: Scenario, c: Character) -> str:
+    gender = {"m": "man", "f": "woman"}.get(c.gender, "person")
+    return (
+        f"Candid unretouched smartphone photo of an ordinary real {gender}, taken by someone sitting across from them. "
+        "Shot from about three meters away, at a polite conversational distance, the person seated and framed from the "
+        "waist up, centered. The person is the clear subject and fills most of the frame height: the head takes up "
+        "about one quarter of the image height, with some room around them. Relaxed posture, looking at the camera. Natural uneven light, mild sensor noise, "
+        f"blurry real surroundings of this place: {s.setting[:160]} "
+        "Real skin with pores and small unevenness, a slightly asymmetrical face. Not a model, no beauty filter, no "
+        "studio light, no retouching, no 3D render look, no text. "
+        f"Show their exact age, do not make them look older than stated. The person: {c.appearance} Role: {c.role}."
+    )
+
+
+def _tile(data: bytes, path: Path) -> None:
+    img = Image.open(io.BytesIO(data)).convert("RGB")
+    side = min(img.size)
+    x, y = (img.width - side) // 2, (img.height - side) // 2
+    img.crop((x, y, x + side, y + side)).resize((1024, 1024), Image.LANCZOS).save(path, quality=88)
+
+
 def portraits(painter: LLM, s: Scenario, c: Character, folder: Path, stem: str, url: str) -> dict[str, str]:
-    data = generate_image(painter, (
-        "A 2x2 grid of four photorealistic head-and-shoulders portraits of the SAME person, identical face, hair, "
-        "clothes and lighting in all four, plain softly blurred office-neutral background, looking at the camera. "
-        "Top-left: neutral, attentive. Top-right: slight warm smile. Bottom-left: skeptical, one eyebrow raised. "
-        "Bottom-right: annoyed, frowning. No text, no borders, no labels. "
-        f"The person: {c.appearance}. Role: {c.role}. Setting context: {s.setting[:200]}"
-    ), aspect_ratio="1:1")
-    sheet = Image.open(io.BytesIO(data)).convert("RGB")
-    w, h = sheet.size
-    out = {}
-    for k, expr in enumerate(EXPRESSIONS):
-        x, y = (k % 2) * w // 2, (k // 2) * h // 2
-        m = int(0.02 * w)  # trim seams between tiles
-        tile = sheet.crop((x + m, y + m, x + w // 2 - m, y + h // 2 - m)).resize((384, 384), Image.LANCZOS)
-        name = f"{stem}_{expr}.jpg"
-        tile.save(folder / name, quality=88)
-        out[expr] = f"{url}/{name}"
-    sheet.save(folder / f"{stem}_sheet.jpg", quality=80)  # kept for eyeballing the crop
-    return out
+    neutral = generate_image(painter, portrait_prompt(s, c), aspect_ratio="1:1")
+    _tile(neutral, folder / f"{stem}_neutral.jpg")
+
+    def change(item: tuple[str, str]) -> None:
+        expr, look = item
+        prompt = ("Same photo of the same person: same face, age, hair, clothes, camera, lighting and background. "
+                  f"Only change the facial expression to: {look}. Keep the skin texture and photo noise.")
+        try:
+            data = edit_image(painter, neutral, prompt)
+        except BadRequestError:  # the content filter misfires now and then on ordinary portraits
+            data = edit_image(painter, neutral, prompt)
+        _tile(data, folder / f"{stem}_{expr}.jpg")
+
+    with ThreadPoolExecutor(3) as pool:
+        list(pool.map(change, EXPRESSIONS.items()))
+    return {expr: f"{url}/{stem}_{expr}.jpg" for expr in ["neutral", *EXPRESSIONS]}

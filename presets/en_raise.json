@@ -1,0 +1,76 @@
+{
+  "situation": "I'm a senior backend engineer at a mid-size fintech in Austin, four years in. Next week I have to ask my manager for a 15% raise.",
+  "ui": "en",
+  "scenario": {
+    "title": "The 15% Ask",
+    "language": "en",
+    "setting": "A 30-minute 1:1 in a small conference room at a mid-size fintech office in Austin. Performance review season is approaching and budgets are tight.",
+    "user_role": "You are a senior backend engineer at a mid-size fintech in Austin, four years in. You are meeting with your manager to ask for a raise.",
+    "user_goal": "Ask your manager for a 15% raise next week and get a clear path to a decision.",
+    "user_knows": [
+      "You have worked at this mid-size fintech in Austin for four years as a senior backend engineer",
+      "You are planning to ask for a 15% raise",
+      "You will need to make your case in the meeting using your own reasons and facts"
+    ],
+    "cast": [
+      {
+        "name": "Ryan Parker",
+        "role": "Your direct engineering manager",
+        "appearance": "Early 40s, polo and jeans, laptop open with a calendar full of back-to-backs",
+        "voice": "Friendly but rushed, practical, uses budget and process language",
+        "gender": "m",
+        "goal": "Keep you motivated and retain you without breaking his team merit budget or creating a precedent he can't defend to his boss",
+        "secret": "He can approve up to 5% on his own, but anything above 10% requires a VP-approved written business case submitted by end of next week",
+        "reveal_when": "asks directly what process or approval would be needed for an above-range increase",
+        "red_lines": [
+          "Will not commit to a specific raise number in this meeting",
+          "Will not discuss other teammates' pay"
+        ],
+        "mood": {
+          "trust": 65,
+          "patience": 65
+        }
+      }
+    ],
+    "opening_speaker": "Ryan Parker",
+    "opening_line": "Hey, thanks for grabbing time — I know we have our 1:1 next week too, so what's top of mind for today?",
+    "phases": [
+      "Opening and context setting",
+      "Making the raise request",
+      "Pushback on budget and performance bar and agreeing on next steps"
+    ],
+    "events": [
+      {
+        "at_turn": 4,
+        "description": "Ryan glances at his laptop and says he has a hard stop soon for an incident review, so you need to get to the point."
+      },
+      {
+        "at_turn": 7,
+        "description": "Ryan gets a Slack ping about headcount planning and reminds you this is a tough quarter for the whole org."
+      }
+    ],
+    "success_criteria": [
+      "State the specific 15% ask clearly with a work-related reason",
+      "Ask about concrete next steps, timeline, or decision criteria instead of accepting a vague deferral",
+      "Stay calm and professional when challenged on budget or performance expectations"
+    ],
+    "max_turns": 12
+  },
+  "gate1": [
+    {
+      "attempt": 0,
+      "problems": []
+    }
+  ],
+  "assets": {
+    "background": "/presets/img/en_raise_bg.jpg",
+    "portraits": {
+      "Ryan Parker": {
+        "neutral": "/presets/img/en_raise_0_neutral.jpg",
+        "pleased": "/presets/img/en_raise_0_pleased.jpg",
+        "skeptical": "/presets/img/en_raise_0_skeptical.jpg",
+        "annoyed": "/presets/img/en_raise_0_annoyed.jpg"
+      }
+    }
+  }
+}

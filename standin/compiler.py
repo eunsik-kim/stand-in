@@ -21,7 +21,7 @@ WRITER_SYSTEM = (
 
 SHAPE = (
     '{"title": "...", "language": "ko|en|ja|...", "setting": "...", "user_role": "...", "user_goal": "...", "user_knows": ["..."], '
-    '"cast": [{"name": "...", "role": "...", "appearance": "...", "voice": "...", "goal": "...", '
+    '"cast": [{"name": "...", "role": "...", "appearance": "...", "voice": "...", "gender": "m|f", "goal": "...", '
     '"secret": "...", "reveal_when": "...", "red_lines": ["..."], "mood": {"trust": 0-100, "patience": 0-100}}], '
     '"opening_speaker": "<cast name>", "opening_line": "...", "phases": ["..."], '
     '"events": [{"at_turn": 3, "description": "..."}], "success_criteria": ["..."], "max_turns": 12}'
@@ -30,8 +30,8 @@ SHAPE = (
 
 DIFFICULTY = {
     "easy": "easy: people are fairly open (trust 60-75, patience 70+), reveal_when is a reasonable effort, one mild event.",
-    "real": "realistic: moods and friction as they would really be for this situation.",
-    "hard": "hard: guarded people (trust 25-45, patience 30-50), reveal_when needs real skill, events add strong pressure.",
+    "real": "realistic: friction as it would really be for this situation, patience 45 or more.",
+    "hard": "hard: guarded people (trust 25-45, patience 35-50), reveal_when needs real skill, events add strong pressure.",
 }
 
 
@@ -39,7 +39,7 @@ class Review(BaseModel):
     problems: list[str]
 
 
-def _facts(text: str) -> set[str]:
+def facts(text: str) -> set[str]:
     """Number+unit tokens ('4%', '80만원', '120곳') used to spot a secret repeated in public text."""
     return {re.sub(r"\s+", "", m) for m in re.findall(r"\d[\d,.~]*\s*(?:%|[가-힣A-Za-z]{1,2})", text)}
 
@@ -62,7 +62,7 @@ def structural_problems(s: Scenario, told: str = "") -> list[str]:
     public += [(f"event at turn {e.at_turn}", e.description) for e in s.events]
     for c in s.cast:
         for where, text in public:
-            shared = (_facts(c.secret) & _facts(text)) - _facts(told)  # the user already knows what they told us
+            shared = (facts(c.secret) & facts(text)) - facts(told)  # the user already knows what they told us
             if shared:
                 p.append(f"{where} gives away {c.name}'s secret ({', '.join(sorted(shared))}); keep secrets out of public text")
     return p
@@ -98,14 +98,16 @@ def told_text(situation: str, answers: list[tuple[str, str]], material: str = ""
 
 
 def compile_scenario(writer: LLM, checker: LLM, situation: str, material: str = "",
-                     answers: list[tuple[str, str]] = (), difficulty: str = "real",
+                     answers: list[tuple[str, str]] = (), difficulty: str = "real", ui: str = "",
                      repairs: int = 2, log=print) -> tuple[Scenario, list[dict]]:
     """Returns the scenario and the gate history (problems found per attempt)."""
     told = told_text(situation, list(answers), material)
     ask = (
         f"The user wants to rehearse this. Everything they told us:\n{told}\n\n"
         "Design the scene. Rules:\n"
-        "- language: what the people in the scene actually speak (a Tokyo cafe is 'ja' even if the request is in Korean); otherwise the user's language. All character lines use only that language.\n"
+        "- language: what the people in the scene actually speak (a Tokyo cafe is 'ja' even if the request is in Korean); otherwise the user's language. opening_line and all spoken lines use only that language.\n"
+        + (f"- Everything else (title, setting, roles, goals, user_knows, phases, events, success_criteria, character notes) is read by the user: write it in language '{ui}'.\n" if ui else "")
+        + 
         "- The user plays themselves. user_role and user_knows use only facts the user told us; never invent their achievements, numbers, history or offers. "
         "If something is unknown, leave it general: the user will bring their own facts while speaking.\n"
         "- user_knows: 2-4 facts the user really walks in knowing (from their answers first). Never part of any secret.\n"
@@ -118,7 +120,8 @@ def compile_scenario(writer: LLM, checker: LLM, situation: str, material: str = 
         "- Secrets never appear in the opening_line, events, user_role or user_knows.\n"
         f"- Difficulty {DIFFICULTY.get(difficulty, DIFFICULTY['real'])}\n"
         "- 1-3 events that add pressure (interruption, time, new public information).\n"
-        "- success_criteria: 2-4 outcomes judgeable from the transcript, tied to what the user said they want.\n"
+        "- success_criteria: 2-4 outcomes judgeable from the transcript, tied to what the user said they want. "
+        "Each is one clear thing a well-prepared person can really achieve within this conversation, mostly about what the user does.\n"
         "- opening_line: the first thing said, in character, setting the tone.\n"
         f"Return:\n{SHAPE}"
     )
