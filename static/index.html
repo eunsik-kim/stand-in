@@ -190,7 +190,8 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 /* first screen: nothing but the question, over a dim scene */
 #bhero,#bideas{display:none}
 #build.start .bchat{left:50%;top:50%;bottom:auto;transform:translate(-50%,-50%);width:min(640px,calc(100% - 32px));grid-template-rows:auto;background:none;box-shadow:none;backdrop-filter:none;gap:16px;padding:0}
-#build.start #bhero{display:block;font-size:38px;line-height:1.2;text-align:center;text-shadow:0 2px 24px #000}
+#build.start .bworld{background:radial-gradient(ellipse at 50% 38%,#20242f 0%,#0d0f13 62%)}
+#build.start #bhero{display:block;font-size:38px;line-height:1.2;text-align:center}
 #build.start #bideas{display:inline-flex;justify-self:center;color:#dfe2e8}
 #build.start #bscroll,#build.start #bempty,#build.start #bfoot,#build.start #bchips{display:none}
 #build.start .chead{display:none}
@@ -1091,12 +1092,7 @@ async function openRun(id){
 
 function setStart(on){
   $("build").classList.toggle("start", on);
-  if(on) get("/api/presets").then(r => r.json()).then(list => {
-    const shots = list.map(p => p.assets?.background).filter(Boolean);
-    if(shots.length && $("build").classList.contains("start"))
-      $("bworld").style.backgroundImage = `linear-gradient(#08090ca6,#08090cd9),url(${shots[Math.floor(Math.random() * shots.length)]})`;
-  });
-  else $("bworld").style.backgroundImage = "";
+  $("bworld").style.backgroundImage = "";
 }
 function newStoryState(){
   clearInterval(bpoll); bpoll = null; B = null;
