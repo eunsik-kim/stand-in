@@ -531,11 +531,12 @@ def replies(req: AutoReq):
     got = actor.ask(
         Replies, "You suggest what a person could say next in a live conversation. Reply with a single JSON object.",
         f"Setting: {sc.setting}\nThe person: {sc.user_role}\nWhat they want: {sc.user_goal}\n\nTranscript:\n{s.scene.public()}\n\n"
-        f"Write 3 different things they could say next, in language '{sc.language}', in the first person, short and natural when spoken aloud. "
-        "Make them really different in approach: one direct, one warm or curious, one that holds back or changes direction. Do not repeat anything already said.\n"
+        f"Write 3 different things they could say next, in language '{sc.language}', in the first person, one short spoken sentence each. "
+        "Put the one you recommend first. Make them really different in approach: direct, warm or curious, holding back. "
+        "No quotation marks. Do not repeat anything already said.\n"
         'Return {"replies": ["...", "...", "..."]}',
     )
-    return {"replies": got.replies[:3]}
+    return {"replies": [r.strip().strip('"“”\'') for r in got.replies[:3]]}
 
 
 class EndReq(BaseModel):
