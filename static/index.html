@@ -922,6 +922,7 @@ async function resumeWorld(id){
   setStart(false);
   B = await (await get("/api/build/" + id)).json();
   $("bmsgs").innerHTML = "";
+  if(!B.talk.length){ bubble("them", B.world.place); bubble("them", t("bYouAre") + B.world.me); }  // a template nobody has talked to yet
   B.talk.forEach(([who, text]) => bubble(who === "User" ? "you" : "them", text));
   bchips([]); shown.background = shown.summary = shown.cards = ""; $("bpeople").innerHTML = ""; renderWorld(); loadRecent(); go(`#/world/${id}`);
   bpoll ??= setInterval(refreshWorld, 1500);
