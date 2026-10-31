@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from openai import BadRequestError
 
 from standin.art import background, background_prompt, portraits, scene, scene_edit
 from standin.compiler import compile_scenario
@@ -63,13 +64,23 @@ def main() -> None:
         here = [c for c in s.cast if not c.enters_at]
         as_person = lambda c: Person(name=c.name, role=c.role, gender=c.gender, look=c.appearance)
         current = IMG / f"{args.id}_scene.jpg"
-        scene(painter, s.setting, [as_person(c) for c in here], current)
+        for attempt in range(3):  # the content filter misfires on ordinary scenes, so ask again
+            try:
+                place = s.setting if attempt == 0 else s.setting.split(".")[0] + "."
+                scene(painter, place, [as_person(c) for c in here], current)
+                break
+            except BadRequestError:
+                if attempt == 2:
+                    raise
         shots = {}
         for e in s.events:
             here += [c for c in s.cast if c.name in e.enters]
             if e.shot or e.enters:
                 next_shot = IMG / f"{args.id}_{e.at_turn}_scene.jpg"
-                scene_edit(painter, current, s.setting, [as_person(c) for c in here], next_shot, e.shot)
+                try:
+                    scene_edit(painter, current, s.setting, [as_person(c) for c in here], next_shot, e.shot)
+                except BadRequestError:
+                    continue  # the scene carries on with the last photograph
                 shots[str(e.at_turn)] = f"/presets/img/{next_shot.name}"
                 current = next_shot
         preset["assets"] = {"background": f"/presets/img/{args.id}_scene.jpg", "shots": shots}

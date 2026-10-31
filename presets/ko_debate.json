@@ -122,5 +122,9 @@
       "attempt": 1,
       "problems": []
     }
-  ]
+  ],
+  "assets": {
+    "background": "/presets/img/ko_debate_scene.jpg",
+    "shots": {}
+  }
 }

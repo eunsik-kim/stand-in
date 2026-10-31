@@ -115,5 +115,12 @@
       "attempt": 0,
       "problems": []
     }
-  ]
+  ],
+  "assets": {
+    "background": "/presets/img/en_dinner_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_dinner_2_scene.jpg",
+      "4": "/presets/img/en_dinner_4_scene.jpg"
+    }
+  }
 }

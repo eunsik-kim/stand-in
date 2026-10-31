@@ -115,5 +115,13 @@
       "attempt": 0,
       "problems": []
     }
-  ]
+  ],
+  "assets": {
+    "background": "/presets/img/ko_reunion_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_reunion_2_scene.jpg",
+      "4": "/presets/img/ko_reunion_4_scene.jpg",
+      "6": "/presets/img/ko_reunion_6_scene.jpg"
+    }
+  }
 }
