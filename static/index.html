@@ -182,7 +182,8 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 #build.start .composer{background:#0d0f13d9;backdrop-filter:blur(10px)}
 #build.start .composer textarea{font-size:18px}
 #build.start .bpanel{left:0}
-#build.start:has(.bpanel:not(.hidden)) .bchat{display:none}
+#build.start:has(.bpanel:not(.hidden)) .bchat,#build:has(.bpanel:not(.hidden)) #bmenu{display:none}
+.bchat{transition:none}
 .bfrow{display:flex;gap:16px;align-items:center;justify-content:space-between}
 #benter{flex:none;padding:13px 28px;font-size:17px}
 #bpeople{align-self:end;display:flex;gap:10px;flex-wrap:wrap;min-height:0}
@@ -193,7 +194,17 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .bf{aspect-ratio:1;border-radius:16px;background:#ffffff14 center/cover;box-shadow:0 0 0 1px #ffffff24,0 10px 26px #0008;display:grid;place-items:center;margin-bottom:6px}
 .bfoot{display:grid;gap:8px;padding:12px 14px;border-radius:14px;background:#000000a6;backdrop-filter:blur(8px);font-size:14px}
 #bsummary{display:grid;gap:2px}#bsummary small{color:var(--acc);margin-right:6px}
-@media(max-width:800px){.bchat{top:44%}.bworld{padding:12px 12px 58%}.bpanel,#bempty{left:0}}
+@media(max-width:900px){
+  .bchat{top:auto;bottom:10px;left:10px;right:10px;width:auto;height:56vh}
+  .bworld{padding:60px 12px calc(56vh + 22px);grid-template-rows:auto auto;align-content:end;gap:8px}
+  #bempty{inset:0 0 56vh 0}.bpanel{left:0;z-index:7}
+  #bpeople{gap:6px;flex-wrap:nowrap;overflow:auto}.pc{flex:0 0 min(220px,70%)}.pc p{display:none}
+  .bfoot{padding:8px 10px}.bfrow{gap:10px}#bsummary{min-width:0;font-size:13px}#bsummary>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #benter{padding:10px 16px;font-size:15px}
+  #build.start .bchat{height:auto;left:50%;right:auto;bottom:auto;width:calc(100% - 24px)}
+  #build.start #bhero{font-size:28px}
+}
+@media(max-width:800px){}
 
 /* briefing */
 .q{display:grid;gap:6px;padding:14px 0;border-bottom:1px solid var(--line)}
@@ -835,7 +846,7 @@ async function buildSay(text){
   try{
     const r = await post("/api/build", {id:B?.id || "", message:text, ui:UI, name:store.get("standin-name")});
     if(r.reset){ $("bsend").disabled = false; newStory(); talkListen(); return; }
-    B = r; wait.remove(); bubble("them", r.say); bchips(r.chips); renderWorld();
+    B = r; wait.remove(); bubble("them", r.say); bchips(r.chips); renderWorld(); go(`#/world/${r.id}`);
     if(r.stuck && !(r.world.place || r.world.people.length)) panel("btemplates");
     loadRecent();
     if(r.begin && r.world.place && r.world.people.length) stepInside();
@@ -918,19 +929,56 @@ async function resumeWorld(id){
   B = await (await get("/api/build/" + id)).json();
   $("bmsgs").innerHTML = "";
   B.talk.forEach(([who, text]) => bubble(who === "User" ? "you" : "them", text));
-  bchips([]); shown.background = shown.summary = shown.cards = ""; $("bpeople").innerHTML = ""; renderWorld(); loadRecent();
+  bchips([]); shown.background = shown.summary = shown.cards = ""; $("bpeople").innerHTML = ""; renderWorld(); loadRecent(); go(`#/world/${id}`);
   bpoll ??= setInterval(refreshWorld, 1500);
 }
 async function useTemplate(id){
   panel(null); newStoryState(); setStart(false);
   B = await post("/api/template", {id, ui:UI});
-  bubble("them", t("bTemplateReady"));
+  bubble("them", t("bTemplateReady")); go(`#/world/${B.id}`);
   renderWorld(); loadRecent();
   bpoll ??= setInterval(refreshWorld, 1500);
 }
 function newStory(){
-  newStoryState(); setStart(true); panel(null); loadRecent(); $("bsay").focus();
+  newStoryState(); setStart(true); panel(null); loadRecent(); $("bsay").focus(); go("#/");
 }
+// ---------- browser back and forward: every screen has an address ----------
+let routing = false;
+function go(hash, replace){
+  if(routing || location.hash === hash) return;
+  history[replace ? "replaceState" : "pushState"](null, "", hash);
+}
+const home = () => B ? `#/world/${B.id}` : "#/";
+function leaveStage(){
+  stopRec(); stopVoice(); cam.rec = false; state = "idle";
+  if(B) bpoll ??= setInterval(refreshWorld, 1500);
+}
+async function route(){
+  routing = true;
+  const [, page, id] = (location.hash || "#/").split("/");
+  try{
+    if(page === "scene" && S?.id){ show("stage"); return; }
+    if(page === "review" && id){ await openRun(id); return; }
+    if(page === "review" && $("debrief").innerHTML){ show("debrief"); return; }
+    leaveStage(); show("build");
+    if(page === "world" && id){ panel(null); if(B?.id !== id) await resumeWorld(id); return; }
+    if(page === "templates" || page === "history"){ panel(page === "history" ? "bhistory" : "btemplates"); return; }
+    panel(null);
+    if(B){ newStoryState(); setStart(true); loadRecent(); }
+    if(location.hash && location.hash !== "#/") history.replaceState(null, "", "#/");
+  }catch(e){ console.warn(e); history.replaceState(null, "", "#/"); newStoryState(); setStart(true); show("build"); }
+  finally{ routing = false; }
+}
+window.addEventListener("popstate", route);
+async function openRun(id){
+  const res = await get("/api/history/" + encodeURIComponent(id));
+  if(!res.ok) throw new Error("unknown run");
+  const d = await res.json();
+  D = {scenario:d.scenario, assets:d.assets || {}, preset:null};
+  S = {scenario:d.scenario, assets:D.assets};
+  show("debrief"); renderDebrief(d);
+}
+
 function setStart(on){
   $("build").classList.toggle("start", on);
   if(on) get("/api/presets").then(r => r.json()).then(list => {
@@ -1011,7 +1059,7 @@ async function enter(){
   $("enterState") && ($("enterState").textContent = "");
   try{ S = await post("/api/start", {scenario:D.scenario, assets:D.assets, preset:D.preset, reveal:REVEAL, ui:UI}); }
   catch(e){ if($("enterState")) $("enterState").textContent = t("cantStart") + e; else alert(t("cantStart") + e); return; }
-  turn = 0; state = "idle"; show("stage");
+  turn = 0; state = "idle"; show("stage"); go("#/scene");
   $("log").innerHTML = ""; $("caption").textContent = ""; $("typed").value = "";
   $("doneBtn").style.width = ""; $("doneBtn").innerHTML = icon("send"); $("doneBtn").onclick = () => finish(); $("endBtn").classList.remove("hidden");
   S.goals = []; S.lastBetter = ""; S.found = 0; showFound();
@@ -1046,7 +1094,7 @@ $("endBtn").onclick = () => { stopVoice(); over(t("endedByYou")); };  // looking
 
 async function showDebrief(){
   if(state === "debrief") return;
-  state = "debrief"; stopVoice();
+  state = "debrief"; stopVoice(); go("#/review");
   show("debrief");
   $("debrief").innerHTML = `<h1>${t("debrief")}</h1><p class="sub">${t("debriefing")}</p>`;
   let d;
@@ -1105,8 +1153,9 @@ function renderDebrief(d, live){
     <section><h2>${t("goalsH")}</h2>${db.criteria.map(c => `<div class="crit"><span class="${c.met?"ok":"no"}">${c.met?"✓":"✕"}</span>
       <div><b>${esc(c.criterion)}</b><div>${esc(c.why)}</div></div></div>`).join("")}</section>`}
     <section><h2>${t("dReplay")}</h2><div class="replay">${replay}</div></section>
-    <div class="row"><button class="primary" id="againBtn">${t("again")}</button><button onclick="location.reload()">${t("other")}</button></div>`;
+    <div class="row"><button class="primary" id="againBtn">${t("again")}</button><button id="otherBtn">${t("other")}</button></div>`;
   $("againBtn").onclick = enter;
+  $("otherBtn").onclick = () => { show("build"); newStory(); };
   document.querySelectorAll("[data-back]").forEach(b => b.onclick = () => {
     const m = db.turning_points[+b.dataset.back];
     returnTo(m.turn, m.try_instead, d.lines);
@@ -1119,7 +1168,7 @@ async function returnTo(n, line, lines){
   let r;
   try{ r = await post("/api/rewind", {id:S.id, turn:at}); }catch(e){ alert(t("failed") + e); return; }
   turn = r.turn; S.goals = r.goals; S.found = r.found; state = "idle";
-  show("stage"); showFound(); renderGoals(r.goals); coachText();
+  show("stage"); go("#/scene"); showFound(); renderGoals(r.goals); coachText();
   $("turnText").textContent = `${turn} / ${S.scenario.max_turns}`;
   document.querySelectorAll(".person.left").forEach(el => el.classList.remove("left"));
   $("doneBtn").style.width = ""; $("doneBtn").innerHTML = icon("send"); $("doneBtn").onclick = () => finish(); $("endBtn").classList.remove("hidden");
@@ -1170,8 +1219,8 @@ function renderSparks(){
 }
 function panel(id){  // templates and history share the right side
   ["btemplates", "bhistory"].forEach(x => $(x).classList.toggle("hidden", x !== id));
-  if(id === "btemplates"){ renderSparks(); loadPresets(); }
-  if(id === "bhistory") loadHistory();
+  if(id === "btemplates"){ renderSparks(); loadPresets(); go("#/templates"); }
+  if(id === "bhistory"){ loadHistory(); go("#/history"); }
 }
 const when = s => new Date(s * 1000).toLocaleDateString(UI, {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
 async function loadHistory(){
@@ -1179,10 +1228,7 @@ async function loadHistory(){
   $("histBody").innerHTML = (h.runs.length ? h.runs.map(r => `<button class="hrow" data-run="${esc(r.id)}"><b>${esc(r.title)}</b><span><span class="pts">${r.met}/${r.all}</span> <small>${when(r.when)}</small></span></button>`).join("") : "")
     || `<p class="sub">${t("hNone")}</p>`;
   $("histBody").querySelectorAll("[data-run]").forEach(b => b.onclick = async () => {
-    const d = await (await get("/api/history/" + encodeURIComponent(b.dataset.run))).json();
-    D = {scenario:d.scenario, assets:d.assets || {}, preset:null};
-    S = {scenario:d.scenario};
-    show("debrief"); renderDebrief(d);
+    await openRun(b.dataset.run); go("#/review/" + b.dataset.run);
   });
 }
 async function loadRecent(){
@@ -1196,6 +1242,7 @@ function startBuilding(){
   store.set("standin-seen", "1");
   show("build");
   setStart(!B); micButton(); $("bsay").focus(); loadRecent();
+  if(location.hash.length > 2) route();
 }
 document.querySelectorAll(".olangs button").forEach(b => b.onclick = () => {
   UI = b.dataset.lang; store.set("standin-ui", UI);
@@ -1217,7 +1264,7 @@ document.addEventListener("click", e => { if(!e.target.closest("#bside")) toggle
 $("bnew").onclick = () => { toggleMenu(false); newStory(); };
 $("btplBtn").onclick = () => { toggleMenu(false); panel("btemplates"); };
 $("bhistBtn").onclick = () => { toggleMenu(false); panel("bhistory"); };
-document.querySelectorAll(".bclose").forEach(b => b.onclick = () => panel(null));
+document.querySelectorAll(".bclose").forEach(b => b.onclick = () => { panel(null); go(home()); });
 $("bideas").onclick = () => panel("btemplates");
 
 const loadPresets = () => fetch("/api/presets").then(r => r.json()).then(list => {
