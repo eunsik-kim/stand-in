@@ -865,6 +865,7 @@ function bubble(who, text){
 function bchips(list){
   $("bchips").innerHTML = (list || []).map(c => `<button type="button">${esc(c)}</button>`).join("");
   $("bchips").querySelectorAll("button").forEach(b => b.onclick = () => buildSay(b.textContent));
+  requestAnimationFrame(() => { $("bscroll").scrollTop = 1e9; });  // suggestions take room, so keep the last message in view
 }
 // polled every 1.5s, so only touch what really changed: rebuilding the page makes it flicker
 const shown = {background:"", summary:"", cards:""};
