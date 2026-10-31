@@ -1150,7 +1150,7 @@ async function takeBack(){
   $("turnText").textContent = `${turn} / ${S.scenario.max_turns}`;
   while($("log").children.length > turnLog) $("log").lastChild.remove();
   document.querySelectorAll(".person.left").forEach(el => el.classList.remove("left"));
-  $("doneBtn").style.width = ""; $("doneBtn").innerHTML = icon("send"); $("doneBtn").onclick = () => finish(); $("endBtn").classList.remove("hidden");
+  $("doneBtn").innerHTML = icon("send"); $("doneBtn").onclick = () => finish();
   renderGoals(r.goals);
   if(S.lastBetter) $("typed").value = S.lastBetter;
   listen();
@@ -1171,7 +1171,7 @@ async function enter(){
   catch(e){ if($("enterState")) $("enterState").textContent = t("cantStart") + e; else alert(t("cantStart") + e); return; }
   turn = 0; state = "idle"; show("stage"); go("#/scene");
   $("log").innerHTML = ""; $("caption").textContent = ""; $("typed").value = "";
-  $("doneBtn").style.width = ""; $("doneBtn").innerHTML = icon("send"); $("doneBtn").onclick = () => finish(); $("endBtn").classList.remove("hidden");
+  $("doneBtn").innerHTML = icon("send"); $("doneBtn").onclick = () => finish();
   S.goals = []; S.lastBetter = ""; S.found = 0; showFound();
   S.here = new Set(); S.opening = S.assets?.background;
   $("stage").classList.toggle("coached", COACH && !S.assets?.scene); renderGoals(); coachText();
@@ -1195,11 +1195,9 @@ async function enter(){
 }
 
 function over(reason){
-  state = "over"; stopRec(); cam.rec = false;
-  $("micStatus").textContent = t("sceneOver") + reason;
-  $("doneBtn").style.width = "auto"; $("doneBtn").textContent = t("seeDebrief"); $("doneBtn").disabled = false; $("doneBtn").onclick = showDebrief;
+  state = "over"; stopRec(); cam.rec = false; choiceSeq++; clearTimeout(pickTimer); $("choices").innerHTML = "";
   $("caption").className = "caption narr"; $("caption").textContent = reason;
-  $("typed").disabled = true; $("endBtn").classList.add("hidden");
+  setTimeout(showDebrief, 900);  // the scene is done, so go straight to looking back
 }
 
 // one "say it again": wipes what is being said, or takes back the line already sent
@@ -1216,7 +1214,7 @@ $("speedBtn").onclick = () => {
 };
 speedLabel();
 $("logBtn").onclick = () => { $("log").classList.toggle("hidden"); $("stage").classList.toggle("logopen"); };
-$("endBtn").onclick = () => { stopVoice(); over(t("endedByYou")); };  // looking back comes after, only if they want it
+$("endBtn").onclick = () => { AUTO = false; stopVoice(); over(t("endedByYou")); };
 
 async function showDebrief(){
   if(state === "debrief") return;
@@ -1297,7 +1295,7 @@ async function returnTo(n, line, lines){
   show("stage"); go("#/scene"); showFound(); renderGoals(r.goals); coachText();
   $("turnText").textContent = `${turn} / ${S.scenario.max_turns}`;
   document.querySelectorAll(".person.left").forEach(el => el.classList.remove("left"));
-  $("doneBtn").style.width = ""; $("doneBtn").innerHTML = icon("send"); $("doneBtn").onclick = () => finish(); $("endBtn").classList.remove("hidden");
+  $("doneBtn").innerHTML = icon("send"); $("doneBtn").onclick = () => finish();
   $("log").innerHTML = "";
   lines.filter(l => l.turn < at).forEach(l => addLog(l.speaker === "user" ? t("me") : l.speaker, l.say));
   const prev = lines.filter(l => l.turn < at && !["user", "narration"].includes(l.speaker)).pop();
