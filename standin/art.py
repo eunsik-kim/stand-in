@@ -52,7 +52,7 @@ def scene_prompt(place: str, people: list) -> str:
     return (
         "Candid unretouched photograph taken from the viewer's own eyes, as if the viewer is right there in the conversation, "
         f"across a small table at a normal conversation distance of about two meters. The place: {place} In the place, naturally part of it, "
-        f"sharing its exact light and shadows: {who}. They face the viewer directly and look at them, seen from the waist up, close enough to talk to, "
+        f"sharing its exact light and shadows, placed from left to right in this exact order: {who}. They face the viewer directly and look at them, seen from the waist up, close enough to talk to, "
         "not far across the room, with clear space above the head. Each head is about one fifth of the image height, and the place "
         "fills the rest of the wide frame. Real skin, natural imperfect faces, not models, mild sensor noise. "
         "No text, no borders, no logos."
