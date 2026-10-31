@@ -67,7 +67,7 @@ def main() -> None:
         assets["portraits"] = faces
         for i, c in enumerate(s.cast):
             if c.name not in faces:
-                faces[c.name] = portraits(painter, s, c, IMG, f"{args.id}_{i}", "/presets/img")
+                faces[c.name] = portraits(painter, s.setting, c.gender, c.appearance, c.role, IMG, f"{args.id}_{i}", "/presets/img")
                 print(f"portraits: {c.name} | {spend.summary()}")
                 path.write_text(json.dumps(preset, indent=2, ensure_ascii=False))  # keep progress
         path.write_text(json.dumps(preset, indent=2, ensure_ascii=False))

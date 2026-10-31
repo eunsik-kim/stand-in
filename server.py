@@ -10,6 +10,7 @@ import re
 import threading
 import time
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict
 from pathlib import Path
 
@@ -22,6 +23,7 @@ from pydantic import BaseModel
 
 from standin import voice
 from standin.art import background, background_prompt, portraits
+from standin.builder import BuildReply, Person, World, as_situation, build_turn, lock
 from standin.coach import coach_turn
 from standin.compiler import compile_scenario, structural_problems
 from standin.intake import DIFFICULTY, questions
@@ -137,6 +139,101 @@ def presets():
             for k, v in load_presets().items()]
 
 
+# ---------- building a world by talking ----------
+class Build:
+    def __init__(self):
+        self.id = uuid.uuid4().hex[:10]
+        self.world = World()
+        self.talk: list[tuple[str, str]] = []
+        self.background = ""
+        self.faces: dict[str, dict] = {}  # name -> expressions drawn so far
+        self.drawn: dict[str, str] = {}  # what each image was drawn from, to redraw only on a real change
+        self.version = 0
+
+
+builds: dict[str, Build] = {}
+easel = ThreadPoolExecutor(6)
+
+
+def draw_changes(b: Build, reply: BuildReply) -> None:
+    """Draw only what changed, in the background, so the conversation never waits for images."""
+    w = reply.world
+    if w.place and b.drawn.get("place") != w.place:
+        b.drawn["place"] = w.place
+
+        def paint(place: str) -> None:
+            stem = uuid.uuid4().hex[:10]
+            background(painter, ("Photorealistic wide shot of an empty place, seen from where a person would sit or stand: "
+                                 f"{place} No people, no text, no logos. Natural light, cinematic."), ART / f"{stem}_bg.jpg")
+            if b.drawn.get("place") == place:  # a newer description wins
+                b.background = f"/art/{stem}_bg.jpg"
+        easel.submit(paint, w.place)
+    for p in w.people:
+        key = f"person:{p.name}"
+        if p.look and b.drawn.get(key) != p.look:
+            b.drawn[key] = p.look
+
+        def face(person: Person, source: str, place: str) -> None:
+            stem = uuid.uuid4().hex[:10]
+            current = lambda: b.drawn.get(f"person:{person.name}") == source
+            set_neutral = lambda url: current() and b.faces.update({person.name: {"neutral": url}})
+            made = portraits(painter, place, person.gender, person.look, person.role, ART, stem, "/art", set_neutral)
+            if current():
+                b.faces[person.name] = made
+        easel.submit(face, p, p.look, w.place)
+    for name in set(b.faces) - {p.name for p in w.people}:
+        del b.faces[name]
+
+
+def build_state(b: Build) -> dict:
+    return {"id": b.id, "world": b.world.model_dump(), "background": b.background, "faces": b.faces,
+            "drawing": sum(1 for k in b.drawn if k.startswith("person:") and k.split(":", 1)[1] not in b.faces)}
+
+
+class BuildReq(BaseModel):
+    id: str = ""
+    message: str
+    ui: str = "en"
+
+
+@app.post("/api/build")
+def build(req: BuildReq):
+    b = builds.get(req.id) or Build()
+    builds[b.id] = b
+    reply = build_turn(interviewer, b.world, b.talk, req.message.strip(), req.ui)
+    reply.world.people = reply.world.people[:4]
+    b.talk += [("User", req.message.strip()), ("You", reply.say)]
+    b.world = reply.world
+    draw_changes(b, reply)
+    print(f"build {b.id}: {len(b.world.people)} people | {spend.summary()}", flush=True)
+    return {**build_state(b), "say": reply.say, "chips": reply.chips, "ready": reply.ready}
+
+
+@app.get("/api/build/{bid}")
+def build_art(bid: str):
+    b = builds.get(bid)
+    if not b:
+        raise HTTPException(404, "unknown build")
+    return build_state(b)
+
+
+class FinishReq(BaseModel):
+    id: str
+    ui: str = "en"
+
+
+@app.post("/api/build/finish")
+def build_finish(req: FinishReq):
+    """The world stays as built; only the hidden side (goals, secrets, events) is written now."""
+    b = builds.get(req.id)
+    if not b or not b.world.people:
+        raise HTTPException(400, "add at least one person first")
+    scenario, gate1 = compile_scenario(writer, checker, as_situation(b.world), ui=req.ui, locked=True)
+    scenario = lock(scenario, b.world)
+    assets = {"background": b.background, "portraits": b.faces}
+    return draft(scenario, assets, None, gate1)
+
+
 class IntakeReq(BaseModel):
     situation: str
     ui: str = "en"
@@ -202,7 +299,7 @@ def image(req: ImageReq):
         c = next((c for c in s.cast if c.name == req.name), None)
         if not c:
             raise HTTPException(400, "unknown character")
-        out = {"portrait": portraits(painter, s, c, ART, stem, "/art")}
+        out = {"portrait": portraits(painter, s.setting, c.gender, c.appearance, c.role, ART, stem, "/art")}
     else:
         raise HTTPException(400, "kind must be background or portrait")
     print(f"image {req.kind} {req.name} | {spend.summary()}", flush=True)

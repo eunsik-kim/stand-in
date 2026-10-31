@@ -13,7 +13,7 @@ from openai import BadRequestError
 from PIL import Image
 
 from .llm import LLM, edit_image, generate_image
-from .spec import Character, Scenario
+from .spec import Scenario
 
 EXPRESSIONS = {
     "pleased": "a small, polite, natural smile",
@@ -33,17 +33,17 @@ def background(painter: LLM, prompt: str, path: Path) -> None:
     img.save(path, quality=85)
 
 
-def portrait_prompt(s: Scenario, c: Character) -> str:
-    gender = {"m": "man", "f": "woman"}.get(c.gender, "person")
+def portrait_prompt(setting: str, gender: str, appearance: str, role: str) -> str:
+    gender = {"m": "man", "f": "woman"}.get(gender, "person")
     return (
         f"Candid unretouched smartphone photo of an ordinary real {gender}, taken by someone sitting across from them. "
         "Shot from about three meters away, at a polite conversational distance, the person seated and framed from the "
         "waist up, centered. The person is the clear subject and fills most of the frame height: the head takes up "
         "about one quarter of the image height, with some room around them. Relaxed posture, looking at the camera. Natural uneven light, mild sensor noise, "
-        f"blurry real surroundings of this place: {s.setting[:160]} "
+        f"blurry real surroundings of this place: {setting[:160]} "
         "Real skin with pores and small unevenness, a slightly asymmetrical face. Not a model, no beauty filter, no "
         "studio light, no retouching, no 3D render look, no text. "
-        f"Show their exact age, do not make them look older than stated. The person: {c.appearance} Role: {c.role}."
+        f"Show their exact age, do not make them look older than stated. The person: {appearance} Role: {role}."
     )
 
 
@@ -54,9 +54,12 @@ def _tile(data: bytes, path: Path) -> None:
     img.crop((x, y, x + side, y + side)).resize((1024, 1024), Image.LANCZOS).save(path, quality=88)
 
 
-def portraits(painter: LLM, s: Scenario, c: Character, folder: Path, stem: str, url: str) -> dict[str, str]:
-    neutral = generate_image(painter, portrait_prompt(s, c), aspect_ratio="1:1")
+def portraits(painter: LLM, setting: str, gender: str, appearance: str, role: str,
+              folder: Path, stem: str, url: str, on_neutral=None) -> dict[str, str]:
+    neutral = generate_image(painter, portrait_prompt(setting, gender, appearance, role), aspect_ratio="1:1")
     _tile(neutral, folder / f"{stem}_neutral.jpg")
+    if on_neutral:  # the person can appear while their other expressions are still being made
+        on_neutral(f"{url}/{stem}_neutral.jpg")
 
     def change(item: tuple[str, str]) -> None:
         expr, look = item

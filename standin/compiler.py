@@ -98,13 +98,16 @@ def told_text(situation: str, answers: list[tuple[str, str]], material: str = ""
 
 
 def compile_scenario(writer: LLM, checker: LLM, situation: str, material: str = "",
-                     answers: list[tuple[str, str]] = (), difficulty: str = "real", ui: str = "",
+                     answers: list[tuple[str, str]] = (), difficulty: str = "real", ui: str = "", locked: bool = False,
                      repairs: int = 2, log=print) -> tuple[Scenario, list[dict]]:
     """Returns the scenario and the gate history (problems found per attempt)."""
     told = told_text(situation, list(answers), material)
     ask = (
         f"The user wants to rehearse this. Everything they told us:\n{told}\n\n"
-        "Design the scene. Rules:\n"
+        + ("The user built this world themselves. Keep the place, every person, their names, roles, looks and "
+           "manners and the user's goal exactly as given, add nobody. Invent only what is hidden: private goals, secrets, "
+           "reveal conditions, moods, events, criteria, the opening line.\n" if locked else "")
+        + "Design the scene. Rules:\n"
         "- language: what the people in the scene actually speak (a Tokyo cafe is 'ja' even if the request is in Korean); otherwise the user's language. opening_line and all spoken lines use only that language.\n"
         + (f"- Everything else (title, setting, roles, goals, user_knows, phases, events, success_criteria, character notes) is read by the user: write it in language '{ui}'.\n" if ui else "")
         + 
