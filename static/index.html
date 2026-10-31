@@ -1233,7 +1233,9 @@ const SPARKS = {
 const store = {get: k => { try{ return localStorage.getItem(k) || ""; }catch(e){ return ""; } }, set: (k, v) => { try{ localStorage.setItem(k, v); }catch(e){} }};
 function renderSparks(){
   $("sparks").innerHTML = SPARKS[UI].map(([head, items]) => `<div class="sgroup"><b>${esc(head)}</b><div>${items.map(s => `<button type="button">${esc(s)}</button>`).join("")}</div></div>`).join("");
-  $("sparks").querySelectorAll("button").forEach(b => b.onclick = () => buildSay(b.textContent));
+  $("sparks").querySelectorAll("button").forEach(b => b.onclick = () => {  // an idea starts a new world, never joins the current one
+    newStoryState(); setStart(false); panel(null); go("#/"); buildSay(b.textContent);
+  });
 }
 function panel(id){  // templates and history share the right side
   ["btemplates", "bhistory"].forEach(x => $(x).classList.toggle("hidden", x !== id));

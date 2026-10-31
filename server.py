@@ -266,6 +266,9 @@ def build_state(b: Build) -> dict:
     return {"id": b.id, "world": b.world.model_dump(), "background": b.background, "faces": b.faces, "talk": b.talk}
 
 
+START_OVER = re.compile(r"^\s*(다시 만들|처음부터|새로 만들|다시 할래|다시 시작|start over|restart|やり直)", re.I)
+
+
 class BuildReq(BaseModel):
     id: str = ""
     message: str
@@ -280,7 +283,7 @@ def build(req: BuildReq, request: Request):
     builds[b.id] = b
     b.ui = req.ui
     reply = build_turn(interviewer, b.world, b.talk, req.message.strip(), req.ui, req.name)
-    if reply.reset:  # they said to start over, so this world is gone
+    if reply.reset or START_OVER.search(req.message):  # they said to start over, so this world is gone
         builds.pop(b.id, None)
         (WORLDS / f"{b.id}.json").unlink(missing_ok=True)
         return {"reset": True, "say": reply.say}
