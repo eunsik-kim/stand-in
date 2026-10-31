@@ -517,6 +517,27 @@ def autopilot(req: AutoReq):
     return {"say": simulated_user(actor, persona)(s.scene, s.turn + 1).strip()}
 
 
+class Replies(BaseModel):
+    replies: list[str]
+
+
+@app.post("/api/replies")
+def replies(req: AutoReq):
+    """Three things the user could say next, for when finding the words is the hard part."""
+    s = sessions.get(req.id)
+    if not s:
+        raise HTTPException(404, "unknown session")
+    sc = s.scene.scenario
+    got = actor.ask(
+        Replies, "You suggest what a person could say next in a live conversation. Reply with a single JSON object.",
+        f"Setting: {sc.setting}\nThe person: {sc.user_role}\nWhat they want: {sc.user_goal}\n\nTranscript:\n{s.scene.public()}\n\n"
+        f"Write 3 different things they could say next, in language '{sc.language}', in the first person, short and natural when spoken aloud. "
+        "Make them really different in approach: one direct, one warm or curious, one that holds back or changes direction. Do not repeat anything already said.\n"
+        'Return {"replies": ["...", "...", "..."]}',
+    )
+    return {"replies": got.replies[:3]}
+
+
 class EndReq(BaseModel):
     id: str
 
