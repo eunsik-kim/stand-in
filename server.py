@@ -23,7 +23,7 @@ from pydantic import BaseModel
 
 from standin import voice
 from standin.art import background, background_prompt, portraits
-from standin.builder import BuildReply, Person, World, as_situation, build_turn, lock
+from standin.builder import BuildReply, Person, World, as_situation, build_turn, lock, others
 from standin.coach import coach_turn
 from standin.compiler import compile_scenario, structural_problems
 from standin.debrief import debrief
@@ -200,7 +200,7 @@ def build(req: BuildReq):
     b = builds.get(req.id) or Build()
     builds[b.id] = b
     reply = build_turn(interviewer, b.world, b.talk, req.message.strip(), req.ui)
-    reply.world.people = reply.world.people[:4]
+    reply.world = others(reply.world)
     b.talk += [("User", req.message.strip()), ("You", reply.say)]
     b.world = reply.world
     draw_changes(b, reply)

@@ -663,21 +663,48 @@ function bchips(list){
   $("bchips").innerHTML = (list || []).map(c => `<button type="button">${esc(c)}</button>`).join("");
   $("bchips").querySelectorAll("button").forEach(b => b.onclick = () => buildSay(b.textContent));
 }
+// polled every 1.5s, so only touch what really changed: rebuilding the page makes it flicker
+const shown = {background:"", summary:""};
+function fadeIn(url, apply){
+  const img = new Image();
+  img.onload = () => apply(url);
+  img.src = url;
+}
 function renderWorld(){
   if(!B) return;
   const w = B.world;
   $("bempty").classList.toggle("hidden", !!(B.background || w.place || w.people.length));
-  $("bworld").style.backgroundImage = B.background ? `linear-gradient(#08090c22,#08090ce0),url(${B.background})` : "";
-  $("bpeople").innerHTML = w.people.map(p => {
+  if(B.background && B.background !== shown.background){
+    shown.background = B.background;
+    fadeIn(B.background, url => { $("bworld").style.backgroundImage = `linear-gradient(#08090c22,#08090ce0),url(${url})`; });
+  }
+  const box = $("bpeople"), keep = new Set(w.people.map(p => p.name));
+  [...box.children].forEach(el => { if(!keep.has(el.dataset.name)) el.remove(); });
+  w.people.forEach(p => {
+    let el = [...box.children].find(x => x.dataset.name === p.name);
+    if(!el){
+      el = document.createElement("div");
+      el.className = "bp drawing"; el.dataset.name = p.name;
+      el.innerHTML = `<div class="bf"><small>${t("bDrawing")}</small></div><b></b><small class="r"></small>`;
+      box.appendChild(el);
+    }
+    el.querySelector("b").textContent = p.name;
+    el.querySelector(".r").textContent = p.role;
     const face = B.faces[p.name]?.neutral;
-    return `<div class="bp ${face ? "" : "drawing"}"><div class="bf" style="${face ? `background-image:url(${face})` : ""}">${face ? "" : `<small>${t("bDrawing")}</small>`}</div>
-      <b>${esc(p.name)}</b><small>${esc(p.role)}</small></div>`;
-  }).join("");
-  $("bsummary").innerHTML = (w.title ? `<b>${esc(w.title)}</b>` : "")
+    if(face && el.dataset.face !== face){
+      el.dataset.face = face;
+      fadeIn(face, url => {
+        const f = el.querySelector(".bf");
+        f.style.backgroundImage = `url(${url})`; f.innerHTML = ""; el.classList.remove("drawing");
+      });
+    }
+  });
+  const summary = (w.title ? `<b>${esc(w.title)}</b>` : "")
     + (w.place ? `<div>${esc(w.place)}</div>` : "")
     + (w.me ? `<div><small>${t("bYou")}</small> ${esc(w.me)}</div>` : "")
     + (w.goal ? `<div><small>${t("bGoal")}</small> ${esc(w.goal)}</div>` : "");
-  $("benter").disabled = !(w.place && w.people.length && w.goal);
+  if(summary !== shown.summary){ shown.summary = summary; $("bsummary").innerHTML = summary; }
+  if($("bstate").textContent === "") $("benter").disabled = !(w.place && w.people.length && w.goal);
 }
 async function buildSay(text){
   text = text.trim(); if(!text) return;
@@ -694,7 +721,12 @@ async function buildSay(text){
 }
 async function refreshWorld(){
   if(!B) return;
-  try{ Object.assign(B, await (await fetch("/api/build/" + B.id)).json()); renderWorld(); }catch(e){}
+  try{
+    const next = await (await fetch("/api/build/" + B.id)).json();
+    const changed = next.background !== B.background || JSON.stringify(next.faces) !== JSON.stringify(B.faces);
+    Object.assign(B, next);
+    if(changed) renderWorld();
+  }catch(e){}
 }
 // talk the world into being: a pause sends it, and it listens again after each reply
 const talk = {on:false, rec:null, said:"", last:0, timer:null};

@@ -42,7 +42,8 @@ GUIDE = (
     "- Update the world from their latest message. If they change something, change only that.\n"
     "- Fill small gaps a photographer would need (age, clothes, light), but do not invent story or relationships. "
     "look is never empty, so every person can appear right away.\n"
-    "- Only people the user asked for exist. At most 4. Give a real name if they gave none.\n"
+    "- people are only the others in the scene, never the user themselves: the user goes in `me`, as a short description "
+    "(their job or relation to the others). Only people the user asked for exist. At most 4. Give a real name if they gave none.\n"
     "- say: one or two short sentences. Acknowledge what just appeared, then ask for the single most useful missing thing: "
     "the place, then who is there, then what they want to happen. Never ask two things.\n"
     "- chips: tappable answers to your question, concrete to this world, in the user's voice.\n"
@@ -60,6 +61,14 @@ def build_turn(llm: LLM, world: World, history: list[tuple[str, str]], message: 
         'Return {"world": {"title": "", "place": "", "language": "", "me": "", "goal": "", "people": '
         '[{"name": "", "role": "", "gender": "m|f", "look": "", "manner": ""}]}, "say": "", "chips": [], "ready": false}',
     )
+
+
+SELF = {"나", "저", "본인", "me", "i", "myself", "user", "自分", "私", "僕"}
+
+
+def others(w: World) -> World:
+    """The user stands in the scene as themselves, not as a character on the stage."""
+    return w.model_copy(update={"people": [p for p in w.people if p.name.strip().lower() not in SELF][:4]})
 
 
 def as_situation(w: World) -> str:
