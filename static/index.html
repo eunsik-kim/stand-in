@@ -136,7 +136,7 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .nav [data-ic]{display:grid;place-items:center;flex:none;overflow:visible}
 .navh{padding:14px 10px 4px;color:var(--mute);font-size:12px}
 #recent{overflow:auto;min-height:0;display:grid;gap:2px;align-content:start;scrollbar-width:thin;scrollbar-color:#ffffff24 transparent}
-.bchat{position:absolute;z-index:4;left:14px;top:14px;bottom:14px;width:min(384px,calc(100% - 28px));display:grid;grid-template-rows:auto 1fr auto auto;gap:10px;padding:10px 12px 12px;min-height:0;border-radius:18px;background:#14161ce6;backdrop-filter:blur(14px);box-shadow:0 0 0 1px #ffffff14}
+.bchat{position:absolute;z-index:4;left:14px;top:14px;bottom:14px;width:min(384px,calc(100% - 28px));display:grid;grid-template-rows:auto auto minmax(0,1fr) auto auto;gap:10px;padding:10px 12px 12px;min-height:0;border-radius:18px;background:#14161ce6;backdrop-filter:blur(14px);box-shadow:0 0 0 1px #ffffff14}
 #bmsgs{overflow:auto;display:flex;flex-direction:column;gap:8px;min-height:0;padding-right:6px;scrollbar-width:thin;scrollbar-color:#ffffff24 transparent}
 .msg{max-width:88%;padding:9px 13px;border-radius:14px;line-height:1.45}
 .msg.them{align-self:flex-start;background:#ffffff12}
@@ -175,7 +175,7 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 #build.start .bchat{left:50%;top:50%;bottom:auto;transform:translate(-50%,-50%);width:min(640px,calc(100% - 32px));grid-template-rows:auto;background:none;box-shadow:none;backdrop-filter:none;gap:16px;padding:0}
 #build.start #bhero{display:block;font-size:38px;line-height:1.2;text-align:center;text-shadow:0 2px 24px #000}
 #build.start #bideas{display:inline-flex;justify-self:center;color:#dfe2e8}
-#build.start #bmsgs,#build.start #bempty,#build.start #bfoot,#build.start #bchips{display:none}
+#build.start #bmsgs,#build.start #bpeople,#build.start #bempty,#build.start #bfoot,#build.start #bchips{display:none}
 #build.start .chead{display:none}
 #bmenu{position:absolute;z-index:5;left:24px;top:22px}
 .chead{height:30px}
@@ -186,9 +186,11 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .bchat{transition:none}
 .bfrow{display:flex;gap:16px;align-items:center;justify-content:space-between}
 #benter{flex:none;padding:13px 28px;font-size:17px}
-#bpeople{align-self:end;display:flex;gap:10px;flex-wrap:wrap;min-height:0}
-.pc{width:min(300px,100%);padding:10px 12px;border-radius:12px;background:#000000b3;backdrop-filter:blur(8px);display:grid;gap:3px;font-size:13px;line-height:1.4}
-.pc b{font-size:15px}.pc small{color:var(--acc)}.pc p{margin:0;color:#dfe2e8;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.pc .h{color:#a9afbb}
+#bpeople{display:grid;gap:6px;max-height:42%;overflow:auto;scrollbar-width:thin;scrollbar-color:#ffffff24 transparent}
+#bpeople:empty{display:none}
+.pc{padding:10px 12px;border-radius:12px;background:#ffffff0d;display:grid;gap:3px;font-size:13px;line-height:1.45}
+.pc b{font-size:15px}.pc small{color:var(--acc)}.pc p{margin:0;color:#dfe2e8}.pc .h{color:#a9afbb}
+.bfoot{grid-row:2}
 .bp{width:clamp(130px,17vw,220px);display:grid;gap:2px;text-align:center}
 .bp small{color:#c9cdd6;font-size:12px}
 .bf{aspect-ratio:1;border-radius:16px;background:#ffffff14 center/cover;box-shadow:0 0 0 1px #ffffff24,0 10px 26px #0008;display:grid;place-items:center;margin-bottom:6px}
@@ -198,7 +200,7 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
   .bchat{top:auto;bottom:10px;left:10px;right:10px;width:auto;height:56vh}
   .bworld{padding:60px 12px calc(56vh + 22px);grid-template-rows:auto auto;align-content:end;gap:8px}
   #bempty{inset:0 0 56vh 0}.bpanel{left:0;z-index:7}
-  #bpeople{gap:6px;flex-wrap:nowrap;overflow:auto}.pc{flex:0 0 min(220px,70%)}.pc p{display:none}
+  #bpeople{max-height:30%}
   .bfoot{padding:8px 10px}.bfrow{gap:10px}#bsummary{min-width:0;font-size:13px}#bsummary>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   #benter{padding:10px 16px;font-size:15px}
   #build.start .bchat{height:auto;left:50%;right:auto;bottom:auto;width:calc(100% - 24px)}
@@ -300,6 +302,7 @@ h2{margin:0;font-size:22px}
   <div class="bchat">
     <div class="chead"></div>
     <h1 id="bhero" data-t="bHero"></h1>
+    <div id="bpeople"></div>
     <div id="bmsgs"></div>
     <div class="chips" id="bchips"></div>
     <div class="composer"><textarea id="bsay" rows="2" data-tp="bPh"></textarea>
@@ -318,7 +321,6 @@ h2{margin:0;font-size:22px}
       <div class="ghead"><h2 data-t="bHistory"></h2><button class="ibtn bclose" data-ic="x" data-tl="bClose"></button></div>
       <div id="histBody"></div>
     </div>
-    <div id="bpeople"></div>
     <div class="bfoot hidden" id="bfoot">
       <div class="bfrow"><div id="bsummary"></div><button id="benter" class="primary" data-t="bEnter" disabled></button></div>
       <small id="bstate" class="sub" style="margin:0"></small>
