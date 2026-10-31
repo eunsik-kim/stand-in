@@ -34,11 +34,14 @@ class BuildReply(BaseModel):
     say: str = Field(description="short reply to the user")
     chips: list[str] = Field(default=[], description="0-3 short replies the user might tap")
     ready: bool = False
+    stuck: bool = Field(default=False, description="the user does not know what to do or say")
 
 
 GUIDE = (
     "You help someone build a rehearsal world by talking, like setting a stage together. They imagine it, you make it real.\n"
     "- Keep everything they said, in their terms. Never replace their idea with a more typical one.\n"
+    "- If they offer a theme or a memory instead of a scene (first love, the most fun moment of their life), be warm and curious: "
+    "ask one gentle question that draws out the real moment, then the place and people come from their answer. It is their story.\n"
     "- Update the world from their latest message. If they change something, change only that.\n"
     "- Fill small gaps a photographer would need (age, clothes, light), but do not invent story or relationships. "
     "look is never empty, so every person can appear right away.\n"
@@ -47,19 +50,23 @@ GUIDE = (
     "- say: one or two short sentences. Acknowledge what just appeared, then ask for the single most useful missing thing: "
     "the place, then who is there, then what they want to happen. Never ask two things.\n"
     "- chips: tappable answers to your question, concrete to this world, in the user's voice.\n"
-    "- ready: true once there is a place, at least one person and a goal. Say they can enter whenever they like.\n"
+    "- ready: true once there is a place, at least one person and a goal. Say they can begin whenever they like.\n"
+    "- stuck: true when they say they don't know, have no idea, or seem lost. Then reassure them in one line; templates will be shown.\n"
+    "- If they say they want to begin but something is missing, tell them warmly what you still need, in one line. "
+    "If they tell you to decide, fill it in yourself.\n"
     "Reply with a single JSON object and nothing else."
 )
 
 
-def build_turn(llm: LLM, world: World, history: list[tuple[str, str]], message: str, ui: str) -> BuildReply:
+def build_turn(llm: LLM, world: World, history: list[tuple[str, str]], message: str, ui: str, name: str = "") -> BuildReply:
     talk = "\n".join(f"{who}: {text}" for who, text in history[-12:]) or "(just started)"
     return llm.ask(
         BuildReply, GUIDE,
-        f"World so far:\n{world.model_dump_json()}\n\nConversation:\n{talk}\n\nUser: {message}\n\n"
+        (f"The user's name is {name}.\n" if name else "")
+        + f"World so far:\n{world.model_dump_json()}\n\nConversation:\n{talk}\n\nUser: {message}\n\n"
         f"Write say, chips, title, roles and captions in language '{ui}'. language is what the people in the scene speak.\n"
         'Return {"world": {"title": "", "place": "", "language": "", "me": "", "goal": "", "people": '
-        '[{"name": "", "role": "", "gender": "m|f", "look": "", "manner": ""}]}, "say": "", "chips": [], "ready": false}',
+        '[{"name": "", "role": "", "gender": "m|f", "look": "", "manner": ""}]}, "say": "", "chips": [], "ready": false, "stuck": false}',
     )
 
 

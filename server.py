@@ -10,14 +10,15 @@ import re
 import threading
 import time
 import uuid
-from concurrent.futures import ThreadPoolExecutor
+from collections import defaultdict, deque
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import asdict
 from pathlib import Path
 
 import uvicorn
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, Response, StreamingResponse
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -39,6 +40,8 @@ SAVE = ROOT / "runs" / "web"
 SAVE.mkdir(parents=True, exist_ok=True)
 ART = ROOT / "runs" / "art"  # images made for custom scenes
 ART.mkdir(parents=True, exist_ok=True)
+WORLDS = ROOT / "runs" / "worlds"
+WORLDS.mkdir(parents=True, exist_ok=True)
 TTS = ROOT / "runs" / "tts"
 TTS.mkdir(parents=True, exist_ok=True)
 
@@ -53,6 +56,7 @@ env = os.getenv
 writer = LLM(env("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.7, "writer")
 actor = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.8, "actor", "minimal")
 checker = LLM(env("STANDIN_CHECK_MODEL", CHECK_MODEL), spend, cache, 0.0, "checker", "minimal")
+quick_writer = LLM(env("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.7, "writer", "low")
 coach = LLM(env("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.2, "coach")
 interviewer = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.4, "builder", "minimal")
 painter = LLM(env("STANDIN_IMAGE_MODEL", IMAGE_MODEL), spend, cache, 1.0, "painter")
@@ -60,13 +64,15 @@ whisper = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.3, "live_
 
 
 class Session:
-    def __init__(self, scenario: Scenario, preset: str | None, reveal: str, ui: str):
+    def __init__(self, scenario: Scenario, preset: str | None, reveal: str, ui: str, owner: str):
         self.id = uuid.uuid4().hex[:10]
         self.scene: Scene = open_scene(scenario)
         self.preset = preset
         self.reveal = reveal  # how much of the cast the user chose to see beforehand
         self.ui = ui
         self.goals = ["todo"] * len(scenario.success_criteria)
+        self.assets: dict = {}
+        self.owner = owner
         self.history: list[tuple] = []  # state before each turn, for "say that again"
         self.turn = 0
         self.lock = threading.Lock()
@@ -112,10 +118,38 @@ def draft(scenario: Scenario, assets: dict, preset: str | None, gate1=None) -> d
 app = FastAPI()
 
 
+# per visitor address, per hour: enough for real use, not enough to drain the credits
+LIMITS = {"/api/speak": 300, "/api/image": 20}
+PAID_PER_HOUR = int(os.getenv("STANDIN_HOURLY_LIMIT", "150"))
+recent: dict[tuple[str, str], deque] = defaultdict(deque)
+
+
+def over_limit(request: Request) -> bool:
+    path = request.url.path
+    if request.method != "POST" or not path.startswith("/api/") or path == "/api/start":
+        return False
+    who = request.headers.get("fly-client-ip") or (request.client.host if request.client else "")
+    limit = LIMITS.get(path, PAID_PER_HOUR)
+    hits, now = recent[who, path if path in LIMITS else "llm"], time.time()
+    while hits and now - hits[0] > 3600:
+        hits.popleft()
+    if len(hits) >= limit:
+        return True
+    hits.append(now)
+    return False
+
+
+def visitor(request: Request) -> str:
+    """A random id kept in the visitor's browser, so each person sees only their own worlds and runs."""
+    return request.headers.get("x-visitor", "")[:40]
+
+
 @app.middleware("http")
-async def always_revalidate(request, call_next):
-    """Portraits keep their file names when remade, so the browser must check for a new version."""
+async def guard(request, call_next):
+    if over_limit(request):
+        return JSONResponse({"detail": "Too many requests for now. Please try again in a while."}, status_code=429)
     response = await call_next(request)
+    # Portraits keep their file names when remade, so the browser must check for a new version.
     response.headers["Cache-Control"] = "no-cache"
     return response
 
@@ -144,14 +178,50 @@ class Build:
         self.id = uuid.uuid4().hex[:10]
         self.world = World()
         self.talk: list[tuple[str, str]] = []
+        self.ui = "en"
+        self.owner = ""
         self.background = ""
         self.faces: dict[str, dict] = {}  # name -> expressions drawn so far
         self.drawn: dict[str, str] = {}  # what each image was drawn from, to redraw only on a real change
-        self.version = 0
+        self.prepared: dict[str, Future] = {}  # world as JSON -> its scene, written before the user asks
+
+    def save(self) -> None:
+        (WORLDS / f"{self.id}.json").write_text(json.dumps({
+            "id": self.id, "owner": self.owner, "world": self.world.model_dump(), "talk": self.talk, "background": self.background,
+            "faces": self.faces, "drawn": self.drawn}, ensure_ascii=False))
 
 
 builds: dict[str, Build] = {}
 easel = ThreadPoolExecutor(6)
+
+
+def find_build(bid: str, owner: str) -> Build | None:
+    """Worlds live on disk, so leaving or restarting never loses one. Only their maker can open them."""
+    if bid in builds:
+        return builds[bid] if builds[bid].owner == owner else None
+    path = WORLDS / f"{Path(bid).name}.json"
+    if not bid or not path.exists():
+        return None
+    data = json.loads(path.read_text())
+    if data.get("owner", "") != owner:
+        return None
+    b = Build()
+    b.owner = owner
+    b.id, b.world, b.background, b.faces, b.drawn = (data["id"], World.model_validate(data["world"]), data["background"],
+                                                     data["faces"], data["drawn"])
+    b.talk = [tuple(x) for x in data["talk"]]
+    builds[b.id] = b
+    return b
+
+
+def prepare(b: Build) -> Future:
+    """Write the hidden side as soon as the world can start, so beginning is instant."""
+    key = b.world.model_dump_json()
+    if key not in b.prepared:
+        world = b.world.model_copy(deep=True)
+        b.prepared[key] = easel.submit(lambda: lock(compile_scenario(
+            quick_writer, checker, as_situation(world), ui=b.ui, locked=True, repairs=1, log=lambda _: None)[0], world))
+    return b.prepared[key]
 
 
 def draw_changes(b: Build, reply: BuildReply) -> None:
@@ -166,6 +236,7 @@ def draw_changes(b: Build, reply: BuildReply) -> None:
                                  f"{place} No people, no text, no logos. Natural light, cinematic."), ART / f"{stem}_bg.jpg")
             if b.drawn.get("place") == place:  # a newer description wins
                 b.background = f"/art/{stem}_bg.jpg"
+                b.save()
         easel.submit(paint, w.place)
     for p in w.people:
         key = f"person:{p.name}"
@@ -179,38 +250,71 @@ def draw_changes(b: Build, reply: BuildReply) -> None:
             made = portraits(painter, place, person.gender, person.look, person.role, ART, stem, "/art", set_neutral)
             if current():
                 b.faces[person.name] = made
+                b.save()
         easel.submit(face, p, p.look, w.place)
     for name in set(b.faces) - {p.name for p in w.people}:
         del b.faces[name]
 
 
 def build_state(b: Build) -> dict:
-    return {"id": b.id, "world": b.world.model_dump(), "background": b.background, "faces": b.faces,
-            "drawing": sum(1 for k in b.drawn if k.startswith("person:") and k.split(":", 1)[1] not in b.faces)}
+    return {"id": b.id, "world": b.world.model_dump(), "background": b.background, "faces": b.faces, "talk": b.talk}
 
 
 class BuildReq(BaseModel):
     id: str = ""
     message: str
     ui: str = "en"
+    name: str = ""
 
 
 @app.post("/api/build")
-def build(req: BuildReq):
-    b = builds.get(req.id) or Build()
+def build(req: BuildReq, request: Request):
+    b = find_build(req.id, visitor(request)) or Build()
+    b.owner = visitor(request)
     builds[b.id] = b
-    reply = build_turn(interviewer, b.world, b.talk, req.message.strip(), req.ui)
+    b.ui = req.ui
+    reply = build_turn(interviewer, b.world, b.talk, req.message.strip(), req.ui, req.name)
     reply.world = others(reply.world)
     b.talk += [("User", req.message.strip()), ("You", reply.say)]
     b.world = reply.world
     draw_changes(b, reply)
+    b.save()
+    if b.world.place and b.world.people and b.world.goal:
+        prepare(b)
     print(f"build {b.id}: {len(b.world.people)} people | {spend.summary()}", flush=True)
-    return {**build_state(b), "say": reply.say, "chips": reply.chips, "ready": reply.ready}
+    return {**build_state(b), "say": reply.say, "chips": reply.chips, "ready": reply.ready, "stuck": reply.stuck}
+
+
+@app.get("/api/history")
+def history(request: Request):
+    """This visitor's worlds to pick up again and past rehearsals, newest first."""
+    me, worlds, runs = visitor(request), [], []
+    for path in sorted(WORLDS.glob("*.json"), key=lambda x: x.stat().st_mtime, reverse=True)[:12]:
+        d = json.loads(path.read_text())
+        if d["talk"] and d.get("owner", "") == me:
+            worlds.append({"id": d["id"], "title": d["world"]["title"] or d["talk"][0][1][:40], "when": path.stat().st_mtime})
+    for path in sorted(SAVE.glob("*.json"), key=lambda x: x.stat().st_mtime, reverse=True)[:30]:
+        d = json.loads(path.read_text())
+        if d.get("owner", "") != me:
+            continue
+        crit = d["debrief"]["criteria"]
+        runs.append({"id": path.stem, "title": d["scenario"]["title"], "when": path.stat().st_mtime,
+                     "met": sum(c["met"] for c in crit), "all": len(crit)})
+    return {"worlds": worlds, "runs": runs}
+
+
+@app.get("/api/history/{rid}")
+def past_run(rid: str, request: Request):
+    path = SAVE / f"{Path(rid).name}.json"
+    run = json.loads(path.read_text()) if path.exists() else None
+    if not run or run.get("owner", "") != visitor(request):
+        raise HTTPException(404, "unknown run")
+    return run
 
 
 @app.get("/api/build/{bid}")
-def build_art(bid: str):
-    b = builds.get(bid)
+def build_art(bid: str, request: Request):
+    b = find_build(bid, visitor(request))
     if not b:
         raise HTTPException(404, "unknown build")
     return build_state(b)
@@ -222,15 +326,13 @@ class FinishReq(BaseModel):
 
 
 @app.post("/api/build/finish")
-def build_finish(req: FinishReq):
-    """The world stays as built; only the hidden side (goals, secrets, events) is written now."""
-    b = builds.get(req.id)
-    if not b or not b.world.people:
-        raise HTTPException(400, "add at least one person first")
-    scenario, gate1 = compile_scenario(writer, checker, as_situation(b.world), ui=req.ui, locked=True)
-    scenario = lock(scenario, b.world)
-    assets = {"background": b.background, "portraits": b.faces}
-    return draft(scenario, assets, None, gate1)
+def build_finish(req: FinishReq, request: Request):
+    """Usually already written by `prepare`; expressions keep arriving while the scene runs."""
+    b = find_build(req.id, visitor(request))
+    if not b:
+        raise HTTPException(404, "unknown build")
+    b.ui = req.ui
+    return draft(prepare(b).result(), {"background": b.background, "portraits": b.faces}, None)
 
 
 @app.get("/api/preset/{pid}")
@@ -275,7 +377,7 @@ class StartReq(BaseModel):
 
 
 @app.post("/api/start")
-def start(req: StartReq):
+def start(req: StartReq, request: Request):
     try:
         scenario = Scenario.model_validate(req.scenario)
     except ValueError as e:
@@ -283,7 +385,8 @@ def start(req: StartReq):
     problems = [p for p in structural_problems(scenario) if "secret" not in p]  # the user may spoil their own scene
     if problems:
         raise HTTPException(400, "; ".join(problems))
-    s = Session(scenario, req.preset, req.reveal, req.ui)
+    s = Session(scenario, req.preset, req.reveal, req.ui, visitor(request))
+    s.assets = req.assets
     sessions[s.id] = s
     print(f"start {s.id}: {scenario.title} (reveal={req.reveal}) | {spend.summary()}", flush=True)
     return {"id": s.id, "scenario": public_scenario(scenario), "assets": req.assets,
@@ -408,11 +511,11 @@ def end(req: EndReq):
         }
     slug = re.sub(r"\W+", "_", sc.scenario.title)[:40]
     (SAVE / f"{s.id}_{slug}.json").write_text(json.dumps(
-        {**result, "scenario": sc.scenario.model_dump(), "spend": spend.summary(), "latency": spend.latency()},
+        {**result, "owner": s.owner, "scenario": sc.scenario.model_dump(), "assets": s.assets, "spend": spend.summary(), "latency": spend.latency()},
         indent=2, ensure_ascii=False))
     print(f"end {s.id} | {spend.summary()}", flush=True)
     return result
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=int(os.getenv("PORT", "8010")), log_level="warning")
+    uvicorn.run(app, host=os.getenv("HOST", "127.0.0.1"), port=int(os.getenv("PORT", "8010")), log_level="warning")
