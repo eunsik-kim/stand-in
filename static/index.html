@@ -493,8 +493,8 @@ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices;
 
 // conversation speed: how fast they speak and how soon a pause counts as finished
 const SPEEDS = [1, 1.25, 1.5];
-let SPEED = 1;
-try{ SPEED = +localStorage.getItem("standin-speed") || 1; }catch(e){}
+let SPEED = 1.5;
+try{ SPEED = +localStorage.getItem("standin-speed") || 1.5; }catch(e){}
 function speedLabel(){ $("speedBtn").textContent = `${SPEED}x`; }
 function browserVoice(text, who){
   const lang = LANG[S.scenario.language] || S.scenario.language;

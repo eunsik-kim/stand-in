@@ -522,7 +522,7 @@ def autopilot(req: AutoReq):
     s = sessions.get(req.id)
     if not s:
         raise HTTPException(404, "unknown session")
-    persona = f"Speak the way this person would, thoughtfully and naturally, working toward what they want: {s.scene.scenario.user_goal}"
+    persona = f"Speak casually, in very short lines of a few words, the way this person really would, working toward: {s.scene.scenario.user_goal}"
     return {"say": simulated_user(actor, persona)(s.scene, s.turn + 1).strip()}
 
 
@@ -540,8 +540,9 @@ def replies(req: AutoReq):
     got = actor.ask(
         Replies, "You suggest what a person could say next in a live conversation. Reply with a single JSON object.",
         f"Setting: {sc.setting}\nThe person: {sc.user_role}\nWhat they want: {sc.user_goal}\n\nTranscript:\n{s.scene.public()}\n\n"
-        f"Write 3 different things they could say next, in language '{sc.language}', in the first person, one breath each. {SPOKEN} "
-        "Put the one you recommend first. Make them really different in approach: direct, warm or curious, holding back. "
+        f"Write 3 different things they could say next, in language '{sc.language}', in the first person. {SPOKEN} "
+        "Keep each one really light and short, what someone actually blurts out: 2 to 8 words, like 'Wait, seriously?' or '아니 그건 좀...' or '왜요?'. "
+        "Put the one you recommend first. Make them really different: push back, ask something, or dodge. "
         "No quotation marks. Do not repeat anything already said.\n"
         'Return {"replies": ["...", "...", "..."]}',
     )
