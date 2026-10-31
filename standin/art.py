@@ -50,7 +50,9 @@ def portrait_prompt(setting: str, gender: str, appearance: str, role: str) -> st
 def scene_prompt(place: str, people: list) -> str:
     who = "; ".join(f"{p.name}: {'man' if p.gender == 'm' else 'woman' if p.gender == 'f' else 'person'}, {p.role}, {p.look}" for p in people)
     return (
-        "Candid unretouched photograph taken from the viewer's own eyes, as if the viewer is right there in the conversation, "
+        f"Candid unretouched first-person photograph: we ARE the viewer, looking through our own eyes at the {len(people)} "
+        f"{'person' if len(people) == 1 else 'people'} in front of us. The viewer is never visible: no second person beside them, no over-the-shoulder, "
+        f"no selfie, exactly {len(people)} {'person' if len(people) == 1 else 'people'} in the frame and nobody else. "
         f"across a small table at a normal conversation distance of about two meters. The place: {place} In the place, naturally part of it, "
         f"sharing its exact light and shadows, placed from left to right in this exact order: {who}. They face the viewer directly and look at them, seen from the waist up, close enough to talk to, "
         "not far across the room, with clear space above the head. Each head is about one fifth of the image height, and the place "

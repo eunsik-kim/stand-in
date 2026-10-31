@@ -20,7 +20,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 from .compiler import facts
 from .llm import LLM, _extract_json
-from .spec import Character, Expression, Mood, Scenario
+from .spec import Character, Event, Expression, Mood, Scenario
 
 
 class MoodDelta(BaseModel):
