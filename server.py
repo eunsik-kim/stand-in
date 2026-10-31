@@ -28,7 +28,7 @@ from standin.builder import Person, World, as_situation, build_turn, lock, other
 from standin.coach import coach_turn
 from standin.compiler import compile_scenario, structural_problems
 from standin.debrief import debrief
-from standin.engine import Line, Scene, open_scene, stream_step
+from standin.engine import Line, Scene, open_scene, simulated_user, stream_step
 from standin.llm import LLM, Spend
 from standin.signals import Signals, describe
 from standin.spec import Scenario
@@ -501,6 +501,20 @@ def speak(req: SpeakReq):
     if not voice.available():
         raise HTTPException(503, "no speech key")  # the page falls back to the browser voice
     return Response(voice.synthesize(req.text.strip(), voice.voice_for(scenario, c), spend, TTS), media_type="audio/mpeg")
+
+
+class AutoReq(BaseModel):
+    id: str
+
+
+@app.post("/api/auto")
+def autopilot(req: AutoReq):
+    """Autopilot: a stand-in speaks for the user until they take over."""
+    s = sessions.get(req.id)
+    if not s:
+        raise HTTPException(404, "unknown session")
+    persona = f"Speak the way this person would, thoughtfully and naturally, working toward what they want: {s.scene.scenario.user_goal}"
+    return {"say": simulated_user(actor, persona)(s.scene, s.turn + 1).strip()}
 
 
 class EndReq(BaseModel):
