@@ -29,11 +29,12 @@
         "mood": {
           "trust": 40,
           "patience": 60
-        }
+        },
+        "history": "Dave Rinaldi has been your landlord for the two years you rented this Chicago apartment, handling rent and repairs. Your last exchange was arranging this final walkthrough with the boxes packed to go over his checkout form and the deposit."
       }
     ],
     "opening_speaker": "Dave Rinaldi",
-    "opening_line": "Okay, I did the walkthrough — I'm taking $900 out of the deposit for the wall stains and the mold in the bathroom. That's what I need to get it fixed for the next guy.",
+    "opening_line": "Okay, like we set up, I did the final walkthrough after your two years here — I'm taking $900 out of the deposit for the wall stains and the mold in the bathroom. That's what I need to get it fixed for the next guy.",
     "phases": [
       "Review of the claimed stains and mold",
       "Dispute over normal wear versus damage",

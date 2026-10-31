@@ -21,7 +21,7 @@ WRITER_SYSTEM = (
 
 SHAPE = (
     '{"title": "...", "language": "ko|en|ja|...", "setting": "...", "user_role": "...", "user_goal": "...", "user_knows": ["..."], '
-    '"cast": [{"name": "...", "role": "...", "appearance": "...", "voice": "...", "gender": "m|f", "goal": "...", '
+    '"cast": [{"name": "...", "role": "...", "appearance": "...", "voice": "...", "gender": "m|f", "history": "...", "goal": "...", '
     '"secret": "...", "reveal_when": "...", "red_lines": ["..."], "mood": {"trust": 0-100, "patience": 0-100}}], '
     '"opening_speaker": "<cast name>", "opening_line": "...", "phases": ["..."], '
     '"events": [{"at_turn": 3, "description": "..."}], "success_criteria": ["..."], "max_turns": 12}'
@@ -125,7 +125,9 @@ def compile_scenario(writer: LLM, checker: LLM, situation: str, material: str = 
         "- 1-3 events that add pressure (interruption, time, new public information).\n"
         "- success_criteria: 2-4 outcomes judgeable from the transcript, tied to what the user said they want. "
         "Each is one clear thing a well-prepared person can really achieve within this conversation, mostly about what the user does.\n"
-        "- opening_line: the first thing said, in character, setting the tone.\n"
+        "- history: for each person, 1-2 concrete sentences on what has already happened between them and the user: how they know each other, "
+        "and their last exchange. Nobody is a stranger unless the situation says so. No secrets here; the user knows all of it.\n"
+        "- opening_line: the first thing said, in character. They remember the history, so it sounds like a continuing relationship, not a cold start.\n"
         f"Return:\n{SHAPE}"
     )
     history = []

@@ -30,7 +30,8 @@
         "mood": {
           "trust": 35,
           "patience": 60
-        }
+        },
+        "history": "She first met the founder six weeks ago after his 5-minute pitch at the SaaS Seed Showcase, where she pressed him on cafe TAM. Her last exchange was an email inviting him to this partner meeting and telling him to bring market math that proves venture scale."
       },
       {
         "name": "Marcus Webb",
@@ -48,7 +49,8 @@
         "mood": {
           "trust": 45,
           "patience": 70
-        }
+        },
+        "history": "He joined a 30-minute follow-up Zoom last week where the founder walked him through early retention cohorts and CAC. His last exchange was asking the founder to bring a churn breakdown by cafe size and acquisition cost to today's meeting."
       },
       {
         "name": "David Park",
@@ -66,11 +68,12 @@
         "mood": {
           "trust": 50,
           "patience": 65
-        }
+        },
+        "history": "He was introduced by the founder's accelerator mentor and grabbed coffee with him in SoMa two weeks ago to talk distribution through suppliers. His last exchange was advising him to focus today's pitch on the go-to-market wedge beyond independent cafes."
       }
     ],
     "opening_speaker": "Sarah Klein",
-    "opening_line": "Alright, you've got us for twenty minutes. $35k MRR from cafes — walk us through why this is a Series A company and not just a nice small business tool?",
+    "opening_line": "Alright, welcome back — you were at $22k at the Showcase and I told you to bring real market math. You've got twenty minutes, you're at $35k MRR from cafes — so prove why this is a Series A company and not just a nice small business tool?",
     "phases": [
       "Quick pitch and hook",
       "Traction and unit economics grilling",

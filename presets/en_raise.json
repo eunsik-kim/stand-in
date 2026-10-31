@@ -29,11 +29,12 @@
         "mood": {
           "trust": 65,
           "patience": 65
-        }
+        },
+        "history": "Ryan has been your direct manager for the last two years on the backend payments team. In your last 1:1 you wrapped up sprint progress and he gave you a heads-up that performance review season was coming with tight budgets."
       }
     ],
     "opening_speaker": "Ryan Parker",
-    "opening_line": "Hey, thanks for grabbing time — I know we have our 1:1 next week too, so what's top of mind for today?",
+    "opening_line": "Hey, thanks for grabbing time — I know we just synced on sprint stuff last week and we've still got our regular 1:1 next week, so what's top of mind for today? I've got about 30 minutes.",
     "phases": [
       "Opening and context setting",
       "Making the raise request",

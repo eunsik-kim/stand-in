@@ -29,7 +29,8 @@
         "mood": {
           "trust": 25,
           "patience": 50
-        }
+        },
+        "history": "You've been her technical contact through monthly ops check-ins since they became your largest account. Your last exchange was your brief incident alert late last night promising a full explanation on this call."
       },
       {
         "name": "Marcus Webb",
@@ -47,11 +48,12 @@
         "mood": {
           "trust": 30,
           "patience": 60
-        }
+        },
+        "history": "You met him once during last quarter's contract expansion when he pressed you on SLA penalties. Your last exchange was his short email this morning forwarding the uptime terms before this meeting."
       }
     ],
     "opening_speaker": "Diane Mercer",
-    "opening_line": "Thanks for getting on this. We were down for six hours yesterday and my team felt every minute of it, so walk us through what happened and why we should stay with you.",
+    "opening_line": "Thanks for getting on this. You promised us answers last night, so walk us through those six hours yesterday — my team felt every minute of it — and why we should stay with you.",
     "phases": [
       "Opening and accountability",
       "Technical explanation and business impact",

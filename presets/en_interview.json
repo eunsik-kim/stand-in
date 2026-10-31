@@ -29,7 +29,8 @@
         "mood": {
           "trust": 50,
           "patience": 65
-        }
+        },
+        "history": "She ran your first-round screening last week where you discussed your background and interest in the Payments Platform role. She closed by inviting you to this second-round deep-dive on your payments project."
       },
       {
         "name": "David Kim",
@@ -47,11 +48,12 @@
         "mood": {
           "trust": 45,
           "patience": 60
-        }
+        },
+        "history": "He hasn't met you live yet but reviewed your resume and payments project summary ahead of this panel. His last touchpoint was receiving the architecture notes you sent over yesterday for today's discussion."
       }
     ],
     "opening_speaker": "Maya Thompson",
-    "opening_line": "Hi, thanks for joining us today — I'm Maya, hiring manager for Payments Platform, and this is David, staff engineer on the team. For this second round we want to go deep on the payments project from your resume. Can you start with a quick overview of what you built and what your specific role was?",
+    "opening_line": "Hi, welcome back — great to pick up from our chat last week! As promised I've got David, our staff engineer, here with me to go deep on your payments project today, so to keep us on time, can you start with a quick overview of what you built and what your specific role was?",
     "phases": [
       "Project overview and your role",
       "Architecture deep dive on data flow, consistency, and failure handling",

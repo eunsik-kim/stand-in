@@ -23,6 +23,7 @@ class Character(BaseModel):
     appearance: str = Field(description="for the portrait: age range, look, clothing")
     voice: str = Field(description="how they sound and talk: pace, register, verbal habits")
     gender: str = Field(default="", description="'m' or 'f', picks their speaking voice")
+    history: str = Field(default="", description="what has already happened between them and the user; both remember it")
     goal: str = Field(description="PRIVATE: what they want out of this conversation")
     secret: str = Field(description="PRIVATE: a concrete fact the user does not know that would change the user's strategy")
     reveal_when: str = Field(description="PRIVATE: what the user must do/say before they let the secret slip")

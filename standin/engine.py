@@ -90,7 +90,7 @@ class Scene:
 def _bible(s: Scenario) -> str:
     """The part of the prompt that never changes during a scene, kept first so it can be cached."""
     people = "\n".join(
-        f"{c.name} ({c.role}). Talks: {c.voice}\n  goal: {c.goal}\n  secret: {c.secret}\n"
+        f"{c.name} ({c.role}). Talks: {c.voice}\n  already happened with the user: {c.history}\n  goal: {c.goal}\n  secret: {c.secret}\n"
         f"  reveals the secret only if the user: {c.reveal_when}\n  will not: {'; '.join(c.red_lines)}"
         for c in s.cast)
     return (

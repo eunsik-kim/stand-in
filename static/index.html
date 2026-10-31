@@ -834,6 +834,7 @@ function renderWorld(){
   const summary = (w.title ? `<b>${esc(w.title)}</b>` : "")
     + (w.goal ? `<div><small>${t("bGoal")}</small> ${esc(w.goal)}</div>` : "");
   if(summary !== shown.summary){ shown.summary = summary; $("bsummary").innerHTML = summary; }
+  $("benter").classList.toggle("hidden", !B.ready);
   if($("bstate").textContent === "") $("benter").disabled = false;
 }
 async function buildSay(text){
@@ -938,7 +939,15 @@ async function useTemplate(id){
   // say what this is before anything else: where we are, who you are here
   bubble("them", B.world.place);
   bubble("them", t("bYouAre") + B.world.me);
-  bubble("them", t("bTemplateReady")); go(`#/world/${B.id}`);
+  go(`#/world/${B.id}`);
+  renderWorld(); loadRecent();
+  bpoll ??= setInterval(refreshWorld, 1500);
+  const wait = bubble("them typing", "···");  // the director opens the conversation
+  try{
+    const r = await post("/api/build", {id:B.id, message:"", ui:UI, name:store.get("standin-name"), kickoff:true});
+    B = r; wait.remove(); bubble("them", r.say); bchips(r.chips); renderWorld();
+  }catch(e){ wait.textContent = t("failed") + e; }
+  return;
   renderWorld(); loadRecent();
   bpoll ??= setInterval(refreshWorld, 1500);
 }

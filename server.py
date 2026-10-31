@@ -180,6 +180,7 @@ class Build:
         self.talk: list[tuple[str, str]] = []
         self.ui = "en"
         self.owner = ""
+        self.ready = False
         self.background = ""
         self.faces: dict[str, dict] = {}  # name -> that person's reactions in the same photograph
         self.drawn: dict[str, str] = {}  # what each image was drawn from, to redraw only on a real change
@@ -187,7 +188,7 @@ class Build:
 
     def save(self) -> None:
         (WORLDS / f"{self.id}.json").write_text(json.dumps({
-            "id": self.id, "owner": self.owner, "world": self.world.model_dump(), "talk": self.talk, "background": self.background,
+            "id": self.id, "owner": self.owner, "ready": self.ready, "world": self.world.model_dump(), "talk": self.talk, "background": self.background,
             "faces": self.faces, "drawn": self.drawn}, ensure_ascii=False))
 
 
@@ -210,6 +211,7 @@ def find_build(bid: str, owner: str) -> Build | None:
     b.id, b.world, b.background, b.faces, b.drawn = (data["id"], World.model_validate(data["world"]), data["background"],
                                                      data["faces"], data["drawn"])
     b.talk = [tuple(x) for x in data["talk"]]
+    b.ready = data.get("ready", False)
     builds[b.id] = b
     draw_changes(b, b.world)  # worlds saved before they had a photograph get one now
     return b
@@ -263,7 +265,7 @@ def draw_changes(b: Build, w: World, redraw: bool = False) -> None:
 
 
 def build_state(b: Build) -> dict:
-    return {"id": b.id, "world": b.world.model_dump(), "background": b.background, "faces": b.faces, "talk": b.talk}
+    return {"id": b.id, "world": b.world.model_dump(), "background": b.background, "faces": b.faces, "talk": b.talk, "ready": b.ready}
 
 
 START_OVER = re.compile(r"^\s*(다시 만들|처음부터|새로 만들|다시 할래|다시 시작|start over|restart|やり直)", re.I)
@@ -274,6 +276,7 @@ class BuildReq(BaseModel):
     message: str
     ui: str = "en"
     name: str = ""
+    kickoff: bool = False
 
 
 @app.post("/api/build")
@@ -282,20 +285,26 @@ def build(req: BuildReq, request: Request):
     b.owner = visitor(request)
     builds[b.id] = b
     b.ui = req.ui
-    reply = build_turn(interviewer, b.world, b.talk, req.message.strip(), req.ui, req.name)
-    if reply.reset or START_OVER.search(req.message):  # they said to start over, so this world is gone
+    message = req.message.strip()
+    if req.kickoff:  # the user chose a template: the director speaks first
+        message = ("(The user just picked this scene. Do not repeat the setting. In one warm line, ask the first thing that makes it "
+                   "theirs: what is between them and the main person, or how they feel walking in.)")
+    reply = build_turn(interviewer, b.world, b.talk, message, req.ui, req.name)
+    if not req.kickoff and (reply.reset or START_OVER.search(message)):  # they said to start over, so this world is gone
         builds.pop(b.id, None)
         (WORLDS / f"{b.id}.json").unlink(missing_ok=True)
         return {"reset": True, "say": reply.say}
     reply.world = others(reply.world)
-    b.talk += [("User", req.message.strip()), ("You", reply.say)]
+    b.talk += ([] if req.kickoff else [("User", message)]) + [("You", reply.say)]
+    spoken = sum(who == "User" for who, _ in b.talk)
+    b.ready = b.ready or (reply.ready and spoken >= 3)  # a few real exchanges before anyone walks in
     b.world = reply.world
     draw_changes(b, b.world, reply.redraw)
     b.save()
     if b.world.place and b.world.people:
         prepare(b)
     print(f"build {b.id}: {len(b.world.people)} people | {spend.summary()}", flush=True)
-    return {**build_state(b), "say": reply.say, "chips": reply.chips, "ready": reply.ready, "stuck": reply.stuck, "begin": reply.begin}
+    return {**build_state(b), "say": reply.say, "chips": reply.chips, "ready": b.ready, "stuck": reply.stuck, "begin": reply.begin}
 
 
 @app.get("/api/history")
@@ -363,7 +372,7 @@ def template(req: TemplateReq, request: Request):
     b = Build()
     b.owner, b.ui = visitor(request), req.ui
     b.world = World(title=s.title, place=s.setting, language=s.language, me=s.user_role, goal=s.user_goal,
-                    people=[Person(name=c.name, role=c.role, gender=c.gender, look=c.appearance, manner=c.voice) for c in s.cast])
+                    people=[Person(name=c.name, role=c.role, gender=c.gender, look=c.appearance, manner=c.voice, history=c.history) for c in s.cast])
     done: Future = Future()
     done.set_result(s)
     b.prepared[b.world.model_dump_json()] = done

@@ -58,7 +58,9 @@ GUIDE = (
     "to think it through together. A world made for fun can simply be enjoyed. For a negotiation, ask what each side wants and the terms.\n"
     "- say: two sentences at most. chips: up to 3 tappable answers in the user's own voice, specific to this world.\n"
     "- Near the end, ask what they want from this moment, in their own words. It can be small: just catch up, say sorry, make them laugh. That is their goal.\n"
-    "- ready: true once there is a place, a person you know well, and a goal. Then tell them you can feel the scene and they can begin.\n"
+    "- Never rush into the scene, even from a template. Talk with them first: what brings them here, what is between them and each person "
+    "(or that they have never met, which is fine), how they feel walking in, what they hope happens. Their answers go into history, manner and goal.\n"
+    "- ready: true only after that conversation, once there is a place, a person you know well and a goal. Then tell them you can feel the scene and they can begin.\n"
     "- stuck: true when they say they don't know or seem lost. Reassure them in one line.\n"
     "- reset: true when they want to start over, make it again or try something else entirely.\n"
     "- If a message makes no sense, like a misheard fragment, do not build on it: ask what they meant.\n"
@@ -129,7 +131,8 @@ def lock(s: Scenario, w: World) -> Scenario:
             name=p.name, role=p.role, appearance=p.look, voice=p.manner, goal="", secret="", reveal_when="",
             red_lines=[], mood=Mood(trust=50, patience=60)))
         cast.append(c.model_copy(update={"name": p.name, "role": p.role, "appearance": p.look or c.appearance,
-                                         "voice": p.manner or c.voice, "gender": p.gender or c.gender}))
+                                         "voice": p.manner or c.voice, "gender": p.gender or c.gender,
+                                         "history": p.history or c.history}))
     names = [c.name for c in cast]
     speaker = s.opening_speaker if s.opening_speaker in names else names[0]
     return s.model_copy(update={"cast": cast, "opening_speaker": speaker, "setting": w.place or s.setting,
