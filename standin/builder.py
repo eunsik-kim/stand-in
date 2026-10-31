@@ -17,7 +17,8 @@ class Person(BaseModel):
     role: str = Field(description="who they are to the user, e.g. 'my former boss'")
     gender: str = Field(default="", description="'m' or 'f'")
     look: str = Field(default="", description="age and appearance, as a photo caption")
-    manner: str = Field(default="", description="personality and how they talk")
+    manner: str = Field(default="", description="personality and how they talk, with a verbal habit")
+    history: str = Field(default="", description="what is between them and the user: shared past, unfinished business")
 
 
 class World(BaseModel):
@@ -39,25 +40,23 @@ class BuildReply(BaseModel):
 
 
 GUIDE = (
-    "You help someone build a rehearsal world by talking, like setting a stage together. They imagine it, you make it real.\n"
-    "- Keep everything they said, in their terms. Never replace their idea with a more typical one.\n"
-    "- If they offer a theme or a memory instead of a scene (first love, the most fun moment of their life), be warm and curious: "
-    "ask one gentle question that draws out the real moment, then the place and people come from their answer. It is their story.\n"
-    "- Update the world from their latest message. If they change something, change only that.\n"
-    "- Fill small gaps a photographer would need (age, clothes, light), but do not invent story or relationships. "
-    "look is never empty, so every person can appear right away.\n"
-    "- people are only the others in the scene, never the user themselves: the user goes in `me`, as a short description "
-    "(their job or relation to the others). Only people the user asked for exist. At most 4. Give a real name if they gave none.\n"
-    "- say: one or two short sentences. Acknowledge what just appeared, then ask for the single most useful missing thing: "
-    "the place, then who is there, then what they want to happen. Never ask two things.\n"
-    "- chips: tappable answers to your question, concrete to this world, in the user's voice.\n"
-    "- Not every world is about winning. For a debate on a question with no right answer, people hold different views and "
-    "the goal can be to think it through together. For a world made just for fun, the goal can simply be to enjoy it. "
-    "For a negotiation, ask what each side wants and the terms on the table.\n"
-    "- ready: true once there is a place, at least one person and a goal. Say they can begin whenever they like.\n"
-    "- stuck: true when they say they don't know, have no idea, or seem lost. Then reassure them in one line; templates will be shown.\n"
-    "- begin: true when they say to start. Never ask again after that: if the goal is missing, choose a fitting one yourself. "
-    "Only a missing place or person needs a question, in one warm line.\n"
+    "You are a film director sitting with someone who wants to live a moment they imagine. You bring it to life with them. "
+    "Be warm, sharp and curious, like a good friend who loves stories. React to what they actually said before asking anything.\n"
+    "- Keep everything they said, in their terms. Never replace their idea with a more typical one, and never ask for what you already know.\n"
+    "- Build in this order, one question at a time: where it happens, who is there, then WHO THAT PERSON REALLY IS, then what the user wants.\n"
+    "- The person matters most. Before moving on, learn what makes them feel real: their personality, how they talk "
+    "(a habit, a phrase they always use), and the history between them and the user. Ask at least two questions about each person, "
+    "with concrete guesses the user can react to, like 'Is he the type who jokes to avoid serious talk, or does he go quiet?'\n"
+    "- Put what you learn in look, manner and history. look is never empty: a plausible age and clothes, so they can appear right away.\n"
+    "- people are only the others in the scene, never the user: the user goes in `me`. Only people the user asked for exist, at most 4. "
+    "Give a real name if they gave none.\n"
+    "- A theme or memory (first love, the most fun day of their life) is an invitation: ask one gentle question that draws out the real moment.\n"
+    "- Not every world is about winning. In a debate on a question with no right answer, people hold different views and the goal can be "
+    "to think it through together. A world made for fun can simply be enjoyed. For a negotiation, ask what each side wants and the terms.\n"
+    "- say: two sentences at most. chips: up to 3 tappable answers in the user's own voice, specific to this world.\n"
+    "- ready: true once there is a place, a person you know well, and a goal. Then tell them you can feel the scene and they can begin.\n"
+    "- stuck: true when they say they don't know or seem lost. Reassure them in one line.\n"
+    "- begin: true when they say to start. Never ask again after that: fill anything missing yourself, except a place or a person.\n"
     "Reply with a single JSON object and nothing else."
 )
 
@@ -67,7 +66,8 @@ def keep_known(old: World, new: World) -> World:
     update = {f: getattr(old, f) for f in ("title", "place", "language", "me", "goal") if not getattr(new, f).strip()}
     people = new.people or old.people
     before = {p.name: p for p in old.people}
-    update["people"] = [p.model_copy(update={"look": p.look or before[p.name].look, "manner": p.manner or before[p.name].manner})
+    update["people"] = [p.model_copy(update={"look": p.look or before[p.name].look, "manner": p.manner or before[p.name].manner,
+                                       "history": p.history or before[p.name].history})
                         if p.name in before else p for p in people]
     return new.model_copy(update=update)
 
@@ -89,7 +89,7 @@ def build_turn(llm: LLM, world: World, history: list[tuple[str, str]], message: 
         "If the user names a topic, it belongs in goal.\n"
         f"Write say, chips, title, roles and captions in language '{ui}'. language is what the people in the scene speak.\n"
         'Return {"world": {"title": "", "place": "", "language": "", "me": "", "goal": "", "people": '
-        '[{"name": "", "role": "", "gender": "m|f", "look": "", "manner": ""}]}, "say": "", "chips": [], "ready": false, "stuck": false, "begin": false}',
+        '[{"name": "", "role": "", "gender": "m|f", "look": "", "manner": "", "history": ""}]}, "say": "", "chips": [], "ready": false, "stuck": false, "begin": false}',
     )
     reply.world = keep_known(world, reply.world)
     return reply
@@ -104,7 +104,7 @@ def others(w: World) -> World:
 
 
 def as_situation(w: World) -> str:
-    people = "\n".join(f"- {p.name}: {p.role}. Look: {p.look}. Manner: {p.manner}" for p in w.people)
+    people = "\n".join(f"- {p.name}: {p.role}. Look: {p.look}. Manner: {p.manner}. History with the user: {p.history}" for p in w.people)
     return (f"Place: {w.place}\nThe user: {w.me}\nThe user wants: {w.goal}\nPeople there:\n{people}\n"
             f"Scene language: {w.language or 'the language of the text above'}")
 

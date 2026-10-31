@@ -99,6 +99,12 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 @keyframes toast{10%,75%{opacity:1;transform:translate(-50%,6px)}100%{opacity:0}}
 .score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}.score b{font-size:40px;color:var(--acc)}
 .score .up{color:var(--good);font-weight:700}.tries{color:var(--mute);width:100%}
+.shot{position:absolute;inset:0;background:#08090c center/cover;display:none}
+.shot.next{opacity:0;transition:opacity .28s ease}
+.pov .shot{display:block}.pov .room{display:none}
+.pov .caption{background:#000000a6;bottom:104px}
+.pov .dock{background:#14161cc2}
+.pov .top{background:linear-gradient(#000000a0,transparent)}
 .logopen .room{padding-right:386px}
 .logopen .caption,.logopen .dock{left:calc(50% - 187px);width:min(680px,calc(100% - 412px))}
 .coached.logopen .caption,.coached.logopen .dock{left:calc(50% - 38px);width:calc(100% - 724px)}
@@ -114,8 +120,9 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .olangs{display:grid;gap:8px}.olangs button{padding:14px 18px;text-align:left;font-size:17px}
 .olangs button:hover,.olangs button.on{background:var(--acc);color:#111}
 /* build */
-#build{position:fixed;inset:0;display:grid;grid-template-columns:232px minmax(320px,400px) 1fr;background:#08090c}
-.bside{display:grid;grid-template-rows:auto auto auto 1fr auto;gap:6px;padding:14px 10px;min-height:0;background:#0d0f13;box-shadow:1px 0 0 #ffffff14}
+#build{position:fixed;inset:0;background:#08090c}
+.bside{position:absolute;z-index:6;inset:0 auto 0 0;width:250px;display:grid;grid-template-rows:auto auto auto 1fr auto;gap:6px;padding:14px 10px;min-height:0;background:#0d0f13;box-shadow:1px 0 0 #ffffff14,12px 0 32px #0008;transform:translateX(-105%);transition:transform .18s ease}
+.bside.open{transform:none}
 .bside .logo{padding:4px 10px 10px}.bside nav{display:grid;gap:2px}
 .nav{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:9px;background:transparent;color:#c9cdd6;font-size:14px;text-align:left}
 .nav:hover,.nav.on{background:#ffffff12;color:var(--fg)}
@@ -123,7 +130,7 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .nav [data-ic]{display:grid;place-items:center;flex:none;overflow:visible}
 .navh{padding:14px 10px 4px;color:var(--mute);font-size:12px}
 #recent{overflow:auto;min-height:0;display:grid;gap:2px;align-content:start;scrollbar-width:thin;scrollbar-color:#ffffff24 transparent}
-.bchat{display:grid;grid-template-rows:1fr auto auto;gap:10px;padding:14px;min-height:0;background:var(--panel);box-shadow:1px 0 0 #ffffff14}
+.bchat{position:absolute;z-index:4;left:14px;top:14px;bottom:14px;width:min(384px,calc(100% - 28px));display:grid;grid-template-rows:auto 1fr auto auto;gap:10px;padding:10px 12px 12px;min-height:0;border-radius:18px;background:#14161ce6;backdrop-filter:blur(14px);box-shadow:0 0 0 1px #ffffff14}
 #bmsgs{overflow:auto;display:flex;flex-direction:column;gap:8px;min-height:0;padding-right:6px;scrollbar-width:thin;scrollbar-color:#ffffff24 transparent}
 .msg{max-width:88%;padding:9px 13px;border-radius:14px;line-height:1.45}
 .msg.them{align-self:flex-start;background:#ffffff12}
@@ -145,9 +152,9 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .thumb{display:block;aspect-ratio:16/8;background:#ffffff0d center/cover}
 .cbody{display:grid;gap:6px;padding:12px 14px}.cbody b{font-size:15px;line-height:1.35}
 .cbody small{display:flex;gap:6px;align-items:flex-start;line-height:1.4}.cbody .ic{width:14px;height:14px;margin-top:2px}
-.bworld{position:relative;display:grid;grid-template-rows:1fr auto;gap:16px;padding:20px;min-height:0;overflow:hidden;background:#0d0f13 center/cover}
-#bempty{position:absolute;inset:0;display:grid;place-items:center;color:var(--mute);font-size:18px;padding:24px;text-align:center;pointer-events:none}
-.bpanel{position:absolute;z-index:3;inset:0;overflow:auto;padding:32px clamp(20px,4vw,56px);display:grid;gap:16px;align-content:start;background:#0d0f13f5}
+.bworld{position:absolute;inset:0;display:grid;grid-template-rows:1fr auto;gap:16px;padding:20px 20px 20px 416px;min-height:0;overflow:hidden;background:#0d0f13 center/cover}
+#bempty{position:absolute;inset:0 0 0 398px;display:grid;place-items:center;color:var(--mute);font-size:18px;padding:24px;text-align:center;pointer-events:none}
+.bpanel{position:absolute;z-index:3;inset:0 0 0 398px;overflow:auto;padding:32px clamp(20px,4vw,56px);display:grid;gap:16px;align-content:start;background:#0d0f13f5}
 .bpanel h2{font-size:24px}.bpanel h3{margin:14px 0 0;font-size:13px;color:var(--mute);font-weight:600}
 .hbtns{display:flex;gap:2px}
 .hrow{display:flex;justify-content:space-between;gap:12px;width:100%;text-align:left;padding:12px 14px;background:var(--panel);box-shadow:inset 0 0 0 1px var(--line);margin-top:6px}
@@ -159,14 +166,15 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .sgroup button:hover{background:#ffffff14;box-shadow:inset 0 0 0 1px #ffffff40}
 .bfrow{display:flex;gap:16px;align-items:center;justify-content:space-between}
 #benter{flex:none;padding:13px 28px;font-size:17px}
-#bpeople{align-self:end;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;min-height:0}
+#bpeople{align-self:end;display:flex;gap:10px;flex-wrap:wrap;min-height:0}
+.pc{width:min(300px,100%);padding:10px 12px;border-radius:12px;background:#000000b3;backdrop-filter:blur(8px);display:grid;gap:3px;font-size:13px;line-height:1.4}
+.pc b{font-size:15px}.pc small{color:var(--acc)}.pc p{margin:0;color:#dfe2e8}.pc .h{color:#a9afbb}
 .bp{width:clamp(130px,17vw,220px);display:grid;gap:2px;text-align:center}
 .bp small{color:#c9cdd6;font-size:12px}
 .bf{aspect-ratio:1;border-radius:16px;background:#ffffff14 center/cover;box-shadow:0 0 0 1px #ffffff24,0 10px 26px #0008;display:grid;place-items:center;margin-bottom:6px}
 .bfoot{display:grid;gap:8px;padding:12px 14px;border-radius:14px;background:#000000a6;backdrop-filter:blur(8px);font-size:14px}
 #bsummary{display:grid;gap:2px}#bsummary small{color:var(--acc);margin-right:6px}
-@media(max-width:1100px){#build{grid-template-columns:minmax(300px,380px) 1fr}.bside{display:none}}
-@media(max-width:800px){#build{grid-template-columns:1fr;grid-template-rows:1fr 46%}.bworld{order:-1}}
+@media(max-width:800px){.bchat{top:44%}.bworld{padding:12px 12px 58%}.bpanel,#bempty{left:0}}
 
 /* briefing */
 .q{display:grid;gap:6px;padding:14px 0;border-bottom:1px solid var(--line)}
@@ -248,7 +256,7 @@ h2{margin:0;font-size:22px}
 
 <!-- BUILD: talk on the left, the world appears on the right -->
 <div id="build" class="hidden">
-  <aside class="bside">
+  <aside class="bside" id="bside">
     <b class="logo">Stand-In</b>
     <nav>
       <button class="nav" id="bnew"><span data-ic="plus"></span><span data-t="bNew"></span></button>
@@ -260,6 +268,7 @@ h2{margin:0;font-size:22px}
     <button class="nav" id="bsettings"><span data-ic="gear"></span><span data-t="bSettings"></span></button>
   </aside>
   <div class="bchat">
+    <div class="chead"><button class="ibtn" id="bmenu" data-ic="menu" data-tl="bHistory"></button></div>
     <div id="bmsgs"></div>
     <div class="chips" id="bchips"></div>
     <div class="composer"><textarea id="bsay" rows="2" data-tp="bPh"></textarea>
@@ -290,6 +299,7 @@ h2{margin:0;font-size:22px}
 
 <!-- STAGE -->
 <div id="stage" class="hidden">
+  <div class="shot" id="shotA"></div><div class="shot next" id="shotB"></div>
   <div class="room" id="room"><div class="cast" id="cast"></div></div>
   <div class="top">
     <div class="ttl"><b id="title"></b><div class="setting" id="setting"></div></div>
@@ -319,12 +329,13 @@ h2{margin:0;font-size:22px}
 <div id="debrief" class="wrap hidden"></div>
 
 <script type="module">
-const T = {"camOff":{"en":"Camera off","ko":"카메라 꺼짐","ja":"カメラオフ"},"camOn":{"en":"Turn on camera","ko":"카메라 켜기","ja":"カメラをオン"},"hearThem":{"en":"Hear their voices","ko":"상대 목소리 듣기","ja":"相手の声を聞く"},"speakIn":{"en":"Answer by voice","ko":"말로 답하기","ja":"声で答える"},"privacy":{"en":"Your gaze is computed in this browser and video never leaves it. Speech recognition works in Chrome.","ko":"카메라는 시선·고개 방향만 이 브라우저 안에서 계산하고, 영상은 어디에도 보내지 않습니다. 음성 인식은 Chrome에서 동작합니다.","ja":"視線と顔の向きはこのブラウザ内で計算し、映像は外に送りません。音声認識はChromeで動作します。"},"home":{"en":"Back to start","ko":"처음으로","ja":"最初に戻る"},"log":{"en":"Transcript","ko":"대화 기록","ja":"会話ログ"},"finish":{"en":"End & debrief","ko":"끝내고 복기","ja":"終了して振り返る"},"typePh":{"en":"Or type here (Enter)","ko":"말 대신 입력해도 됩니다 (Enter)","ja":"入力でもOK (Enter)"},"done":{"en":"I'm done","ko":"말 다 했어요","ja":"話し終えた"},"noCam":{"en":"No camera","ko":"카메라 없음","ja":"カメラなし"},"camDenied":{"en":"Camera blocked","ko":"카메라 권한 없음","ja":"カメラ権限なし"},"camLoading":{"en":"Loading face tracking","ko":"얼굴 인식 모델 불러오는 중","ja":"顔認識を読み込み中"},"camCal":{"en":"Look at the screen: calibrating","ko":"정면(화면)을 봐 주세요: 기준 잡는 중","ja":"画面を見てください: 調整中"},"camFail":{"en":"Face tracking unavailable","ko":"얼굴 인식 불러오기 실패: 카메라 영상만 사용","ja":"顔認識を読み込めません"},"camReady":{"en":"Camera ready","ko":"카메라 준비됨","ja":"カメラ準備完了"},"noFace":{"en":"Face not visible","ko":"얼굴이 안 보임","ja":"顔が見えません"},"eye":{"en":"Eye contact","ko":"눈 맞춤","ja":"視線OK"},"down":{"en":"Looking down","ko":"아래를 봄","ja":"下を見ている"},"away":{"en":"Looking away","ko":"다른 곳을 봄","ja":"よそ見"},"srOk":{"en":"Speech recognition ready","ko":"음성 인식 사용 가능","ja":"音声認識OK"},"srNo":{"en":"Speech recognition needs Chrome: type instead","ko":"이 브라우저는 음성 인식 미지원 (Chrome 권장): 입력으로 진행","ja":"音声認識はChromeが必要です: 入力で進めます"},"listening":{"en":"Listening. Pause and it sends automatically","ko":"듣고 있어요. 말씀하세요 (잠시 멈추면 자동으로 넘어갑니다)","ja":"聞いています (少し間を置くと自動で送信)"},"typeNow":{"en":"Type your answer","ko":"답을 입력하세요","ja":"回答を入力"},"micDenied":{"en":"Microphone blocked: type instead","ko":"마이크 권한이 없어 입력으로 진행","ja":"マイク権限なし: 入力で進めます"},"thinking":{"en":"They're thinking…","ko":"상대가 생각하는 중…","ja":"相手が考えています…"},"me":{"en":"You","ko":"나","ja":"自分"},"seen":{"en":"Seen","ko":"관찰","ja":"観察"},"lost":{"en":"Connection lost. Say that again.","ko":"연결이 끊겼어요. 다시 말씀해 주세요.","ja":"接続が切れました。もう一度どうぞ。"},"failed":{"en":"Failed: ","ko":"실패: ","ja":"失敗: "},"loading":{"en":"Loading…","ko":"불러오는 중…","ja":"読み込み中…"},"rNames":{"en":"Names only","ko":"이름·역할만","ja":"名前と役割のみ"},"rProfile":{"en":"Profiles","ko":"인물 소개까지","ja":"人物紹介まで"},"rAll":{"en":"Their secrets (easy)","ko":"속마음까지 (쉬움)","ja":"本音まで(やさしい)"},"brief":{"en":"Briefing","ko":"브리핑","ja":"ブリーフィング"},"enter":{"en":"Enter the room","ko":"입장하기","ja":"入室する"},"briefSub":{"en":"Check it before you walk in. Every field can be edited.","ko":"들어가기 전에 확인하고, 마음에 안 드는 건 고치세요. 모든 칸을 수정할 수 있어요.","ja":"入室前に確認しましょう。すべて編集できます。"},"leftover":{"en":"Open review notes: ","ko":"자동 검사에서 남은 지적: ","ja":"自動チェックの指摘: "},"howMuch":{"en":"How much do you want to know going in?","ko":"상대 정보를 얼마나 미리 볼까요?","ja":"相手の情報をどこまで見ますか?"},"revealSub":{"en":"Names only feels most real. Their secrets lets you practice with the answers. The debrief reveals everything either way.","ko":"실전처럼 하려면 ‘이름·역할만’. ‘속마음까지’는 상대의 목표와 비밀을 알고 들어가는 연습 모드입니다. 어느 쪽이든 복기에서 전부 공개돼요.","ja":"本番に近いのは「名前と役割のみ」。どちらでも振り返りですべて公開されます。"},"coachOpt":{"en":"Live coach","ko":"실시간 코치","ja":"ライブコーチ"},"coachSub":{"en":"Tracks your goals and suggests your next move during the scene.","ko":"대화 중에 목표 달성을 체크하고 다음 수를 알려 줍니다.","ja":"会話中に目標をチェックし、次の一手を提案します。"},"scene":{"en":"Scene","ko":"장면","ja":"シーン"},"title":{"en":"Title","ko":"제목","ja":"タイトル"},"bgRe":{"en":"Redraw background","ko":"배경 다시 만들기","ja":"背景を作り直す"},"bgNew":{"en":"Draw background","ko":"배경 이미지 만들기","ja":"背景を作る"},"bgEdit":{"en":"Edit background description","ko":"배경 이미지 설명 고치기","ja":"背景の説明を編集"},"setting":{"en":"Place, time, mood","ko":"장소·시간·분위기","ja":"場所・時間・雰囲気"},"you":{"en":"You","ko":"나","ja":"自分"},"role":{"en":"Your role","ko":"내 역할","ja":"自分の役割"},"goal":{"en":"Your goal","ko":"내 목표","ja":"自分の目標"},"knows":{"en":"What you know going in (one per line)","ko":"내가 알고 들어가는 것 (한 줄에 하나)","ja":"事前に知っていること(1行に1つ)"},"people":{"en":"Who you'll meet","ko":"만날 사람","ja":"会う人"},"faceRe":{"en":"Redo face","ko":"얼굴 다시","ja":"顔を作り直す"},"faceNew":{"en":"Make face","ko":"얼굴 만들기","ja":"顔を作る"},"name":{"en":"Name","ko":"이름","ja":"名前"},"cRole":{"en":"Role","ko":"역할","ja":"役割"},"look":{"en":"Appearance","ko":"외모","ja":"外見"},"voice":{"en":"Voice & manner","ko":"말투·성격","ja":"話し方・性格"},"inner":{"en":"Their private side","ko":"속마음","ja":"本音"},"spoiler":{"en":"Their private side (spoiler)","ko":"속마음 (스포일러: 열면 비밀을 알고 들어갑니다)","ja":"本音(ネタバレ)"},"hGoal":{"en":"Hidden goal","ko":"숨은 목표","ja":"隠れた目的"},"secret":{"en":"Secret","ko":"비밀","ja":"秘密"},"reveal":{"en":"Reveals it when","ko":"비밀을 털어놓는 조건","ja":"秘密を明かす条件"},"lines":{"en":"Won't accept (one per line)","ko":"절대 받아들이지 않는 것 (한 줄에 하나)","ja":"受け入れないこと(1行に1つ)"},"trust":{"en":"Trust","ko":"신뢰","ja":"信頼"},"patience":{"en":"Patience","ko":"인내","ja":"忍耐"},"checks":{"en":"Your goals for this rehearsal","ko":"이번 연습의 체크포인트","ja":"今回の目標"},"crit":{"en":"Goals (one per line, 2-4)","ko":"성공 기준 (한 줄에 하나, 2-4개)","ja":"目標(1行に1つ、2〜4個)"},"staging":{"en":"Staging (first line, events, length)","ko":"연출 (첫 대사, 돌발 상황, 길이)","ja":"演出(最初の台詞、出来事、長さ)"},"first":{"en":"First line","ko":"첫 대사","ja":"最初の台詞"},"events":{"en":"Events (one per line, 'turn: what happens')","ko":"돌발 상황 (한 줄에 하나, ‘턴: 내용’)","ja":"出来事(1行に1つ、「ターン: 内容」)"},"turns":{"en":"Max turns (4-30)","ko":"최대 턴 수 (4-30)","ja":"最大ターン数 (4-30)"},"drawing":{"en":"Drawing…","ko":"그리는 중…","ja":"作成中…"},"cantStart":{"en":"Can't start: ","ko":"시작할 수 없어요: ","ja":"開始できません: "},"goalLabel":{"en":"Goal: ","ko":"목표: ","ja":"目標: "},"sceneOver":{"en":"Scene over: ","ko":"장면이 끝났습니다: ","ja":"シーン終了: "},"seeDebrief":{"en":"See debrief","ko":"복기 보기","ja":"振り返りを見る"},"endedByYou":{"en":"Ended by you","ko":"직접 종료","ja":"自分で終了"},"debrief":{"en":"Debrief","ko":"복기","ja":"振り返り"},"debriefing":{"en":"Working out what they really thought… (about 30s)","ko":"상대들의 속마음을 정리하는 중… (20~40초)","ja":"相手の本音をまとめています… (約30秒)"},"goalsH":{"en":"Goals","ko":"성공 기준","ja":"目標"},"turn":{"en":"turn","ko":"턴","ja":"ターン"},"hidden":{"en":"What they were hiding","ko":"그들이 숨기고 있던 것","ja":"隠していたこと"},"told":{"en":"Told you","ko":"털어놓음","ja":"明かした"},"kept":{"en":"Kept it hidden","ko":"끝까지 숨김","ja":"隠し通した"},"gShort":{"en":"Goal","ko":"목표","ja":"目的"},"moments":{"en":"Moments that changed things","ko":"흐름이 바뀐 순간","ja":"流れが変わった瞬間"},"thought":{"en":"They thought: ","ko":"속마음: ","ja":"本音: "},"tryThis":{"en":"Try saying: ","ko":"이렇게 말해 보기: ","ja":"こう言ってみる: "},"full":{"en":"Full transcript with their thoughts","ko":"전체 기록 (속마음 포함)","ja":"全記録(本音つき)"},"narr":{"en":"Scene","ko":"상황","ja":"状況"},"other":{"en":"Another scene","ko":"다른 장면","ja":"別のシーン"},"cFound":{"en":"Secrets uncovered","ko":"알아낸 비밀","ja":"見つけた秘密"},"cSecret":{"en":"Secret uncovered","ko":"비밀을 알아냈어요","ja":"秘密を聞き出した"},"cGoals":{"en":"Goals","ko":"목표","ja":"目標"},"cCoach":{"en":"Coach","ko":"코치","ja":"コーチ"},"cWait":{"en":"Say something and I'll start tracking.","ko":"말을 시작하면 체크를 시작할게요.","ja":"話し始めるとチェックを始めます。"},"cBetter":{"en":"Could sound like","ko":"이렇게 말할 수도 있어요","ja":"こう言えます"},"cRetry":{"en":"Say that again","ko":"다시 말하기","ja":"言い直す"},"cDone":{"en":"Goal reached!","ko":"목표 달성!","ja":"目標達成!"},"coachBtn":{"en":"Coach","ko":"코치","ja":"コーチ"},"again":{"en":"Practice again","ko":"다시 도전","ja":"もう一度挑戦"},"attempts":{"en":"Your attempts","ko":"도전 기록","ja":"挑戦の記録"},"attempt":{"en":"Attempt","ko":"도전","ja":"挑戦"},"improved":{"en":"Better than last time!","ko":"지난번보다 나아졌어요!","ja":"前回より良くなりました!"},"bHello":{"en":"What do you want to step into? Tell me anything.","ko":"어떤 순간으로 들어가 볼까요? 편하게 말해 주세요.","ja":"どんな瞬間に入ってみますか? 自由に話してください。"},"bPh":{"en":"Tell me about it…","ko":"편하게 이야기해 주세요…","ja":"自由に話してください…"},"bSend":{"en":"Send","ko":"보내기","ja":"送信"},"bEmpty":{"en":"Tell me what you imagine. It will appear here.","ko":"상상하는 걸 말해 보세요. 여기에 나타날 거예요.","ja":"想像を話してください。ここに現れます。"},"bEnter":{"en":"Let's begin","ko":"시작하자","ja":"始めよう"},"bDrawing":{"en":"Appearing…","ko":"나타나는 중…","ja":"現れています…"},"bYou":{"en":"You","ko":"나","ja":"自分"},"bGoal":{"en":"You want","ko":"원하는 것","ja":"望むこと"},"bSetting":{"en":"Walking in…","ko":"들어가는 중…","ja":"入っています…"},"bMic":{"en":"Talk","ko":"말하기","ja":"話す"},"bMicOn":{"en":"Listening","ko":"듣는 중","ja":"聞いています"},"bSparks":{"en":"Start from an idea","ko":"아이디어로 시작하기","ja":"アイデアから始める"},"bExamples":{"en":"Ready-made scenes","ko":"바로 해 볼 수 있는 장면","ja":"すぐ試せるシーン"},"oHi":{"en":"Stand-In","ko":"Stand-In","ja":"Stand-In"},"oLang":{"en":"Which language feels like home?","ko":"어떤 언어가 편하세요?","ja":"どの言語が話しやすいですか?"},"oWhat":{"en":"Describe any moment, from your memories or your future. It appears in front of you, and you step inside and talk to the people in it.","ko":"기억 속 순간이든 앞으로 올 순간이든 말해 보세요. 눈앞에 나타나고, 그 안에 들어가 사람들과 직접 이야기할 수 있어요.","ja":"思い出でも、これからの場面でも話してください。目の前に現れ、その中で人と話せます。"},"oTalk":{"en":"You'll talk to them out loud","ko":"실제로 말을 걸게 될 거예요","ja":"声に出して話します"},"oTalkSub":{"en":"Allow the mic to speak. The camera is optional and only lets them notice your eye contact; video never leaves this browser.","ko":"마이크를 켜면 말로 대화할 수 있어요. 카메라는 선택이고, 상대가 내 시선을 알아차리는 데만 쓰여요. 영상은 이 브라우저 밖으로 나가지 않습니다.","ja":"マイクで会話できます。カメラは任意で、視線を相手が感じ取るためだけに使います。映像はブラウザの外に出ません。"},"oMic":{"en":"Allow microphone","ko":"마이크 허용","ja":"マイクを許可"},"oMicOk":{"en":"Microphone ready","ko":"마이크 준비됨","ja":"マイク準備完了"},"oMicNo":{"en":"Mic blocked: you can type instead","ko":"마이크가 막혀 있어요: 입력으로 할 수 있어요","ja":"マイク不可: 入力できます"},"oName":{"en":"What should they call you?","ko":"뭐라고 불러 드릴까요?","ja":"何とお呼びしましょう?"},"oNameSub":{"en":"People in your scenes will use this name.","ko":"장면 속 사람들이 이 이름으로 불러요.","ja":"シーンの人々がこの名前で呼びます。"},"oNamePh":{"en":"Your name","ko":"이름","ja":"名前"},"oNext":{"en":"Next","ko":"다음","ja":"次へ"},"oSkip":{"en":"Skip","ko":"건너뛰기","ja":"スキップ"},"oDone":{"en":"Let's begin","ko":"시작하자","ja":"始めよう"},"bNew":{"en":"New story","ko":"새 이야기","ja":"新しい話"},"bContinue":{"en":"Pick up where you left off","ko":"이어서 하기","ja":"続きから"},"bTemplates":{"en":"Templates","ko":"템플릿","ja":"テンプレート"},"bHistory":{"en":"History","ko":"기록","ja":"履歴"},"bClose":{"en":"Close","ko":"닫기","ja":"閉じる"},"bStuck":{"en":"Not sure where to start? Here are a few ideas.","ko":"어디서 시작할지 막막하면 이 중에서 골라 보세요.","ja":"迷ったら、ここから選んでみてください。"},"hWorlds":{"en":"Worlds in progress","ko":"만들던 세계","ja":"作りかけの世界"},"hRuns":{"en":"Past rehearsals","ko":"지난 연습","ja":"過去の練習"},"hNone":{"en":"Nothing here yet.","ko":"아직 기록이 없어요.","ja":"まだ履歴がありません。"},"dTrust":{"en":"How their trust moved","ko":"신뢰가 움직인 흐름","ja":"信頼の動き"},"dBack":{"en":"Go back to this moment","ko":"이 순간으로 돌아가기","ja":"この瞬間に戻る"},"dReplay":{"en":"Replay, with what they were really thinking","ko":"다시 보기: 그때 상대의 속마음","ja":"振り返り: あのときの本音"},"dSaid":{"en":"You said","ko":"내가 한 말","ja":"自分の言葉"},"dBranch":{"en":"Back in the moment. Say it differently.","ko":"그 순간으로 돌아왔어요. 다르게 말해 보세요.","ja":"あの瞬間に戻りました。違う言い方をしてみましょう。"},"bSettings":{"en":"Settings","ko":"설정","ja":"設定"},"bRecent":{"en":"Recent","ko":"최근","ja":"最近"}};
+const T = {"camOff":{"en":"Camera off","ko":"카메라 꺼짐","ja":"カメラオフ"},"camOn":{"en":"Turn on camera","ko":"카메라 켜기","ja":"カメラをオン"},"hearThem":{"en":"Hear their voices","ko":"상대 목소리 듣기","ja":"相手の声を聞く"},"speakIn":{"en":"Answer by voice","ko":"말로 답하기","ja":"声で答える"},"privacy":{"en":"Your gaze is computed in this browser and video never leaves it. Speech recognition works in Chrome.","ko":"카메라는 시선·고개 방향만 이 브라우저 안에서 계산하고, 영상은 어디에도 보내지 않습니다. 음성 인식은 Chrome에서 동작합니다.","ja":"視線と顔の向きはこのブラウザ内で計算し、映像は外に送りません。音声認識はChromeで動作します。"},"home":{"en":"Back to start","ko":"처음으로","ja":"最初に戻る"},"log":{"en":"Transcript","ko":"대화 기록","ja":"会話ログ"},"finish":{"en":"End & debrief","ko":"끝내고 복기","ja":"終了して振り返る"},"typePh":{"en":"Or type here (Enter)","ko":"말 대신 입력해도 됩니다 (Enter)","ja":"入力でもOK (Enter)"},"done":{"en":"I'm done","ko":"말 다 했어요","ja":"話し終えた"},"noCam":{"en":"No camera","ko":"카메라 없음","ja":"カメラなし"},"camDenied":{"en":"Camera blocked","ko":"카메라 권한 없음","ja":"カメラ権限なし"},"camLoading":{"en":"Loading face tracking","ko":"얼굴 인식 모델 불러오는 중","ja":"顔認識を読み込み中"},"camCal":{"en":"Look at the screen: calibrating","ko":"정면(화면)을 봐 주세요: 기준 잡는 중","ja":"画面を見てください: 調整中"},"camFail":{"en":"Face tracking unavailable","ko":"얼굴 인식 불러오기 실패: 카메라 영상만 사용","ja":"顔認識を読み込めません"},"camReady":{"en":"Camera ready","ko":"카메라 준비됨","ja":"カメラ準備完了"},"noFace":{"en":"Face not visible","ko":"얼굴이 안 보임","ja":"顔が見えません"},"eye":{"en":"Eye contact","ko":"눈 맞춤","ja":"視線OK"},"down":{"en":"Looking down","ko":"아래를 봄","ja":"下を見ている"},"away":{"en":"Looking away","ko":"다른 곳을 봄","ja":"よそ見"},"srOk":{"en":"Speech recognition ready","ko":"음성 인식 사용 가능","ja":"音声認識OK"},"srNo":{"en":"Speech recognition needs Chrome: type instead","ko":"이 브라우저는 음성 인식 미지원 (Chrome 권장): 입력으로 진행","ja":"音声認識はChromeが必要です: 入力で進めます"},"listening":{"en":"Listening. Pause and it sends automatically","ko":"듣고 있어요. 말씀하세요 (잠시 멈추면 자동으로 넘어갑니다)","ja":"聞いています (少し間を置くと自動で送信)"},"typeNow":{"en":"Type your answer","ko":"답을 입력하세요","ja":"回答を入力"},"micDenied":{"en":"Microphone blocked: type instead","ko":"마이크 권한이 없어 입력으로 진행","ja":"マイク権限なし: 入力で進めます"},"thinking":{"en":"They're thinking…","ko":"상대가 생각하는 중…","ja":"相手が考えています…"},"me":{"en":"You","ko":"나","ja":"自分"},"seen":{"en":"Seen","ko":"관찰","ja":"観察"},"lost":{"en":"Connection lost. Say that again.","ko":"연결이 끊겼어요. 다시 말씀해 주세요.","ja":"接続が切れました。もう一度どうぞ。"},"failed":{"en":"Failed: ","ko":"실패: ","ja":"失敗: "},"loading":{"en":"Loading…","ko":"불러오는 중…","ja":"読み込み中…"},"rNames":{"en":"Names only","ko":"이름·역할만","ja":"名前と役割のみ"},"rProfile":{"en":"Profiles","ko":"인물 소개까지","ja":"人物紹介まで"},"rAll":{"en":"Their secrets (easy)","ko":"속마음까지 (쉬움)","ja":"本音まで(やさしい)"},"brief":{"en":"Briefing","ko":"브리핑","ja":"ブリーフィング"},"enter":{"en":"Enter the room","ko":"입장하기","ja":"入室する"},"briefSub":{"en":"Check it before you walk in. Every field can be edited.","ko":"들어가기 전에 확인하고, 마음에 안 드는 건 고치세요. 모든 칸을 수정할 수 있어요.","ja":"入室前に確認しましょう。すべて編集できます。"},"leftover":{"en":"Open review notes: ","ko":"자동 검사에서 남은 지적: ","ja":"自動チェックの指摘: "},"howMuch":{"en":"How much do you want to know going in?","ko":"상대 정보를 얼마나 미리 볼까요?","ja":"相手の情報をどこまで見ますか?"},"revealSub":{"en":"Names only feels most real. Their secrets lets you practice with the answers. The debrief reveals everything either way.","ko":"실전처럼 하려면 ‘이름·역할만’. ‘속마음까지’는 상대의 목표와 비밀을 알고 들어가는 연습 모드입니다. 어느 쪽이든 복기에서 전부 공개돼요.","ja":"本番に近いのは「名前と役割のみ」。どちらでも振り返りですべて公開されます。"},"coachOpt":{"en":"Live coach","ko":"실시간 코치","ja":"ライブコーチ"},"coachSub":{"en":"Tracks your goals and suggests your next move during the scene.","ko":"대화 중에 목표 달성을 체크하고 다음 수를 알려 줍니다.","ja":"会話中に目標をチェックし、次の一手を提案します。"},"scene":{"en":"Scene","ko":"장면","ja":"シーン"},"title":{"en":"Title","ko":"제목","ja":"タイトル"},"bgRe":{"en":"Redraw background","ko":"배경 다시 만들기","ja":"背景を作り直す"},"bgNew":{"en":"Draw background","ko":"배경 이미지 만들기","ja":"背景を作る"},"bgEdit":{"en":"Edit background description","ko":"배경 이미지 설명 고치기","ja":"背景の説明を編集"},"setting":{"en":"Place, time, mood","ko":"장소·시간·분위기","ja":"場所・時間・雰囲気"},"you":{"en":"You","ko":"나","ja":"自分"},"role":{"en":"Your role","ko":"내 역할","ja":"自分の役割"},"goal":{"en":"Your goal","ko":"내 목표","ja":"自分の目標"},"knows":{"en":"What you know going in (one per line)","ko":"내가 알고 들어가는 것 (한 줄에 하나)","ja":"事前に知っていること(1行に1つ)"},"people":{"en":"Who you'll meet","ko":"만날 사람","ja":"会う人"},"faceRe":{"en":"Redo face","ko":"얼굴 다시","ja":"顔を作り直す"},"faceNew":{"en":"Make face","ko":"얼굴 만들기","ja":"顔を作る"},"name":{"en":"Name","ko":"이름","ja":"名前"},"cRole":{"en":"Role","ko":"역할","ja":"役割"},"look":{"en":"Appearance","ko":"외모","ja":"外見"},"voice":{"en":"Voice & manner","ko":"말투·성격","ja":"話し方・性格"},"inner":{"en":"Their private side","ko":"속마음","ja":"本音"},"spoiler":{"en":"Their private side (spoiler)","ko":"속마음 (스포일러: 열면 비밀을 알고 들어갑니다)","ja":"本音(ネタバレ)"},"hGoal":{"en":"Hidden goal","ko":"숨은 목표","ja":"隠れた目的"},"secret":{"en":"Secret","ko":"비밀","ja":"秘密"},"reveal":{"en":"Reveals it when","ko":"비밀을 털어놓는 조건","ja":"秘密を明かす条件"},"lines":{"en":"Won't accept (one per line)","ko":"절대 받아들이지 않는 것 (한 줄에 하나)","ja":"受け入れないこと(1行に1つ)"},"trust":{"en":"Trust","ko":"신뢰","ja":"信頼"},"patience":{"en":"Patience","ko":"인내","ja":"忍耐"},"checks":{"en":"Your goals for this rehearsal","ko":"이번 연습의 체크포인트","ja":"今回の目標"},"crit":{"en":"Goals (one per line, 2-4)","ko":"성공 기준 (한 줄에 하나, 2-4개)","ja":"目標(1行に1つ、2〜4個)"},"staging":{"en":"Staging (first line, events, length)","ko":"연출 (첫 대사, 돌발 상황, 길이)","ja":"演出(最初の台詞、出来事、長さ)"},"first":{"en":"First line","ko":"첫 대사","ja":"最初の台詞"},"events":{"en":"Events (one per line, 'turn: what happens')","ko":"돌발 상황 (한 줄에 하나, ‘턴: 내용’)","ja":"出来事(1行に1つ、「ターン: 内容」)"},"turns":{"en":"Max turns (4-30)","ko":"최대 턴 수 (4-30)","ja":"最大ターン数 (4-30)"},"drawing":{"en":"Drawing…","ko":"그리는 중…","ja":"作成中…"},"cantStart":{"en":"Can't start: ","ko":"시작할 수 없어요: ","ja":"開始できません: "},"goalLabel":{"en":"Goal: ","ko":"목표: ","ja":"目標: "},"sceneOver":{"en":"Scene over: ","ko":"장면이 끝났습니다: ","ja":"シーン終了: "},"seeDebrief":{"en":"See debrief","ko":"복기 보기","ja":"振り返りを見る"},"endedByYou":{"en":"Ended by you","ko":"직접 종료","ja":"自分で終了"},"debrief":{"en":"Debrief","ko":"복기","ja":"振り返り"},"debriefing":{"en":"Working out what they really thought… (about 30s)","ko":"상대들의 속마음을 정리하는 중… (20~40초)","ja":"相手の本音をまとめています… (約30秒)"},"goalsH":{"en":"Goals","ko":"성공 기준","ja":"目標"},"turn":{"en":"turn","ko":"턴","ja":"ターン"},"hidden":{"en":"What they were hiding","ko":"그들이 숨기고 있던 것","ja":"隠していたこと"},"told":{"en":"Told you","ko":"털어놓음","ja":"明かした"},"kept":{"en":"Kept it hidden","ko":"끝까지 숨김","ja":"隠し通した"},"gShort":{"en":"Goal","ko":"목표","ja":"目的"},"moments":{"en":"Moments that changed things","ko":"흐름이 바뀐 순간","ja":"流れが変わった瞬間"},"thought":{"en":"They thought: ","ko":"속마음: ","ja":"本音: "},"tryThis":{"en":"Try saying: ","ko":"이렇게 말해 보기: ","ja":"こう言ってみる: "},"full":{"en":"Full transcript with their thoughts","ko":"전체 기록 (속마음 포함)","ja":"全記録(本音つき)"},"narr":{"en":"Scene","ko":"상황","ja":"状況"},"other":{"en":"Another scene","ko":"다른 장면","ja":"別のシーン"},"cFound":{"en":"Secrets uncovered","ko":"알아낸 비밀","ja":"見つけた秘密"},"cSecret":{"en":"Secret uncovered","ko":"비밀을 알아냈어요","ja":"秘密を聞き出した"},"cGoals":{"en":"Goals","ko":"목표","ja":"目標"},"cCoach":{"en":"Coach","ko":"코치","ja":"コーチ"},"cWait":{"en":"Say something and I'll start tracking.","ko":"말을 시작하면 체크를 시작할게요.","ja":"話し始めるとチェックを始めます。"},"cBetter":{"en":"Could sound like","ko":"이렇게 말할 수도 있어요","ja":"こう言えます"},"cRetry":{"en":"Say that again","ko":"다시 말하기","ja":"言い直す"},"cDone":{"en":"Goal reached!","ko":"목표 달성!","ja":"目標達成!"},"coachBtn":{"en":"Coach","ko":"코치","ja":"コーチ"},"again":{"en":"Practice again","ko":"다시 도전","ja":"もう一度挑戦"},"attempts":{"en":"Your attempts","ko":"도전 기록","ja":"挑戦の記録"},"attempt":{"en":"Attempt","ko":"도전","ja":"挑戦"},"improved":{"en":"Better than last time!","ko":"지난번보다 나아졌어요!","ja":"前回より良くなりました!"},"bHello":{"en":"What do you want to step into? Tell me anything.","ko":"어떤 순간으로 들어가 볼까요? 편하게 말해 주세요.","ja":"どんな瞬間に入ってみますか? 自由に話してください。"},"bPh":{"en":"Tell me about it…","ko":"편하게 이야기해 주세요…","ja":"自由に話してください…"},"bSend":{"en":"Send","ko":"보내기","ja":"送信"},"bEmpty":{"en":"Tell me what you imagine. It will appear here.","ko":"상상하는 걸 말해 보세요. 여기에 나타날 거예요.","ja":"想像を話してください。ここに現れます。"},"bEnter":{"en":"Let's begin","ko":"시작하자","ja":"始めよう"},"bDrawing":{"en":"Appearing…","ko":"나타나는 중…","ja":"現れています…"},"bYou":{"en":"You","ko":"나","ja":"自分"},"bGoal":{"en":"You want","ko":"원하는 것","ja":"望むこと"},"bSetting":{"en":"Walking in…","ko":"들어가는 중…","ja":"入っています…"},"bMic":{"en":"Talk","ko":"말하기","ja":"話す"},"bMicOn":{"en":"Listening","ko":"듣는 중","ja":"聞いています"},"bSparks":{"en":"Start from an idea","ko":"아이디어로 시작하기","ja":"アイデアから始める"},"bExamples":{"en":"Ready-made scenes","ko":"바로 해 볼 수 있는 장면","ja":"すぐ試せるシーン"},"oHi":{"en":"Stand-In","ko":"Stand-In","ja":"Stand-In"},"oLang":{"en":"Which language feels like home?","ko":"어떤 언어가 편하세요?","ja":"どの言語が話しやすいですか?"},"oWhat":{"en":"Describe any moment, from your memories or your future. It appears in front of you, and you step inside and talk to the people in it.","ko":"기억 속 순간이든 앞으로 올 순간이든 말해 보세요. 눈앞에 나타나고, 그 안에 들어가 사람들과 직접 이야기할 수 있어요.","ja":"思い出でも、これからの場面でも話してください。目の前に現れ、その中で人と話せます。"},"oTalk":{"en":"You'll talk to them out loud","ko":"실제로 말을 걸게 될 거예요","ja":"声に出して話します"},"oTalkSub":{"en":"Allow the mic to speak. The camera is optional and only lets them notice your eye contact; video never leaves this browser.","ko":"마이크를 켜면 말로 대화할 수 있어요. 카메라는 선택이고, 상대가 내 시선을 알아차리는 데만 쓰여요. 영상은 이 브라우저 밖으로 나가지 않습니다.","ja":"マイクで会話できます。カメラは任意で、視線を相手が感じ取るためだけに使います。映像はブラウザの外に出ません。"},"oMic":{"en":"Allow microphone","ko":"마이크 허용","ja":"マイクを許可"},"oMicOk":{"en":"Microphone ready","ko":"마이크 준비됨","ja":"マイク準備完了"},"oMicNo":{"en":"Mic blocked: you can type instead","ko":"마이크가 막혀 있어요: 입력으로 할 수 있어요","ja":"マイク不可: 入力できます"},"oName":{"en":"What should they call you?","ko":"뭐라고 불러 드릴까요?","ja":"何とお呼びしましょう?"},"oNameSub":{"en":"People in your scenes will use this name.","ko":"장면 속 사람들이 이 이름으로 불러요.","ja":"シーンの人々がこの名前で呼びます。"},"oNamePh":{"en":"Your name","ko":"이름","ja":"名前"},"oNext":{"en":"Next","ko":"다음","ja":"次へ"},"oSkip":{"en":"Skip","ko":"건너뛰기","ja":"スキップ"},"oDone":{"en":"Let's begin","ko":"시작하자","ja":"始めよう"},"bNew":{"en":"New story","ko":"새 이야기","ja":"新しい話"},"bContinue":{"en":"Pick up where you left off","ko":"이어서 하기","ja":"続きから"},"bTemplates":{"en":"Templates","ko":"템플릿","ja":"テンプレート"},"bHistory":{"en":"Past rehearsals","ko":"지난 연습","ja":"過去の練習"},"bClose":{"en":"Close","ko":"닫기","ja":"閉じる"},"bStuck":{"en":"Not sure where to start? Here are a few ideas.","ko":"어디서 시작할지 막막하면 이 중에서 골라 보세요.","ja":"迷ったら、ここから選んでみてください。"},"hWorlds":{"en":"Worlds in progress","ko":"만들던 세계","ja":"作りかけの世界"},"hRuns":{"en":"Past rehearsals","ko":"지난 연습","ja":"過去の練習"},"hNone":{"en":"Nothing here yet.","ko":"아직 기록이 없어요.","ja":"まだ履歴がありません。"},"dTrust":{"en":"How their trust moved","ko":"신뢰가 움직인 흐름","ja":"信頼の動き"},"dBack":{"en":"Go back to this moment","ko":"이 순간으로 돌아가기","ja":"この瞬間に戻る"},"dReplay":{"en":"Replay, with what they were really thinking","ko":"다시 보기: 그때 상대의 속마음","ja":"振り返り: あのときの本音"},"dSaid":{"en":"You said","ko":"내가 한 말","ja":"自分の言葉"},"dBranch":{"en":"Back in the moment. Say it differently.","ko":"그 순간으로 돌아왔어요. 다르게 말해 보세요.","ja":"あの瞬間に戻りました。違う言い方をしてみましょう。"},"bSettings":{"en":"Settings","ko":"설정","ja":"設定"},"bRecent":{"en":"Recent","ko":"최근","ja":"最近"}};
 let UI = "en";
 try{ UI = localStorage.getItem("standin-ui") || (["ko","ja"].includes(navigator.language.slice(0,2)) ? navigator.language.slice(0,2) : "en"); }catch(e){}
 const t = k => T[k]?.[UI] ?? k;
 const ICONS = {
   plus:'<path d="M12 5v14M5 12h14"/>',
+  menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
   grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
   clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
   gear:'<circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2.1-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2.1 1.2l-2.3-.9-2 3.4 2 1.5a7 7 0 0 0 0 2.4l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2.1 1.2L10 21h4l.5-2.6a7 7 0 0 0 2.1-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/>',
@@ -671,7 +682,19 @@ function renderCast(){
   Object.values(S.assets?.portraits || {}).forEach(p => Object.values(p).forEach(u => { new Image().src = u; }));  // no flash on the first change
 }
 
+// one photograph from the user's own eyes: a reaction changes the face, never the room
+function showShot(url){
+  if(!url || showShot.now === url) return;
+  showShot.now = url;
+  const img = new Image();
+  img.onload = () => { const [a, b] = [$("shotA"), $("shotB")];
+    b.style.backgroundImage = `url(${url})`; b.style.opacity = 1;
+    setTimeout(() => { a.style.backgroundImage = `url(${url})`; b.style.transition = "none"; b.style.opacity = 0;
+      requestAnimationFrame(() => b.style.transition = ""); }, 300); };
+  img.src = url;
+}
 function setFace(i, expression){
+  if(S.assets?.scene){ showShot(S.assets.scene[S.scenario.cast[i]?.name]?.[expression] || S.assets.background); return; }
   const el = $("p" + i); if(!el) return;
   const img = portrait(S.scenario.cast[i], expression);
   const [base, next] = el.querySelectorAll(".face .img");
@@ -742,7 +765,7 @@ function bchips(list){
   $("bchips").querySelectorAll("button").forEach(b => b.onclick = () => buildSay(b.textContent));
 }
 // polled every 1.5s, so only touch what really changed: rebuilding the page makes it flicker
-const shown = {background:"", summary:""};
+const shown = {background:"", summary:"", cards:""};
 function fadeIn(url, apply){
   const img = new Image();
   img.onload = () => apply(url);
@@ -759,27 +782,9 @@ function renderWorld(){
     shown.background = B.background;
     fadeIn(B.background, url => { $("bworld").style.backgroundImage = `linear-gradient(#08090c22,#08090ce0),url(${url})`; });
   }
-  const box = $("bpeople"), keep = new Set(w.people.map(p => p.name));
-  [...box.children].forEach(el => { if(!keep.has(el.dataset.name)) el.remove(); });
-  w.people.forEach(p => {
-    let el = [...box.children].find(x => x.dataset.name === p.name);
-    if(!el){
-      el = document.createElement("div");
-      el.className = "bp drawing"; el.dataset.name = p.name;
-      el.innerHTML = `<div class="bf"><small>${t("bDrawing")}</small></div><b></b><small class="r"></small>`;
-      box.appendChild(el);
-    }
-    el.querySelector("b").textContent = p.name;
-    el.querySelector(".r").textContent = p.role;
-    const face = B.faces[p.name]?.neutral;
-    if(face && el.dataset.face !== face){
-      el.dataset.face = face;
-      fadeIn(face, url => {
-        const f = el.querySelector(".bf");
-        f.style.backgroundImage = `url(${url})`; f.innerHTML = ""; el.classList.remove("drawing");
-      });
-    }
-  });
+  const cards = w.people.map(p => `<div class="pc"><b>${esc(p.name)}</b><small>${esc(p.role)}</small>
+    ${p.manner ? `<p>${esc(p.manner)}</p>` : ""}${p.history ? `<p class="h">${esc(p.history)}</p>` : ""}</div>`).join("");
+  if(cards !== shown.cards){ shown.cards = cards; $("bpeople").innerHTML = cards; }
   const summary = (w.title ? `<b>${esc(w.title)}</b>` : "")
     + (w.place ? `<div>${esc(w.place)}</div>` : "")
     + (w.me ? `<div><small>${t("bYou")}</small> ${esc(w.me)}</div>` : "")
@@ -811,9 +816,9 @@ async function refreshWorld(){
     const changed = next.background !== B.background || JSON.stringify(next.faces) !== JSON.stringify(B.faces);
     Object.assign(B, next);
     if(changed) renderWorld();
-    if(S?.assets?.portraits && changed && !$("stage").classList.contains("hidden")){  // faces that finish after walking in
-      Object.assign(S.assets.portraits, B.faces);
-      S.scenario.cast.forEach((c, i) => setFace(i, "neutral"));
+    if(S?.assets?.scene && changed){  // reactions and a finished photo can arrive after walking in
+      S.assets.scene = B.faces;
+      if(B.background && B.background !== S.assets.background){ S.assets.background = B.background; showShot(B.background); }
     }
   }catch(e){}
 }
@@ -857,23 +862,28 @@ async function stepInside(){
   const w = B?.world;
   if(!(w?.place && w.people.length)){ buildSay(t("bEnter")); return; }  // the guide asks for what is still missing
   talk.on = false; talkStop(); micButton();
-  $("benter").disabled = true; $("bstate").textContent = t("bSetting");
+  // the room appears the moment they say so; the hidden side finishes behind it
+  $("stage").classList.add("pov"); $("stage").classList.remove("coached");
+  $("shotA").style.backgroundImage = B.background ? `url(${B.background})` : "";
+  $("title").textContent = w.title; $("setting").textContent = ""; $("turnText").textContent = "";
+  $("caption").className = "caption narr"; $("caption").textContent = t("bSetting");
+  $("micStatus").textContent = ""; $("heard").innerHTML = ""; $("typed").disabled = true; $("doneBtn").disabled = true;
+  show("stage");
   try{
     D = await post("/api/build/finish", {id:B.id, ui:UI});
     await enter();
-    $("bstate").textContent = "";
-  }catch(e){ $("bstate").textContent = t("failed") + e; $("benter").disabled = false; }
+  }catch(e){ show("build"); $("bstate").textContent = t("failed") + e; }
 }
 async function resumeWorld(id){
   B = await (await get("/api/build/" + id)).json();
   $("bmsgs").innerHTML = "";
   B.talk.forEach(([who, text]) => bubble(who === "User" ? "you" : "them", text));
-  bchips([]); shown.background = shown.summary = ""; $("bpeople").innerHTML = ""; renderWorld(); loadRecent();
+  bchips([]); shown.background = shown.summary = shown.cards = ""; $("bpeople").innerHTML = ""; renderWorld(); loadRecent();
   bpoll ??= setInterval(refreshWorld, 1500);
 }
 function newStory(){
   clearInterval(bpoll); bpoll = null; B = null;
-  shown.background = shown.summary = "";
+  shown.background = shown.summary = shown.cards = "";
   $("bmsgs").innerHTML = ""; $("bpeople").innerHTML = ""; $("bworld").style.backgroundImage = ""; $("bchips").innerHTML = "";
   $("bempty").classList.remove("hidden"); $("bfoot").classList.add("hidden");
   bubble("them", t("bHello")); panel(null); offered = false; waitForFirstWord(); loadRecent();
@@ -883,7 +893,7 @@ function newStory(){
 let D = null;          // draft: {preset, scenario, assets, gate1, background_prompt}
 let REVEAL = "profile"; // names | profile | all
 const REVEALS = {names:"rNames", profile:"rProfile", all:"rAll"};
-let COACH = true;
+let COACH = false;  // alone with them by default; the coach is one click away
 const lines = a => (a || []).join("\n");
 const unlines = s => s.split("\n").map(x => x.trim()).filter(Boolean);
 
@@ -1076,6 +1086,9 @@ async function enter(){
   $("turnText").textContent = `0 / ${S.scenario.max_turns}`;
   if(S.assets?.background){ $("room").style.backgroundImage = `linear-gradient(#0f111577,#0f1115dd),url(${S.assets.background})`; }
   if(!cam.on){ $("eyeText").textContent = t("camOff"); }
+  $("stage").classList.toggle("pov", !!S.assets?.scene);
+  showShot.now = "";
+  if(S.assets?.scene){ $("shotA").style.backgroundImage = `url(${S.assets.background})`; showShot.now = S.assets.background; }
   renderCast();
   const n = S.scenario.cast.length;
   $("cast").dataset.n = n; $("cast").style.setProperty("--cols", n === 4 ? 2 : n);
@@ -1090,7 +1103,7 @@ function over(reason){
   $("doneBtn").textContent = t("seeDebrief"); $("doneBtn").disabled = false; $("doneBtn").onclick = showDebrief;
 }
 
-$("coachBtn").onclick = () => $("stage").classList.toggle("coached");
+$("coachBtn").onclick = () => { COACH = !COACH; $("stage").classList.toggle("coached", COACH); };
 $("retryBtn").onclick = takeBack;
 $("logBtn").onclick = () => { $("log").classList.toggle("hidden"); $("stage").classList.toggle("logopen"); };
 $("endBtn").onclick = () => { stopVoice(); over(t("endedByYou")); showDebrief(); };
@@ -1238,10 +1251,8 @@ function waitForFirstWord(){
 const when = s => new Date(s * 1000).toLocaleDateString(UI, {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
 async function loadHistory(){
   const h = await (await get("/api/history")).json();
-  $("histBody").innerHTML = (h.worlds.length ? `<h3>${t("hWorlds")}</h3>` + h.worlds.map(w => `<button class="hrow" data-world="${esc(w.id)}"><b>${esc(w.title)}</b><small>${when(w.when)}</small></button>`).join("") : "")
-    + (h.runs.length ? `<h3>${t("hRuns")}</h3>` + h.runs.map(r => `<button class="hrow" data-run="${esc(r.id)}"><b>${esc(r.title)}</b><span><span class="pts">${r.met}/${r.all}</span> <small>${when(r.when)}</small></span></button>`).join("") : "")
+  $("histBody").innerHTML = (h.runs.length ? h.runs.map(r => `<button class="hrow" data-run="${esc(r.id)}"><b>${esc(r.title)}</b><span><span class="pts">${r.met}/${r.all}</span> <small>${when(r.when)}</small></span></button>`).join("") : "")
     || `<p class="sub">${t("hNone")}</p>`;
-  $("histBody").querySelectorAll("[data-world]").forEach(b => b.onclick = () => { panel(null); resumeWorld(b.dataset.world); });
   $("histBody").querySelectorAll("[data-run]").forEach(b => b.onclick = async () => {
     const d = await (await get("/api/history/" + encodeURIComponent(b.dataset.run))).json();
     D = {scenario:d.scenario, assets:d.assets || {}, preset:null};
@@ -1252,7 +1263,7 @@ async function loadHistory(){
 async function loadRecent(){
   const {worlds} = await (await get("/api/history")).json();
   $("recent").innerHTML = worlds.map(w => `<button class="nav ${w.id === B?.id ? "on" : ""}" data-world="${esc(w.id)}"><span>${esc(w.title)}</span></button>`).join("");
-  $("recent").querySelectorAll("[data-world]").forEach(b => b.onclick = () => { panel(null); resumeWorld(b.dataset.world); });
+  $("recent").querySelectorAll("[data-world]").forEach(b => b.onclick = () => { toggleMenu(false); panel(null); resumeWorld(b.dataset.world); });
 }
 function step(n){ [0, 1, 2].forEach(i => $("o" + i).classList.toggle("hidden", i !== n)); }
 function onboard(){ show("onboard"); step(0); $("oname").value = store.get("standin-name"); }
@@ -1276,9 +1287,12 @@ $("o1next").onclick = () => { step(2); $("oname").focus(); };
 $("o2next").onclick = () => { store.set("standin-name", $("oname").value.trim()); startBuilding(); };
 $("oname").addEventListener("keydown", e => { if(e.key === "Enter" && !e.isComposing) $("o2next").click(); });
 $("bsettings").onclick = onboard;
-$("bnew").onclick = newStory;
-$("btplBtn").onclick = () => panel("btemplates");
-$("bhistBtn").onclick = () => panel("bhistory");
+const toggleMenu = on => $("bside").classList.toggle("open", on);
+$("bmenu").onclick = e => { e.stopPropagation(); toggleMenu(); };
+document.addEventListener("click", e => { if(!e.target.closest("#bside")) toggleMenu(false); });
+$("bnew").onclick = () => { toggleMenu(false); newStory(); };
+$("btplBtn").onclick = () => { toggleMenu(false); panel("btemplates"); };
+$("bhistBtn").onclick = () => { toggleMenu(false); panel("bhistory"); };
 document.querySelectorAll(".bclose").forEach(b => b.onclick = () => panel(null));
 $("bsay").addEventListener("input", () => clearTimeout(idleTimer));
 

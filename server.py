@@ -23,7 +23,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from standin import voice
-from standin.art import background, background_prompt, portraits
+from standin.art import background, background_prompt, portraits, scene, scene_expressions
 from standin.builder import BuildReply, Person, World, as_situation, build_turn, lock, others
 from standin.coach import coach_turn
 from standin.compiler import compile_scenario, structural_problems
@@ -58,7 +58,7 @@ actor = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.8, "actor",
 checker = LLM(env("STANDIN_CHECK_MODEL", CHECK_MODEL), spend, cache, 0.0, "checker", "minimal")
 quick_writer = LLM(env("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.7, "writer", "low")
 coach = LLM(env("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.2, "coach")
-interviewer = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.4, "builder", "minimal")
+interviewer = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.5, "builder", "low")
 painter = LLM(env("STANDIN_IMAGE_MODEL", IMAGE_MODEL), spend, cache, 1.0, "painter")
 whisper = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.3, "live_coach", "minimal")
 
@@ -181,7 +181,7 @@ class Build:
         self.ui = "en"
         self.owner = ""
         self.background = ""
-        self.faces: dict[str, dict] = {}  # name -> expressions drawn so far
+        self.faces: dict[str, dict] = {}  # name -> that person's reactions in the same photograph
         self.drawn: dict[str, str] = {}  # what each image was drawn from, to redraw only on a real change
         self.prepared: dict[str, Future] = {}  # world as JSON -> its scene, written before the user asks
 
@@ -225,35 +225,38 @@ def prepare(b: Build) -> Future:
 
 
 def draw_changes(b: Build, reply: BuildReply) -> None:
-    """Draw only what changed, in the background, so the conversation never waits for images."""
+    """One photograph holds the place and the people, redrawn when they change. The conversation never waits for it."""
     w = reply.world
-    if w.place and b.drawn.get("place") != w.place:
-        b.drawn["place"] = w.place
+    if not w.place:
+        return
+    key = w.place + "|" + "|".join(f"{p.name}:{p.look}" for p in w.people)
+    if b.drawn.get("scene") == key:
+        return
+    b.drawn["scene"] = key
 
-        def paint(place: str) -> None:
-            stem = uuid.uuid4().hex[:10]
-            background(painter, ("Photorealistic wide shot of an empty place, seen from where a person would sit or stand: "
-                                 f"{place} No people, no text, no logos. Natural light, cinematic."), ART / f"{stem}_bg.jpg")
-            if b.drawn.get("place") == place:  # a newer description wins
-                b.background = f"/art/{stem}_bg.jpg"
-                b.save()
-        easel.submit(paint, w.place)
-    for p in w.people:
-        key = f"person:{p.name}"
-        if p.look and b.drawn.get(key) != p.look:
-            b.drawn[key] = p.look
+    def paint(place: str, people: list[Person]) -> None:
+        stem = uuid.uuid4().hex[:10]
+        if people:
+            scene(painter, place, people, ART / f"{stem}_scene.jpg")
+            url = f"/art/{stem}_scene.jpg"
+        else:
+            background(painter, ("Candid photograph from the viewer's own eyes, standing in this place: "
+                                 f"{place} No people, no text, no logos. Natural light."), ART / f"{stem}_bg.jpg")
+            url = f"/art/{stem}_bg.jpg"
+        if b.drawn.get("scene") != key:  # a newer description wins
+            return
+        b.background, b.faces = url, {}
+        b.save()
+        for person in people:
+            easel.submit(react, person, url, key)
 
-        def face(person: Person, source: str, place: str) -> None:
-            stem = uuid.uuid4().hex[:10]
-            current = lambda: b.drawn.get(f"person:{person.name}") == source
-            set_neutral = lambda url: current() and b.faces.update({person.name: {"neutral": url}})
-            made = portraits(painter, place, person.gender, person.look, person.role, ART, stem, "/art", set_neutral)
-            if current():
-                b.faces[person.name] = made
-                b.save()
-        easel.submit(face, p, p.look, w.place)
-    for name in set(b.faces) - {p.name for p in w.people}:
-        del b.faces[name]
+    def react(person: Person, url: str, version: str) -> None:
+        made = scene_expressions(painter, ART / Path(url).name, person, ART, uuid.uuid4().hex[:10], "/art")
+        if b.drawn.get("scene") == version:
+            b.faces[person.name] = made
+            b.save()
+
+    easel.submit(paint, w.place, list(w.people))
 
 
 def build_state(b: Build) -> dict:
@@ -332,7 +335,7 @@ def build_finish(req: FinishReq, request: Request):
     if not b:
         raise HTTPException(404, "unknown build")
     b.ui = req.ui
-    return draft(prepare(b).result(), {"background": b.background, "portraits": b.faces}, None)
+    return draft(prepare(b).result(), {"background": b.background, "scene": b.faces}, None)
 
 
 @app.get("/api/preset/{pid}")
