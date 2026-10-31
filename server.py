@@ -26,7 +26,6 @@ from standin.art import background, background_prompt, portraits
 from standin.builder import BuildReply, Person, World, as_situation, build_turn, lock
 from standin.coach import coach_turn
 from standin.compiler import compile_scenario, structural_problems
-from standin.intake import DIFFICULTY, questions
 from standin.debrief import debrief
 from standin.engine import Line, Scene, open_scene, stream_step
 from standin.llm import LLM, Spend
@@ -55,7 +54,7 @@ writer = LLM(env("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.7, "writ
 actor = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.8, "actor", "minimal")
 checker = LLM(env("STANDIN_CHECK_MODEL", CHECK_MODEL), spend, cache, 0.0, "checker", "minimal")
 coach = LLM(env("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.2, "coach")
-interviewer = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.4, "interviewer")
+interviewer = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.4, "builder", "minimal")
 painter = LLM(env("STANDIN_IMAGE_MODEL", IMAGE_MODEL), spend, cache, 1.0, "painter")
 whisper = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.3, "live_coach", "minimal")
 
@@ -232,45 +231,6 @@ def build_finish(req: FinishReq):
     scenario = lock(scenario, b.world)
     assets = {"background": b.background, "portraits": b.faces}
     return draft(scenario, assets, None, gate1)
-
-
-class IntakeReq(BaseModel):
-    situation: str
-    ui: str = "en"
-
-
-@app.post("/api/intake")
-def intake(req: IntakeReq):
-    if not req.situation.strip():
-        raise HTTPException(400, "empty situation")
-    qs = questions(interviewer, req.situation.strip(), req.ui)
-    print(f"intake: {len(qs)} questions | {spend.summary()}", flush=True)
-    return {"questions": [q.model_dump() for q in qs]}
-
-
-class Answer(BaseModel):
-    id: str = ""
-    ask: str
-    answer: str = ""
-
-
-class CompileReq(BaseModel):
-    situation: str
-    answers: list[Answer] = []
-    material: str = ""  # pasted resume, abstract, lease...
-    ui: str = "en"
-
-
-@app.post("/api/compile")
-def compile_(req: CompileReq):
-    if not req.situation.strip():
-        raise HTTPException(400, "empty situation")
-    difficulty = next((DIFFICULTY.get(a.answer.strip(), "real") for a in req.answers if a.id == "difficulty"), "real")
-    answers = [(a.ask, a.answer) for a in req.answers if a.id != "difficulty"]
-    scenario, gate1 = compile_scenario(writer, checker, req.situation.strip(), req.material,
-                                     answers=answers, difficulty=difficulty, ui=req.ui)
-    print(f"compiled: {scenario.title} ({difficulty}) | {spend.summary()}", flush=True)
-    return draft(scenario, {}, None, gate1)
 
 
 @app.get("/api/preset/{pid}")
