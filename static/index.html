@@ -341,7 +341,6 @@ h2{margin:0;font-size:22px}
     <div class="bar">
       <button class="ibtn micb" id="micToggle" data-ic="mic" data-tl="bMicTip"></button>
       <div class="field"><div class="heard" id="heard"></div><input type="text" id="typed" data-tp="typePh"></div>
-      <button class="ibtn" id="relisten" data-ic="redo" data-tl="bClearTip"></button>
       <button class="ibtn" id="againLine" data-ic="undo" data-tl="bRetryTip"></button>
       <button class="ibtn send" id="doneBtn" data-ic="send" data-tl="bSendTip"></button>
     </div>
@@ -377,7 +376,6 @@ const ICONS = {
   mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>',
   send:'<path d="M12 19V5M6 11l6-6 6 6"/>',
   undo:'<path d="M4 9h11a5 5 0 0 1 0 10H9M4 9l4-4M4 9l4 4"/>',
-  redo:'<path d="M20 12a8 8 0 1 1-2.5-5.8M20 3v5h-5"/>',
   x:'<path d="M6 6l12 12M18 6L6 18"/>',
   users:'<circle cx="9" cy="8" r="3.5"/><path d="M3 20a6 6 0 0 1 12 0M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.5a6 6 0 0 1 3 5.5"/>',
 };
@@ -596,10 +594,6 @@ $("micToggle").onclick = () => {
   if(!SR) return;
   $("voiceIn").checked = !$("voiceIn").checked;
   if(state === "listen"){ stopRec(); listen(); }
-};
-$("relisten").onclick = () => {  // heard it wrong: throw it away and listen again
-  if(state !== "listen") return;
-  stopRec(); $("typed").value = ""; listen();
 };
 
 function measureSignals(text, typed){
@@ -1088,7 +1082,12 @@ function over(reason){
   $("typed").disabled = true; $("endBtn").classList.add("hidden");
 }
 
-$("retryBtn").onclick = $("againLine").onclick = takeBack;
+// one "say it again": wipes what is being said, or takes back the line already sent
+$("retryBtn").onclick = $("againLine").onclick = () => {
+  if(state === "listen" && ($("heard").textContent.trim() || $("typed").value.trim())){
+    stopRec(); $("typed").value = ""; listen();
+  }else takeBack();
+};
 $("logBtn").onclick = () => { $("log").classList.toggle("hidden"); $("stage").classList.toggle("logopen"); };
 $("endBtn").onclick = () => { stopVoice(); over(t("endedByYou")); };  // looking back comes after, only if they want it
 
