@@ -221,10 +221,9 @@ details summary{cursor:pointer;color:var(--mute)}
 details[open] summary{margin-bottom:8px}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .seg button{border-radius:0;background:var(--panel)}.seg button.on{background:var(--acc);color:#111;font-weight:700}
-.warnbox{border-left:4px solid var(--bad);background:var(--panel);padding:10px 14px;border-radius:8px;font-size:14px}
 @media(max-width:700px){.coached .room{padding-left:12px}.coach{top:auto;bottom:190px;left:8px;right:8px;width:auto;max-height:34%}.coached .caption,.coached .dock{left:50%;width:calc(100% - 32px)}.who-card{grid-template-columns:1fr}}
 
-.verdict{font-size:19px;background:var(--panel);border-left:4px solid var(--acc);padding:16px 20px;border-radius:8px}
+.verdict{font-size:19px;line-height:1.6;background:var(--panel);padding:16px 20px;border-radius:12px}
 .crit{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
 .crit .ok{color:var(--good);font-weight:700}.crit .no{color:var(--bad);font-weight:700}
 .secret{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:6px}
@@ -1147,7 +1146,7 @@ function renderDebrief(d, live){
     <section><h2>${t("dTrust")}</h2>${trustChart(d)}</section>
     <section><h2>${t("moments")}</h2>${db.turning_points.map((x, i) => `<div class="tp">
       <small style="color:var(--mute)">${t("turn")} ${x.turn} · ${esc(x.character)}</small>
-      <div>${t("me")}: “${esc(x.what_user_said)}”</div><div class="inner">${t("thought")}${esc(x.what_they_thought)}</div>
+      <div>${t("me")}: “${esc(x.what_user_said)}”</div><div class="inner">${t("thought")}${esc(x.what_they_thought.replace(/\s*\([^)]*(trust|patience|신뢰|인내)[^)]*\)/gi, ""))}</div>
       <div class="try">${t("tryThis")}${esc(x.try_instead)}</div>
       ${canReturn ? `<div><button data-back="${i}">↩ ${t("dBack")}</button></div>` : ""}</div>`).join("")}</section>
     ${plain ? "" : `<section><h2>${t("hidden")}</h2>${d.cast.map(c => `<div class="secret">
