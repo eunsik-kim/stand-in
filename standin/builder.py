@@ -38,6 +38,7 @@ class BuildReply(BaseModel):
     stuck: bool = Field(default=False, description="the user does not know what to do or say")
     begin: bool = Field(default=False, description="the user says to start now")
     redraw: bool = Field(default=False, description="the user asked to change how someone looks or how the place looks")
+    reset: bool = Field(default=False, description="the user wants to throw this away and start over")
 
 
 GUIDE = (
@@ -58,6 +59,8 @@ GUIDE = (
     "- Near the end, ask what they want from this moment, in their own words. It can be small: just catch up, say sorry, make them laugh. That is their goal.\n"
     "- ready: true once there is a place, a person you know well, and a goal. Then tell them you can feel the scene and they can begin.\n"
     "- stuck: true when they say they don't know or seem lost. Reassure them in one line.\n"
+    "- reset: true when they want to start over, make it again or try something else entirely.\n"
+    "- If a message makes no sense, like a misheard fragment, do not build on it: ask what they meant.\n"
     "- redraw: true only when the user asks to change someone's appearance or the look of the place.\n"
     "- begin: true when they say to start. Never ask again after that: fill anything missing yourself, except a place or a person.\n"
     "Reply with a single JSON object and nothing else."
@@ -92,9 +95,10 @@ def build_turn(llm: LLM, world: World, history: list[tuple[str, str]], message: 
         + f"World so far:\n{world.model_dump_json()}\n\nConversation:\n{talk}\n\nUser: {message}\n\n"
         f"{status(world)}\nReturn the whole world each time with everything already in it, plus this message's changes. "
         "If the user names a topic, it belongs in goal.\n"
-        f"Write say, chips, title, roles and captions in language '{ui}'. language is what the people in the scene speak.\n"
+        "Write say, chips, title, roles and captions in the language of the user's latest message "
+        f"(language '{ui}' if unclear). language is what the people in the scene speak.\n"
         'Return {"world": {"title": "", "place": "", "language": "", "me": "", "goal": "", "people": '
-        '[{"name": "", "role": "", "gender": "m|f", "look": "", "manner": "", "history": ""}]}, "say": "", "chips": [], "ready": false, "stuck": false, "begin": false, "redraw": false}',
+        '[{"name": "", "role": "", "gender": "m|f", "look": "", "manner": "", "history": ""}]}, "say": "", "chips": [], "ready": false, "stuck": false, "begin": false, "redraw": false, "reset": false}',
     )
     reply.world = keep_known(world, reply.world, reply.redraw)
     return reply

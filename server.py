@@ -238,6 +238,13 @@ def draw_changes(b: Build, w: World, redraw: bool = False) -> None:
     version = b.drawn["version"] = str(int(b.drawn.get("version", 0)) + 1)
 
     def paint(place: str, people: list[Person], base: str) -> None:
+        try:
+            draw(place, people, base)
+        except Exception as e:  # the conversation goes on; the next change tries again
+            print(f"drawing failed for {b.id}: {e!r:.200}", flush=True)
+            b.drawn.pop("names", None)
+
+    def draw(place: str, people: list[Person], base: str) -> None:
         stem = uuid.uuid4().hex[:10]
         path = ART / f"{stem}_scene.jpg"
         if people and base:
@@ -273,6 +280,10 @@ def build(req: BuildReq, request: Request):
     builds[b.id] = b
     b.ui = req.ui
     reply = build_turn(interviewer, b.world, b.talk, req.message.strip(), req.ui, req.name)
+    if reply.reset:  # they said to start over, so this world is gone
+        builds.pop(b.id, None)
+        (WORLDS / f"{b.id}.json").unlink(missing_ok=True)
+        return {"reset": True, "say": reply.say}
     reply.world = others(reply.world)
     b.talk += [("User", req.message.strip()), ("You", reply.say)]
     b.world = reply.world

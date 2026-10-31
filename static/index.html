@@ -834,6 +834,7 @@ async function buildSay(text){
   $("bsend").disabled = true;
   try{
     const r = await post("/api/build", {id:B?.id || "", message:text, ui:UI, name:store.get("standin-name")});
+    if(r.reset){ $("bsend").disabled = false; newStory(); talkListen(); return; }
     B = r; wait.remove(); bubble("them", r.say); bchips(r.chips); renderWorld();
     if(r.stuck && !(r.world.place || r.world.people.length)) panel("btemplates");
     loadRecent();
@@ -859,11 +860,18 @@ function micButton(){
   $("bmic").classList.toggle("on", talk.on);
   $("bmic").classList.toggle("hidden", !SR);
 }
+// listen in the language they actually use, not just the language of the menus
+function speechLang(){
+  const last = [...$("bmsgs").querySelectorAll(".msg.you")].pop()?.textContent || "";
+  if(/[가-힣]/.test(last)) return "ko-KR";
+  if(/[ぁ-んァ-ン]/.test(last)) return "ja-JP";
+  return LANG[UI];
+}
 function talkListen(){
   if(!talk.on || talk.rec || $("bsend").disabled) return;
   talk.said = ""; talk.last = 0;
   const r = new SR();
-  r.lang = LANG[UI]; r.continuous = true; r.interimResults = true;
+  r.lang = speechLang(); r.continuous = true; r.interimResults = true;
   r.onresult = e => {
     let live = "";
     for(let i = e.resultIndex; i < e.results.length; i++){
