@@ -984,6 +984,12 @@ function talkStop(){
   const r = talk.rec; talk.rec = null;
   if(r){ r.onend = null; try{ r.stop(); }catch(e){} }
 }
+// what's in the box is the truth: edits and deletions stick when they speak again
+$("bsay").addEventListener("input", () => {
+  if(!talk.on) return;
+  talk.said = $("bsay").value.trim() ? $("bsay").value.trim() + " " : "";
+  talk.last = 0;
+});
 $("bmic").onclick = () => { talk.on = !talk.on; micButton(); if(talk.on) talkListen(); else talkStop(); };
 
 // autopilot: a stand-in plays the user's part; they can step in at any moment
