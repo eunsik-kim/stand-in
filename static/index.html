@@ -136,8 +136,8 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .nav [data-ic]{display:grid;place-items:center;flex:none;overflow:visible}
 .navh{padding:14px 10px 4px;color:var(--mute);font-size:12px}
 #recent{overflow:auto;min-height:0;display:grid;gap:2px;align-content:start;scrollbar-width:thin;scrollbar-color:#ffffff24 transparent}
-.bchat{position:absolute;z-index:4;left:14px;top:14px;bottom:14px;width:min(384px,calc(100% - 28px));display:grid;grid-template-rows:auto auto minmax(0,1fr) auto auto;gap:10px;padding:10px 12px 12px;min-height:0;border-radius:18px;background:#14161ce6;backdrop-filter:blur(14px);box-shadow:0 0 0 1px #ffffff14}
-#bmsgs{overflow:auto;display:flex;flex-direction:column;gap:8px;min-height:0;padding-right:6px;scrollbar-width:thin;scrollbar-color:#ffffff24 transparent}
+.bchat{position:absolute;z-index:4;left:14px;top:14px;bottom:14px;width:min(384px,calc(100% - 28px));display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;gap:10px;padding:10px 12px 12px;min-height:0;border-radius:18px;background:#14161ce6;backdrop-filter:blur(14px);box-shadow:0 0 0 1px #ffffff14}
+#bmsgs{display:flex;flex-direction:column;gap:8px}
 .msg{max-width:88%;padding:9px 13px;border-radius:14px;line-height:1.45}
 .msg.them{align-self:flex-start;background:#ffffff12}
 .msg.you{align-self:flex-end;background:var(--acc);color:#111}
@@ -175,7 +175,7 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 #build.start .bchat{left:50%;top:50%;bottom:auto;transform:translate(-50%,-50%);width:min(640px,calc(100% - 32px));grid-template-rows:auto;background:none;box-shadow:none;backdrop-filter:none;gap:16px;padding:0}
 #build.start #bhero{display:block;font-size:38px;line-height:1.2;text-align:center;text-shadow:0 2px 24px #000}
 #build.start #bideas{display:inline-flex;justify-self:center;color:#dfe2e8}
-#build.start #bmsgs,#build.start #bpeople,#build.start #bempty,#build.start #bfoot,#build.start #bchips{display:none}
+#build.start #bscroll,#build.start #bempty,#build.start #bfoot,#build.start #bchips{display:none}
 #build.start .chead{display:none}
 #bmenu{position:absolute;z-index:5;left:24px;top:22px}
 .chead{height:30px}
@@ -186,7 +186,8 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .bchat{transition:none}
 .bfrow{display:flex;gap:16px;align-items:center;justify-content:space-between}
 #benter{flex:none;padding:13px 28px;font-size:17px}
-#bpeople{display:grid;gap:6px;max-height:42%;overflow:auto;scrollbar-width:thin;scrollbar-color:#ffffff24 transparent}
+.bscroll{min-height:0;overflow:auto;display:grid;gap:10px;align-content:start;padding-right:6px;scrollbar-width:thin;scrollbar-color:#ffffff24 transparent}
+#bpeople{display:grid;gap:6px}
 #bpeople:empty{display:none}
 .pc{padding:10px 12px;border-radius:12px;background:#ffffff0d;display:grid;gap:3px;font-size:13px;line-height:1.45}
 .pc b{font-size:15px}.pc small{color:var(--acc)}.pc p{margin:0;color:#dfe2e8}.pc .h{color:#a9afbb}
@@ -200,7 +201,6 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
   .bchat{top:auto;bottom:10px;left:10px;right:10px;width:auto;height:56vh}
   .bworld{padding:60px 12px calc(56vh + 22px);grid-template-rows:auto auto;align-content:end;gap:8px}
   #bempty{inset:0 0 56vh 0}.bpanel{left:0;z-index:7}
-  #bpeople{max-height:30%}
   .bfoot{padding:8px 10px}.bfrow{gap:10px}#bsummary{min-width:0;font-size:13px}#bsummary>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   #benter{padding:10px 16px;font-size:15px}
   #build.start .bchat{height:auto;left:50%;right:auto;bottom:auto;width:calc(100% - 24px)}
@@ -302,8 +302,7 @@ h2{margin:0;font-size:22px}
   <div class="bchat">
     <div class="chead"></div>
     <h1 id="bhero" data-t="bHero"></h1>
-    <div id="bpeople"></div>
-    <div id="bmsgs"></div>
+    <div class="bscroll" id="bscroll"><div id="bpeople"></div><div id="bmsgs"></div></div>
     <div class="chips" id="bchips"></div>
     <div class="composer"><textarea id="bsay" rows="2" data-tp="bPh"></textarea>
       <div class="cbar"><button class="tbtn" id="bmic"></button><button class="ibtn send" id="bsend" data-ic="send" data-tl="bSend"></button></div></div>
@@ -799,7 +798,7 @@ let B = null, bpoll = null;
 function bubble(who, text){
   const d = document.createElement("div");
   d.className = "msg " + who; d.textContent = text;
-  $("bmsgs").appendChild(d); $("bmsgs").scrollTop = 1e9;
+  $("bmsgs").appendChild(d); $("bscroll").scrollTop = 1e9;
   return d;
 }
 function bchips(list){
