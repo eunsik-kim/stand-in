@@ -1,0 +1,122 @@
+{
+  "situation": "My last meeting with my boss before I resign, because I got a better offer. Things will not go as planned.",
+  "ui": "en",
+  "scenario": {
+    "title": "The Resignation Ambush",
+    "language": "en",
+    "setting": "Small glass conference room at end of day for your private 1:1 with your boss. Laptop open, door half-closed, whiteboard still covered from the morning meeting.",
+    "user_role": "You are an employee having a last private meeting with your boss before resigning to accept a better offer.",
+    "user_goal": "Resign clearly and leave on good terms without being talked out of it or pressured to share more than you want.",
+    "user_knows": [
+      "You have a better outside offer and have decided to resign.",
+      "This meeting was booked as a private 1:1 with your boss to tell him first.",
+      "You want to leave professionally and keep a good relationship."
+    ],
+    "cast": [
+      {
+        "name": "Marcus Hale",
+        "role": "Your direct boss, team manager",
+        "appearance": "Rumpled button-down, coffee cup in hand, tired but trying to smile",
+        "voice": "Fast, familiar, half-joking half-guilty-tripping",
+        "gender": "m",
+        "history": "He has been your direct manager for the last year. In your last 1:1 he praised your work and told you he was counting on you for next month's rollout.",
+        "enters_at": 0,
+        "goal": "Delay your resignation and guilt you into finishing the rollout first with vague promises of a future raise.",
+        "secret": "He already told the rest of the team this morning that you might be leaving.",
+        "reveal_when": "asks him directly what he has already told the team",
+        "red_lines": [
+          "will not accept your resignation calmly on the spot",
+          "will not put any counter-offer in writing"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Priya Desai",
+        "role": "HR Manager",
+        "appearance": "Neat blazer, laptop and folder, polite but procedural",
+        "voice": "Calm, crisp, policy-quoting with forced cheer",
+        "gender": "f",
+        "history": "She onboarded you and handles HR for your team. You last emailed her two days ago asking about your unused vacation balance.",
+        "enters_at": 2,
+        "goal": "Turn a private chat into a formal process and get you to commit to a long notice and full documentation.",
+        "secret": "She can approve reducing the standard 4-week notice to 2 weeks if you submit a written handover plan.",
+        "reveal_when": "asks directly whether the notice period can ever be shortened",
+        "red_lines": [
+          "will not let you leave without a formal last day",
+          "will not take sides against management openly"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 65
+        }
+      },
+      {
+        "name": "Dana Whitaker",
+        "role": "Director above your boss",
+        "appearance": "Sharp blazer, phone in hand, acts like she owns the room",
+        "voice": "Loud, blunt, interruptive and funny in a painful way",
+        "gender": "f",
+        "history": "She is Marcus's boss and has borrowed you for two urgent projects. Yesterday she Slacked you 'we need to talk about your future here' out of nowhere.",
+        "enters_at": 4,
+        "goal": "Steal you for her own urgent client fire and prove Marcus cannot keep his people, even if it undermines him in front of you.",
+        "secret": "She has an unapproved plan to offer you an internal transfer to her own team at a higher title to stop you leaving the company.",
+        "reveal_when": "asks her directly why she came to your private resignation meeting",
+        "red_lines": [
+          "will not support you leaving for a competitor",
+          "will not stay quiet if Marcus blames her"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "Marcus Hale",
+    "opening_line": "Shut the door, quick — someone said you're about to quit on me, tell me that's not true?",
+    "phases": [
+      "Attempted private resignation",
+      "Formal retention ambush",
+      "Tug-of-war exit fight"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "Priya knocks and walks in uninvited, saying all resignations now need HR in the room. Your private chat becomes a formal recorded process and Marcus starts performing for her.",
+        "enters": [
+          "Priya Desai"
+        ],
+        "shot": "Door swings open, Priya drags a chair between you and Marcus, flips on the harsh overhead lights and opens her laptop."
+      },
+      {
+        "at_turn": 4,
+        "description": "Dana barges in about an urgent client escalation that supposedly only you can fix. She and Marcus start contradicting each other about your workload and who is to blame, turning your resignation into their fight.",
+        "enters": [
+          "Dana Whitaker"
+        ],
+        "shot": "Dana pushes in with her phone buzzing, drops a stack of client printouts on the table and stands, forcing Marcus to stand too."
+      },
+      {
+        "at_turn": 6,
+        "description": "Marcus puts a call from recruiting on speaker to prove a counter-offer is coming, but the news is bad. Marcus and Dana openly snap at each other and both turn to pressure you for an answer right now.",
+        "enters": [],
+        "shot": "Speakerphone crackles on the table, everyone leans in, Marcus goes red and Dana laughs sharply, the room feels tiny and tense."
+      }
+    ],
+    "success_criteria": [
+      "State clearly that you are resigning and do not let the decision be talked into a maybe",
+      "Stay professional and calm while being interrupted, guilt-tripped, or rushed",
+      "Avoid revealing your new employer name or offer details under pressure",
+      "Get explicit agreement on last day and handover next steps before the scene ends"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [
+    {
+      "attempt": 0,
+      "problems": []
+    }
+  ]
+}

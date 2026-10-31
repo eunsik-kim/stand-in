@@ -11,6 +11,15 @@ from pydantic import BaseModel, Field
 
 Expression = Literal["neutral", "pleased", "skeptical", "annoyed"]
 
+# every line anyone says aloud follows this
+SPOKEN = (
+    "Spoken lines sound like real speech overheard, never written text. Short, unfinished, reacting in the moment: people trail off, "
+    "restart, interrupt, use fillers and slang that fit who they are. No tidy full sentences, no explaining, no formal connectors, "
+    "no summarising what was just said. In Korean use natural 구어체: contractions like 뭐, 걍, 근데, 아니, 어?, 그니까, endings like -거든, -잖아, -는데, -지 뭐, "
+    "and 반말 or 존댓말 as the relationship really would; never 문어체 such as '-습니다만', '따라서', '그러나', '말씀드립니다' unless the person is truly that formal. "
+    "In English use contractions and fragments. In Japanese use casual spoken forms that fit the relationship."
+)
+
 
 class Mood(BaseModel):
     trust: int = Field(ge=0, le=100, description="how much they believe/like the user")

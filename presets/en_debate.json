@@ -1,0 +1,122 @@
+{
+  "situation": "2 AM on a rooftop with old friends. One question: if you could erase your most painful memory, would you?",
+  "ui": "en",
+  "scenario": {
+    "title": "2 AM Rooftop: Would You Erase It?",
+    "language": "en",
+    "setting": "Rooftop of an old apartment building at 2 AM - blankets and sleeping bags on concrete, empty cans, cheap string lights, city hum below. Old friends reunited after months apart.",
+    "user_role": "Yourself, up late on a rooftop at 2 AM catching up with old friends",
+    "user_goal": "Answer the erase-your-memory question honestly and keep the night fun and close with old friends",
+    "user_knows": [
+      "It's 2 AM on a rooftop with old close friends for a late-night reunion",
+      "Maya just asked the group if you would erase your most painful memory if you could",
+      "This is meant to be honest and fun, not small talk"
+    ],
+    "cast": [
+      {
+        "name": "Maya",
+        "role": "High school best friend who organized this rooftop reunion",
+        "appearance": "Oversized hoodie, messy bun, blanket around shoulders, sitting cross-legged",
+        "voice": "Fast, warm, swears affectionately, talks over people when excited",
+        "gender": "f",
+        "history": "Known the user since age 15 from homeroom. Last exchange was texting the user last week: rooftop, 2am, no excuses, bring blankets.",
+        "enters_at": 0,
+        "goal": "Force everyone to give a real, raw answer to the erase question and keep the night emotionally honest",
+        "secret": "She booked a consultation for a memory-reconsolidation therapy trial for next Tuesday and has told no one.",
+        "reveal_when": "asks her directly what memory she would erase herself",
+        "red_lines": [
+          "will not tolerate mocking someone's grief"
+        ],
+        "mood": {
+          "trust": 78,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Devon",
+        "role": "Old college roommate, the group clown",
+        "appearance": "Beanie, puffer jacket, holding a beer, sprawled on a beanbag",
+        "voice": "Dry sarcastic drawl, deflects with bits and impressions",
+        "gender": "m",
+        "history": "Lived with the user sophomore year and had nightly kitchen talks. Last saw the user at a birthday where they promised to stop deflecting everything with jokes.",
+        "enters_at": 0,
+        "goal": "Keep everything funny and light to avoid having to answer seriously himself",
+        "secret": "He missed his flight to his father's funeral last spring because he overslept, but tells everyone work blocked him.",
+        "reveal_when": "asks him directly what painful memory he is joking to avoid",
+        "red_lines": [
+          "will shut down if directly accused of not loving his dad"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 65
+        }
+      },
+      {
+        "name": "Lena",
+        "role": "Mutual old friend who drifted away after moving for work",
+        "appearance": "Work blazer over pajama pants, windswept hair, carrying a six-pack",
+        "voice": "Breathless, bright, talks fast to cover awkwardness",
+        "gender": "f",
+        "history": "Was in the same tight friend group for six years before moving for work and going quiet. Last exchange was the user liking her post three months ago with no reply.",
+        "enters_at": 2,
+        "goal": "Prove she still belongs after being distant by stealing focus and controlling the conversation",
+        "secret": "She is moving to Berlin in 9 days and has not told the group yet.",
+        "reveal_when": "asks her directly why she went quiet after moving for work",
+        "red_lines": [
+          "will not admit she feels guilty for pulling away"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 55
+        }
+      }
+    ],
+    "opening_speaker": "Maya",
+    "opening_line": "Okay, 2AM rule, no lying — if you could delete your worst memory tonight, like gone forever, would you fucking do it?",
+    "phases": [
+      "Playful hypothetical answers",
+      "Real confessions slip out",
+      "Fight and have-to-choose moment"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "Lena bursts through the rooftop door out of breath with beer, warns the building super is doing rounds and they have about 20 minutes left, shifting the night from lazy to urgent.",
+        "enters": [
+          "Lena"
+        ],
+        "shot": "Stairwell door slams open, cold wind scatters blankets and string lights swing as Lena stumbles in grinning with a rattling six-pack."
+      },
+      {
+        "at_turn": 4,
+        "description": "Devon's phone blasts a voicemail from his mom on speaker about his dad's anniversary, killing the jokes. Maya calls him out for never taking anything seriously.",
+        "enters": [],
+        "shot": "Phone speaker crackles loud over the city hum, fairy lights buzz as everyone freezes mid-laugh and Devon looks away."
+      },
+      {
+        "at_turn": 6,
+        "description": "Maya and Devon explode into a real fight - Maya accuses Devon of clowning through everything, Devon accuses her of using heavy questions to control the night, forcing the user to mediate or pick a side.",
+        "enters": [],
+        "shot": "Maya stands knocking over cans, Devon paces to the ledge, blankets strewn as the rooftop goes tense and quiet."
+      }
+    ],
+    "success_criteria": [
+      "Give a genuine personal answer to the erase question instead of dodging with a joke",
+      "Get at least one friend to share the real story behind their answer",
+      "Step in to keep the group together when Maya and Devon fight instead of checking out"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [
+    {
+      "attempt": 0,
+      "problems": [
+        "Devon reveal_when requires several separate things at once instead of one clear move: 'calls out his joking to avoid answering and asks directly what he is avoiding' lists two actions (call out + ask)."
+      ]
+    },
+    {
+      "attempt": 1,
+      "problems": []
+    }
+  ]
+}

@@ -11,7 +11,7 @@ import re
 from pydantic import BaseModel
 
 from .llm import LLM
-from .spec import Scenario
+from .spec import SPOKEN, Scenario
 
 WRITER_SYSTEM = (
     "You design rehearsal scenarios: realistic situations where a person practices facing other people. "
@@ -133,6 +133,7 @@ def compile_scenario(writer: LLM, checker: LLM, situation: str, material: str = 
         "Each is one clear thing a well-prepared person can really achieve within this conversation, mostly about what the user does.\n"
         "- history: for each person, 1-2 concrete sentences on what has already happened between them and the user: how they know each other, "
         "and their last exchange. Nobody is a stranger unless the situation says so. No secrets here; the user knows all of it.\n"
+        f"- opening_line follows this: {SPOKEN}\n"
         "- opening_line: the first thing said, in character. They remember the history, so it sounds like a continuing relationship, not a cold start.\n"
         f"Return:\n{SHAPE}"
     )

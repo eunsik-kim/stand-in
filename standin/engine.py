@@ -20,7 +20,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 from .compiler import facts
 from .llm import LLM, _extract_json
-from .spec import Character, Event, Expression, Mood, Scenario
+from .spec import SPOKEN, Character, Event, Expression, Mood, Scenario
 
 
 class MoodDelta(BaseModel):
@@ -107,7 +107,7 @@ def _bible(s: Scenario) -> str:
         "and respect earn trust. Low trust = guarded, skeptical; low patience = short, cutting, wants to end. "
         "Lines marked 'observed' are what they could see and hear (pauses, eye contact); react only when a real "
         "person in that role would notice and care. A secret stays hidden, without hints, until its condition "
-        "is clearly met. People move: a fair point lands, a good offer softens them, and they never repeat "
+        f"is clearly met. {SPOKEN} People move: a fair point lands, a good offer softens them, and they never repeat "
         "a point they already made. Someone who has been heard can reach an agreement."
     )
 
@@ -148,8 +148,7 @@ def take_prompt(scene: Scene, turn: int) -> str:
         + (f"Not in the room yet, so they cannot speak and nobody mentions them: {', '.join(absent)}.\n\n" if absent else "")
         + f"Transcript:\n{scene.public(viewer='*')}\n\n"
         "Write who reacts to the user's last line. Usually one person; two only if a second would really jump in. "
-        "Each spoken line is 1-2 short sentences, the length a person says in one breath while talking: "
-        "one point or one question at a time, plain spoken language, no stage directions. "
+        "Each spoken line is what a person says in one breath: one point or one question at a time, no stage directions. "
         "Set end=true only if the conversation has reached a natural conclusion.\n"
         + (f"You are also the director. The next planned turning point is: {coming.description} Set advance=true when this moment has "
            "peaked or gone quiet and it is the right time for that to happen next. Keep the scene moving; never let it drag.\n" if coming else "")
@@ -228,7 +227,7 @@ def rewrite(actor: LLM, scene: Scene, c: Character, draft: str, why: str) -> Bea
     return actor.ask(
         Beat, _bible(s),
         f"Transcript:\n{scene.public()}\n\n{c.name} was about to say \"{draft}\", which gives away their secret "
-        f"too early ({why}). Write what {c.name} says instead, keeping it hidden: 1-2 short spoken sentences.\n"
+        f"too early ({why}). Write what {c.name} says instead, keeping it hidden, one breath of real speech. {SPOKEN}\n"
         f'Return {{"speaker": "{c.name}", "expression": "neutral|pleased|skeptical|annoyed", "inner": "...", '
         '"say": "...", "mood_delta": {"trust": -25..25, "patience": -25..25}}',
     )
@@ -413,7 +412,7 @@ def simulated_user(llm: LLM, persona: str) -> Callable[[Scene, int], str]:
             f"Situation: {s.setting}\nYou are: {s.user_role}. Your goal: {s.user_goal}\n"
             f"How you play (stay consistent with this): {persona}\n\n"
             f"Transcript:\n{scene.public()}\n\n"
-            "Say your next line: 1-3 sentences, spoken language, no narration. Answer what was just asked; "
+            f"Say your next line, one breath of real speech, no narration. {SPOKEN} Answer what was just asked; "
             "never repeat a line you already said. "
             'Return {"say": "..."}',
         ).say

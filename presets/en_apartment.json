@@ -1,0 +1,119 @@
+{
+  "situation": "Buying my first apartment. I'm at the final price negotiation with the seller and the agent, and I only have one shot at this.",
+  "ui": "en",
+  "scenario": {
+    "title": "One Shot Closing",
+    "language": "en",
+    "setting": "Small glass-walled conference room at the listing office, late afternoon — final sale contracts on the table, cold coffee, and a wall clock ticking toward closing time",
+    "user_role": "Yourself — a first-time buyer sitting down for the final price negotiation for your first apartment",
+    "user_goal": "Leave this one meeting with a locked final price and terms you can actually live with",
+    "user_knows": [
+      "This is your first apartment purchase",
+      "You are in the final price negotiation with the seller and the agent",
+      "You only get one shot to make your case today"
+    ],
+    "cast": [
+      {
+        "name": "Maya Chen",
+        "role": "Listing agent running the negotiation",
+        "appearance": "Sharp blazer, phone always in hand, stack of contracts",
+        "voice": "Fast, bright, smoothing-over tone that turns clipped under pressure",
+        "gender": "f",
+        "history": "She met you at the open house and showed you the apartment twice. She called you yesterday to say Frank would only meet once for a final number.",
+        "enters_at": 0,
+        "goal": "Close the deal today at the highest price possible to protect her commission and avoid relisting",
+        "secret": "Frank told her privately this morning he would sign if the price is $11,500 below asking provided closing happens in under 30 days.",
+        "reveal_when": "asks Maya directly what number Frank would actually sign today",
+        "red_lines": [
+          "won't forge or show other offer paperwork",
+          "won't let you leave without a clear yes or no"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 65
+        }
+      },
+      {
+        "name": "Frank Delaney",
+        "role": "Seller and current owner",
+        "appearance": "Polo shirt, crossed arms, reading glasses on contract",
+        "voice": "Gruff, blunt, jokes that land a little mean",
+        "gender": "m",
+        "history": "You met him briefly at your second viewing talking about the kitchen remodel. His last words to you through Maya were bring your best number, I don't do back-and-forth.",
+        "enters_at": 0,
+        "goal": "Squeeze the highest possible final price to prove he won, even if it risks blowing up a fast close",
+        "secret": "He will lose a $4,800 deposit on his next house in Tampa if he does not have a signed contract by Friday.",
+        "reveal_when": "asks Frank why he is selling now or what his deadline is for his next move",
+        "red_lines": [
+          "won't be threatened or sworn at",
+          "won't split repairs after price is set"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Sofia Delaney",
+        "role": "Seller's wife and co-owner",
+        "appearance": "Casual sweater, tote bag, packing tape still on her hands",
+        "voice": "Warm, tired, direct — cuts through sales talk",
+        "gender": "f",
+        "history": "You saw her briefly at the second viewing carrying laundry and chatted about the upstairs neighbor. She told you she hoped you'd love the place as much as they did.",
+        "enters_at": 4,
+        "goal": "End the limbo with a clean, drama-free close even if it means taking less, which puts her against Frank's holdout for more",
+        "secret": "She already booked non-refundable movers for next Thursday for $2,200 and will pressure Frank to accept a reasonable final offer rather than start over.",
+        "reveal_when": "asks Sofia what she personally needs from the move or what happens if the deal falls through",
+        "red_lines": [
+          "won't badmouth Frank to kill the deal entirely",
+          "won't agree to stay past next week"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 70
+        }
+      }
+    ],
+    "opening_speaker": "Maya Chen",
+    "opening_line": "Okay, Frank's here, he's given us this one meeting — so hit him with your final number and give him a reason not to walk.",
+    "phases": [
+      "Opening numbers",
+      "Backup offer pressure",
+      "Family split and final ultimatum"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "Maya's phone buzzes with a message from the backup buyer's agent saying they want an answer tonight. She announces it to the table and Frank immediately hardens and talks about walking.",
+        "enters": [],
+        "shot": "Maya flips her phone face-up glowing on the table, Frank leans back arms crossed and drags the contract toward himself."
+      },
+      {
+        "at_turn": 4,
+        "description": "Sofia walks in late from packing and immediately contradicts Frank, saying she just wants this over and done, not a bidding war. Frank snaps at her in front of everyone.",
+        "enters": [
+          "Sofia Delaney"
+        ],
+        "shot": "Door swings open, Sofia drops her tote with keys clattering on the table, Frank's chair scrapes loud as he turns to stare her down."
+      },
+      {
+        "at_turn": 6,
+        "description": "Maya and Frank erupt at each other — Maya accuses him of moving the goalposts and risking everyone's time, Frank accuses her of siding with the buyer to close quick. Frank issues a 10-minute take-it-or-leave-it deadline.",
+        "enters": [],
+        "shot": "Maya half-stands knocking her coffee cup, Frank slaps the table and jabs at the wall clock while the room goes silent."
+      }
+    ],
+    "success_criteria": [
+      "State a clear final price plus at least one concrete term like closing date, repairs, or inclusions",
+      "Ask at least one question that probes the seller's timeline or motivation instead of only arguing price",
+      "Keep negotiating calmly and make a closing attempt after the interruptions without caving instantly or walking out"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [
+    {
+      "attempt": 0,
+      "problems": []
+    }
+  ]
+}

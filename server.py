@@ -31,7 +31,7 @@ from standin.debrief import debrief
 from standin.engine import Line, Scene, open_scene, simulated_user, stream_step
 from standin.llm import LLM, Spend
 from standin.signals import Signals, describe
-from standin.spec import Scenario
+from standin.spec import SPOKEN, Scenario
 
 load_dotenv()
 ROOT = Path(__file__).parent
@@ -540,7 +540,7 @@ def replies(req: AutoReq):
     got = actor.ask(
         Replies, "You suggest what a person could say next in a live conversation. Reply with a single JSON object.",
         f"Setting: {sc.setting}\nThe person: {sc.user_role}\nWhat they want: {sc.user_goal}\n\nTranscript:\n{s.scene.public()}\n\n"
-        f"Write 3 different things they could say next, in language '{sc.language}', in the first person, one short spoken sentence each. "
+        f"Write 3 different things they could say next, in language '{sc.language}', in the first person, one breath each. {SPOKEN} "
         "Put the one you recommend first. Make them really different in approach: direct, warm or curious, holding back. "
         "No quotation marks. Do not repeat anything already said.\n"
         'Return {"replies": ["...", "...", "..."]}',

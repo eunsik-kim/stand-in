@@ -1,0 +1,125 @@
+{
+  "situation": "Final Series A pitch in a VC boardroom. Our runway ends in six weeks and nobody in the room knows it yet.",
+  "ui": "en",
+  "scenario": {
+    "title": "Six Weeks Left",
+    "language": "en",
+    "setting": "Glass-walled VC boardroom late afternoon, Series A final pitch. Deck on screen, water glasses untouched, partners checking watches.",
+    "user_role": "You are the founder delivering the final Series A pitch.",
+    "user_goal": "Convince the room to move forward with your Series A.",
+    "user_knows": [
+      "You are in the final Series A pitch meeting in a VC boardroom.",
+      "Your startup's runway ends in six weeks.",
+      "No one in the room knows about the runway situation yet."
+    ],
+    "cast": [
+      {
+        "name": "Maya Chen",
+        "role": "Managing Partner, deal lead",
+        "appearance": "Sharp blazer, sleeves pushed up, pen tapping term sheet draft",
+        "voice": "Fast, clipped, impatient but warm when impressed",
+        "gender": "f",
+        "history": "Met you three weeks ago after your SaaS panel and ran two follow-up Zooms. Her last text was bring the real numbers, no deck theater.",
+        "enters_at": 0,
+        "goal": "Get a clean, defensible win she can take to Monday's partner meeting without looking reckless.",
+        "secret": "She has $600k in unilateral bridge authority she can deploy to cover diligence, but will never offer it first.",
+        "reveal_when": "asks Maya directly if there is any bridge check to reach a partner vote",
+        "red_lines": [
+          "Will not defend a founder who lies about numbers",
+          "Will not take a deal to partners without a clear lead path"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 55
+        }
+      },
+      {
+        "name": "David Roth",
+        "role": "Senior Partner, skeptic",
+        "appearance": "Gray sweater, glasses down his nose, spreadsheet printed and annotated in red",
+        "voice": "Dry, slow, cutting with fake politeness",
+        "gender": "m",
+        "history": "Sat in on your last Zoom and grilled you on acquisition costs. He ended that call with impress me in person or we're done.",
+        "enters_at": 0,
+        "goal": "Poke holes in the story and force you to admit your cash position before the firm wastes time.",
+        "secret": "The investment committee froze all new Series A term sheets until next quarter unless a deal already has a lead investor committed.",
+        "reveal_when": "asks David directly what would make the firm say no regardless of traction",
+        "red_lines": [
+          "Will not back a deal without seeing downside protection",
+          "Will not let Maya rush him past diligence"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Priya Nair",
+        "role": "Associate, diligence support",
+        "appearance": "Laptop covered in stickers, oversized notebook, out of breath",
+        "voice": "Quick, eager, nervous-laughing when she interrupts",
+        "gender": "f",
+        "history": "Traded emails with you last week for data room access. You promised her the churn cohort breakdown in person today.",
+        "enters_at": 2,
+        "goal": "Prove she is sharper than the founders she covers by catching a flaw and impressing both partners.",
+        "secret": "She must submit her written diligence recommendation by 5pm today, so what you say in this room locks her vote.",
+        "reveal_when": "asks Priya directly what she needs to write a positive diligence note",
+        "red_lines": [
+          "Will not cover for missing data",
+          "Will not openly contradict Maya in front of a founder"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 65
+        }
+      }
+    ],
+    "opening_speaker": "Maya Chen",
+    "opening_line": "Okay, forget slide one — you told me on Zoom you had real traction, so why shouldn't we walk in the next ten minutes?",
+    "phases": [
+      "The Pitch",
+      "The Squeeze",
+      "The Split"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "Priya rushes in late with a fresh TechCrunch alert — a direct competitor just announced a massive raise — and both partners turn to you for why you still win.",
+        "enters": [
+          "Priya Nair"
+        ],
+        "shot": "Door bangs open, Priya slaps a printout on the table, both partners swivel away from the deck to stare at you."
+      },
+      {
+        "at_turn": 4,
+        "description": "Maya's phone buzzes on speaker — the fund's CFO reports another portfolio company just missed payroll — and David immediately pivots to interrogating your burn and cash discipline.",
+        "enters": [],
+        "shot": "Maya's iPhone lights up on speaker in the middle of the table, the glass room goes dead quiet as the CFO's voice fills it."
+      },
+      {
+        "at_turn": 6,
+        "description": "Maya and David erupt into an open fight over whether to kill the deal now or keep digging, forcing you to step in while time runs out.",
+        "enters": [],
+        "shot": "Maya shoves her chair back and stands, David tosses his pen down with a cold laugh, Priya sinks back as the air turns hostile."
+      }
+    ],
+    "success_criteria": [
+      "Secure a concrete next step toward Series A like a partner meeting, diligence list, or bridge discussion",
+      "Reframe the competitor raise without dismissing it or losing credibility",
+      "Handle pressure on burn and cash without lying and without letting the room spiral"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [
+    {
+      "attempt": 0,
+      "problems": [
+        "Priya Nair reveal_when lists more than one action: 'what she needs for her diligence note' or 'what happens next internally' instead of one clear move."
+      ]
+    },
+    {
+      "attempt": 1,
+      "problems": []
+    }
+  ]
+}

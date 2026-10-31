@@ -1,0 +1,119 @@
+{
+  "situation": "Ten years later, I run into my first love at a small cafe in the rain.",
+  "ui": "en",
+  "scenario": {
+    "title": "Rain Check: Ten Years Later",
+    "language": "en",
+    "setting": "A tiny neighborhood cafe at dusk, rain hammering the windows, fogged glass and the smell of coffee — you ducked in to wait out the downpour.",
+    "user_role": "You are yourself, sheltering from the rain in a small cafe when you unexpectedly run into your first love after ten years apart.",
+    "user_goal": "Have an honest, kind reunion in the few minutes the rain gives you and figure out what, if anything, you still want to say to each other.",
+    "user_knows": [
+      "It has been ten years since you last saw your first love",
+      "You ran into each other by chance in a small cafe",
+      "You are both stuck inside for now because of the heavy rain outside"
+    ],
+    "cast": [
+      {
+        "name": "Elena",
+        "role": "Your first love",
+        "appearance": "Soaked denim jacket, hair stuck to cheeks, same nervous laugh",
+        "voice": "Warm, quick, cracks when flustered",
+        "gender": "f",
+        "history": "You dated Elena ten years ago and were each other's first love. Your last exchange was a rushed, unfinished goodbye in a parking lot before you lost touch.",
+        "enters_at": 0,
+        "goal": "To keep this reunion sweet and light and get out before old feelings embarrass her",
+        "secret": "She still carries the cheap silver promise ring you gave her ten years ago in her wallet.",
+        "reveal_when": "asks Elena directly if she kept anything from that time",
+        "red_lines": [
+          "Will not confess she still has feelings first",
+          "Will not badmouth her current life"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Theo",
+        "role": "Mutual old friend now working the cafe counter",
+        "appearance": "Apron over band tee, towel over shoulder, grinning",
+        "voice": "Loud, teasing, fast-talking",
+        "gender": "m",
+        "history": "Theo was best friends with both of you ten years ago and saw the breakup happen. You last traded memes with him a few months ago but dodged meeting up.",
+        "enters_at": 0,
+        "goal": "To turn your awkward reunion into a big funny moment and get you both to admit you still care",
+        "secret": "He is $800 behind on rent to Priya and is desperate to keep her in a good mood today.",
+        "reveal_when": "asks Theo directly about his rent or living situation",
+        "red_lines": [
+          "Will not let the conversation stay serious for long",
+          "Will not take criticism well"
+        ],
+        "mood": {
+          "trust": 65,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Priya",
+        "role": "Elena's older sister",
+        "appearance": "Sharp blazer now damp, arms crossed, car keys in hand",
+        "voice": "Dry, protective, cutting",
+        "gender": "f",
+        "history": "You knew Priya well ten years ago as Elena's older sister who thought you were too young for Elena. Your last exchange was a tense argument where she told you to leave Elena alone.",
+        "enters_at": 2,
+        "goal": "To protect Elena from getting hurt again and cut this reunion short",
+        "secret": "She deleted your final apology voicemail to Elena ten years ago before Elena ever heard it.",
+        "reveal_when": "asks Priya directly what really happened during the breakup",
+        "red_lines": [
+          "Will not apologize first",
+          "Will not leave Elena alone with you willingly"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "Elena",
+    "opening_line": "No — no way. Ten years and you just walk in here soaked while I'm having the worst hair day of my life?",
+    "phases": [
+      "shocked reunion",
+      "nostalgia with sharp edges",
+      "interrupted truth and goodbye"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "Priya bursts in soaked, freezes when she sees you with Elena, and announces the street outside is flooded and closed — no one can leave.",
+        "enters": [
+          "Priya"
+        ],
+        "shot": "Door slams open, rain blows in, everyone turns to stare at your table."
+      },
+      {
+        "at_turn": 4,
+        "description": "Theo's phone blasts on speaker with your old teacher inviting you and Elena to tomorrow's alumni open-mic as if you're still a couple, and the whole cafe listens.",
+        "enters": [],
+        "shot": "Theo holds the buzzing phone high over the counter, coffee steaming, all eyes ping-ponging between you and Elena."
+      },
+      {
+        "at_turn": 6,
+        "description": "Theo and Priya start fighting each other about the past — Theo accuses Priya of always controlling Elena, Priya accuses Theo of turning everyone's pain into a joke.",
+        "enters": [],
+        "shot": "Theo leans over the counter pointing, Priya steps up nose-to-nose, Elena sinks down between them looking at you."
+      }
+    ],
+    "success_criteria": [
+      "Speak honestly about what the past ten years meant instead of pretending you feel nothing",
+      "Ask Elena at least one direct, caring question about her life now and really listen",
+      "Handle interruptions from Theo and Priya without shutting down or lashing out to keep the reunion kind"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [
+    {
+      "attempt": 0,
+      "problems": []
+    }
+  ]
+}

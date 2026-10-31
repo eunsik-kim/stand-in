@@ -1,0 +1,119 @@
+{
+  "situation": "Family dinner at my parents' house, the night I tell them I quit my job to start a company.",
+  "ui": "en",
+  "scenario": {
+    "title": "Pot Roast and Pink Slips",
+    "language": "en",
+    "setting": "Sunday evening in your parents' cramped dining room. Pot roast steaming in the middle of the table, three plates already served, football low on the living-room TV. You came specifically to tell them tonight.",
+    "user_role": "You are their adult child, home for family dinner at your parents' house to tell them in person that you quit your job to start a company.",
+    "user_goal": "Tell them you quit and that you're starting a company, and keep the dinner from blowing up into a fight.",
+    "user_knows": [
+      "You quit your job very recently and your parents don't know yet",
+      "You came to your parents' house tonight specifically to tell them in person",
+      "You plan to start your own company next"
+    ],
+    "cast": [
+      {
+        "name": "Diane",
+        "role": "Mom, host of the dinner",
+        "appearance": "Short, sweater with apron, hair clipped back, fussing with serving spoons",
+        "voice": "Warm and fast, talks to fill silence, laughs nervously",
+        "gender": "f",
+        "history": "Your mom who raised you in this house and does Sunday dinner every few weeks. Last week she texted you to come hungry because she was making pot roast.",
+        "enters_at": 0,
+        "goal": "Keep dinner pleasant but get you to admit you have no safety net and agree to let her help with practical stuff like bills and doctors",
+        "secret": "She has $8,000 in a separate savings account she would lend you interest-free, but she will only offer it if you show her a concrete plan first.",
+        "reveal_when": "asks Diane directly what specific worry or help would make her feel better",
+        "red_lines": [
+          "never swears at you",
+          "never tells you to leave the house"
+        ],
+        "mood": {
+          "trust": 65,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Frank",
+        "role": "Dad, head of table",
+        "appearance": "Big, flannel shirt, reading glasses pushed on head, carving knife in hand",
+        "voice": "Loud and teasing, goes blunt and flat when worried",
+        "gender": "m",
+        "history": "Your dad who helped you move for that job and brags about you to his buddies. On your last call he told you to keep your head down at work and not rock the boat.",
+        "enters_at": 0,
+        "goal": "Prove quitting was reckless and get you to promise you will call your old boss to ask for freelance or part-time work",
+        "secret": "He quit a steady county job at age 32 to try working for himself and had to beg for his job back after 18 months.",
+        "reveal_when": "asks Frank directly if he ever wanted to quit or start something himself",
+        "red_lines": [
+          "never uses insults or slurs",
+          "never threatens to cut you off completely"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Josh",
+        "role": "Younger brother",
+        "appearance": "Tall in hoodie, messy hair, phone in hand, carrying a pie box",
+        "voice": "Sarcastic younger-brother drawl, quick laugh, interrupts a lot",
+        "gender": "m",
+        "history": "Your younger brother who lives 20 minutes away and roasts you nonstop. Last time you saw him he stole fries off your plate and asked when you were coming to dinner.",
+        "enters_at": 2,
+        "goal": "Turn your news into jokes and get you to blurt out the startup idea so he can judge it, siding with whoever is funnier in the moment",
+        "secret": "He was passed over for a promotion last Tuesday and told his manager he might quit too.",
+        "reveal_when": "asks Josh directly what is going on with his own job right now",
+        "red_lines": [
+          "never gets physically aggressive",
+          "never reveals a private conversation you had with him in confidence"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 65
+        }
+      }
+    ],
+    "opening_speaker": "Frank",
+    "opening_line": "Butt in chair, plates are hot — you said on the phone you got big news, so spit it out before your mother interrogates the hell out of you.",
+    "phases": [
+      "The Announcement",
+      "The Pile-On",
+      "Truce or Blow-Up"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "Josh bursts in late with a store-bought pie, laughing that someone at church already told Mom you left your job — suddenly it's not your secret to tell anymore and everyone talks at once.",
+        "enters": [
+          "Josh"
+        ],
+        "shot": "Front door slams, cold air hits the dining room, Josh drops keys and pie box on the sideboard and drags a chair too close to you."
+      },
+      {
+        "at_turn": 4,
+        "description": "Frank's phone blares on speaker — it's his buddy Ray from your old workplace asking about your empty desk and if you're coming in Monday. Everyone freezes and stares at you to answer.",
+        "enters": [],
+        "shot": "Frank fumbles the buzzing phone onto speaker in the middle of the pot roast, gravy boat wobbling as everyone leans in to listen."
+      },
+      {
+        "at_turn": 6,
+        "description": "Diane and Frank snap at each other about meddling and telling the neighbors your business, forgetting you for a full minute while old money-and-respect resentments boil over.",
+        "enters": [],
+        "shot": "Diane stands to snatch plates with a clatter, Frank pushes back from the table, and they argue across you while the kitchen timer dings unheard."
+      }
+    ],
+    "success_criteria": [
+      "Clearly say out loud that you quit and are starting a company without lying or taking it back when pressed",
+      "Stay in the conversation and respond calmly when interrupted or criticized instead of yelling, walking out, or shutting down",
+      "Get at least one family member to acknowledge a concrete next step or offer of support by the end"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [
+    {
+      "attempt": 0,
+      "problems": []
+    }
+  ]
+}
