@@ -35,6 +35,7 @@ class BuildReply(BaseModel):
     chips: list[str] = Field(default=[], description="0-3 short replies the user might tap")
     ready: bool = False
     stuck: bool = Field(default=False, description="the user does not know what to do or say")
+    begin: bool = Field(default=False, description="the user says to start now")
 
 
 GUIDE = (
@@ -50,24 +51,48 @@ GUIDE = (
     "- say: one or two short sentences. Acknowledge what just appeared, then ask for the single most useful missing thing: "
     "the place, then who is there, then what they want to happen. Never ask two things.\n"
     "- chips: tappable answers to your question, concrete to this world, in the user's voice.\n"
+    "- Not every world is about winning. For a debate on a question with no right answer, people hold different views and "
+    "the goal can be to think it through together. For a world made just for fun, the goal can simply be to enjoy it. "
+    "For a negotiation, ask what each side wants and the terms on the table.\n"
     "- ready: true once there is a place, at least one person and a goal. Say they can begin whenever they like.\n"
     "- stuck: true when they say they don't know, have no idea, or seem lost. Then reassure them in one line; templates will be shown.\n"
-    "- If they say they want to begin but something is missing, tell them warmly what you still need, in one line. "
-    "If they tell you to decide, fill it in yourself.\n"
+    "- begin: true when they say to start. Never ask again after that: if the goal is missing, choose a fitting one yourself. "
+    "Only a missing place or person needs a question, in one warm line.\n"
     "Reply with a single JSON object and nothing else."
 )
 
 
+def keep_known(old: World, new: World) -> World:
+    """What the user already said stays, even if a reply leaves it out."""
+    update = {f: getattr(old, f) for f in ("title", "place", "language", "me", "goal") if not getattr(new, f).strip()}
+    people = new.people or old.people
+    before = {p.name: p for p in old.people}
+    update["people"] = [p.model_copy(update={"look": p.look or before[p.name].look, "manner": p.manner or before[p.name].manner})
+                        if p.name in before else p for p in people]
+    return new.model_copy(update=update)
+
+
+def status(w: World) -> str:
+    known = [label for label, value in (("the place", w.place), ("who is there", w.people), ("what the user wants", w.goal)) if value]
+    missing = [label for label, value in (("the place", w.place), ("who is there", w.people), ("what the user wants", w.goal)) if not value]
+    return (f"Already settled, never ask about these again: {', '.join(known) or 'nothing yet'}. "
+            f"Still missing: {', '.join(missing) or 'nothing, they can begin'}.")
+
+
 def build_turn(llm: LLM, world: World, history: list[tuple[str, str]], message: str, ui: str, name: str = "") -> BuildReply:
     talk = "\n".join(f"{who}: {text}" for who, text in history[-12:]) or "(just started)"
-    return llm.ask(
+    reply = llm.ask(
         BuildReply, GUIDE,
         (f"The user's name is {name}.\n" if name else "")
         + f"World so far:\n{world.model_dump_json()}\n\nConversation:\n{talk}\n\nUser: {message}\n\n"
+        f"{status(world)}\nReturn the whole world each time with everything already in it, plus this message's changes. "
+        "If the user names a topic, it belongs in goal.\n"
         f"Write say, chips, title, roles and captions in language '{ui}'. language is what the people in the scene speak.\n"
         'Return {"world": {"title": "", "place": "", "language": "", "me": "", "goal": "", "people": '
-        '[{"name": "", "role": "", "gender": "m|f", "look": "", "manner": ""}]}, "say": "", "chips": [], "ready": false, "stuck": false}',
+        '[{"name": "", "role": "", "gender": "m|f", "look": "", "manner": ""}]}, "say": "", "chips": [], "ready": false, "stuck": false, "begin": false}',
     )
+    reply.world = keep_known(world, reply.world)
+    return reply
 
 
 SELF = {"나", "저", "본인", "me", "i", "myself", "user", "自分", "私", "僕"}

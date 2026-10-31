@@ -279,10 +279,10 @@ def build(req: BuildReq, request: Request):
     b.world = reply.world
     draw_changes(b, reply)
     b.save()
-    if b.world.place and b.world.people and b.world.goal:
+    if b.world.place and b.world.people:
         prepare(b)
     print(f"build {b.id}: {len(b.world.people)} people | {spend.summary()}", flush=True)
-    return {**build_state(b), "say": reply.say, "chips": reply.chips, "ready": reply.ready, "stuck": reply.stuck}
+    return {**build_state(b), "say": reply.say, "chips": reply.chips, "ready": reply.ready, "stuck": reply.stuck, "begin": reply.begin}
 
 
 @app.get("/api/history")
@@ -449,16 +449,19 @@ def live_coach(req: CoachReq):
 
 class RewindReq(BaseModel):
     id: str
+    turn: int | None = None  # go back to just before this user turn; default is the latest one
 
 
 @app.post("/api/rewind")
 def rewind(req: RewindReq):
-    """Take back the last line and answer again."""
+    """Take back the last line, or return to any earlier moment and play it differently."""
     s = sessions.get(req.id)
-    if not s or not s.history:
+    index = len(s.history) - 1 if s and req.turn is None else (req.turn or 0) - 1
+    if not s or not 0 <= index < len(s.history):
         raise HTTPException(400, "nothing to take back")
     with s.lock:
-        size, moods, revealed, left, turn, goals = s.history.pop()
+        size, moods, revealed, left, turn, goals = s.history[index]
+        del s.history[index:]
         sc = s.scene
         del sc.lines[size:]
         sc.moods, sc.revealed, sc.left, sc.ended = moods, revealed, left, ""
