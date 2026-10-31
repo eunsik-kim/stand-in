@@ -334,37 +334,29 @@ def build_finish(req: FinishReq, request: Request):
     return draft(prepare(b).result(), {"background": b.background, "scene": {}}, None)
 
 
-@app.get("/api/preset/{pid}")
-def preset(pid: str):
-    p = load_presets().get(pid)
+class TemplateReq(BaseModel):
+    id: str
+    ui: str = "en"
+
+
+@app.post("/api/template")
+def template(req: TemplateReq, request: Request):
+    """A template is a world someone already built: same screen, same conversation, ready to begin."""
+    p = load_presets().get(req.id)
     if not p:
-        raise HTTPException(404, "unknown preset")
-    return draft(Scenario.model_validate(p["scenario"]), p.get("assets", {}), pid, p.get("gate1"))
-
-
-class ImageReq(BaseModel):
-    scenario: dict
-    kind: str  # "background" | "portrait"
-    name: str = ""  # character, for a portrait
-    prompt: str = ""  # background only: the user's edited prompt
-
-
-@app.post("/api/image")
-def image(req: ImageReq):
-    s = Scenario.model_validate(req.scenario)
-    stem = uuid.uuid4().hex[:10]
-    if req.kind == "background":
-        background(painter, req.prompt.strip() or background_prompt(s), ART / f"{stem}_bg.jpg")
-        out = {"background": f"/art/{stem}_bg.jpg"}
-    elif req.kind == "portrait":
-        c = next((c for c in s.cast if c.name == req.name), None)
-        if not c:
-            raise HTTPException(400, "unknown character")
-        out = {"portrait": portraits(painter, s.setting, c.gender, c.appearance, c.role, ART, stem, "/art")}
-    else:
-        raise HTTPException(400, "kind must be background or portrait")
-    print(f"image {req.kind} {req.name} | {spend.summary()}", flush=True)
-    return out
+        raise HTTPException(404, "unknown template")
+    s = Scenario.model_validate(p["scenario"])
+    b = Build()
+    b.owner, b.ui = visitor(request), req.ui
+    b.world = World(title=s.title, place=s.setting, language=s.language, me=s.user_role, goal=s.user_goal,
+                    people=[Person(name=c.name, role=c.role, gender=c.gender, look=c.appearance, manner=c.voice) for c in s.cast])
+    done: Future = Future()
+    done.set_result(s)
+    b.prepared[b.world.model_dump_json()] = done
+    b.background = p.get("assets", {}).get("background", "").split("?")[0].replace("/presets/img/", "/presets/img/")
+    builds[b.id] = b
+    draw_changes(b, b.world)
+    return build_state(b)
 
 
 class StartReq(BaseModel):
