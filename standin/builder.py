@@ -37,6 +37,7 @@ class BuildReply(BaseModel):
     ready: bool = False
     stuck: bool = Field(default=False, description="the user does not know what to do or say")
     begin: bool = Field(default=False, description="the user says to start now")
+    redraw: bool = Field(default=False, description="the user asked to change how someone looks or how the place looks")
 
 
 GUIDE = (
@@ -54,19 +55,23 @@ GUIDE = (
     "- Not every world is about winning. In a debate on a question with no right answer, people hold different views and the goal can be "
     "to think it through together. A world made for fun can simply be enjoyed. For a negotiation, ask what each side wants and the terms.\n"
     "- say: two sentences at most. chips: up to 3 tappable answers in the user's own voice, specific to this world.\n"
+    "- Near the end, ask what they want from this moment, in their own words. It can be small: just catch up, say sorry, make them laugh. That is their goal.\n"
     "- ready: true once there is a place, a person you know well, and a goal. Then tell them you can feel the scene and they can begin.\n"
     "- stuck: true when they say they don't know or seem lost. Reassure them in one line.\n"
+    "- redraw: true only when the user asks to change someone's appearance or the look of the place.\n"
     "- begin: true when they say to start. Never ask again after that: fill anything missing yourself, except a place or a person.\n"
     "Reply with a single JSON object and nothing else."
 )
 
 
-def keep_known(old: World, new: World) -> World:
-    """What the user already said stays, even if a reply leaves it out."""
+def keep_known(old: World, new: World, redraw: bool = False) -> World:
+    """What the user already said stays, even if a reply leaves it out. A person's look never drifts on its own."""
     update = {f: getattr(old, f) for f in ("title", "place", "language", "me", "goal") if not getattr(new, f).strip()}
+    if old.place and not redraw:
+        update["place"] = old.place
     people = new.people or old.people
     before = {p.name: p for p in old.people}
-    update["people"] = [p.model_copy(update={"look": p.look or before[p.name].look, "manner": p.manner or before[p.name].manner,
+    update["people"] = [p.model_copy(update={"look": p.look if redraw or not before[p.name].look else before[p.name].look, "manner": p.manner or before[p.name].manner,
                                        "history": p.history or before[p.name].history})
                         if p.name in before else p for p in people]
     return new.model_copy(update=update)
@@ -89,9 +94,9 @@ def build_turn(llm: LLM, world: World, history: list[tuple[str, str]], message: 
         "If the user names a topic, it belongs in goal.\n"
         f"Write say, chips, title, roles and captions in language '{ui}'. language is what the people in the scene speak.\n"
         'Return {"world": {"title": "", "place": "", "language": "", "me": "", "goal": "", "people": '
-        '[{"name": "", "role": "", "gender": "m|f", "look": "", "manner": "", "history": ""}]}, "say": "", "chips": [], "ready": false, "stuck": false, "begin": false}',
+        '[{"name": "", "role": "", "gender": "m|f", "look": "", "manner": "", "history": ""}]}, "say": "", "chips": [], "ready": false, "stuck": false, "begin": false, "redraw": false}',
     )
-    reply.world = keep_known(world, reply.world)
+    reply.world = keep_known(world, reply.world, reply.redraw)
     return reply
 
 

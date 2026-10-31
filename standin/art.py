@@ -51,9 +51,10 @@ def scene_prompt(place: str, people: list) -> str:
     who = "; ".join(f"{p.name}: {'man' if p.gender == 'm' else 'woman' if p.gender == 'f' else 'person'}, {p.role}, {p.look}" for p in people)
     return (
         "Candid unretouched photograph taken from the viewer's own eyes, as if the viewer is right there in the conversation, "
-        f"at about 1.5 meters. The place: {place} In the place, naturally part of it, sharing its exact light and shadows: {who}. "
-        "They look straight at the viewer, sitting or standing the way a person really would there. The people are the subject and fill the "
-        "middle of the frame, with the surroundings all around them. Real skin, natural imperfect faces, not models, mild sensor noise. "
+        f"across a small table at a normal conversation distance of about two meters. The place: {place} In the place, naturally part of it, "
+        f"sharing its exact light and shadows: {who}. They face the viewer directly and look at them, seen from the waist up, close enough to talk to, "
+        "not far across the room, with clear space above the head. Each head is about one fifth of the image height, and the place "
+        "fills the rest of the wide frame. Real skin, natural imperfect faces, not models, mild sensor noise. "
         "No text, no borders, no logos."
     )
 
@@ -64,23 +65,13 @@ def scene(painter: LLM, place: str, people: list, path: Path) -> None:
     img.save(path, quality=88)
 
 
-def scene_expressions(painter: LLM, source: Path, person, folder: Path, stem: str, url: str) -> dict[str, str]:
-    """The same photograph with only this person's face changed, so a reaction never breaks the room."""
-    image = source.read_bytes()
-
-    def change(item: tuple[str, str]) -> tuple[str, str]:
-        expr, look = item
-        prompt = (f"Same photograph, same people, place, framing and light. Only change the facial expression of {person.name} "
-                  f"({person.look}) to: {look}. Everything else stays exactly the same.")
-        try:
-            data = edit_image(painter, image, prompt)
-        except BadRequestError:  # the content filter misfires now and then on ordinary photos
-            data = edit_image(painter, image, prompt)
-        Image.open(io.BytesIO(data)).convert("RGB").save(folder / f"{stem}_{expr}.jpg", quality=88)
-        return expr, f"{url}/{stem}_{expr}.jpg"
-
-    with ThreadPoolExecutor(3) as pool:
-        return dict(pool.map(change, EXPRESSIONS.items()))
+def scene_edit(painter: LLM, source: Path, place: str, people: list, path: Path) -> None:
+    """Change the photograph without touching anyone already in it."""
+    who = "; ".join(f"{p.name}: {p.role}, {p.look}" for p in people)
+    data = edit_image(painter, source.read_bytes(), (
+        "Same photograph, same camera, framing and light. Keep every person already in it exactly as they are, the same face. "
+        f"Update it only as needed so that the place is: {place} and the people present are: {who}."))
+    Image.open(io.BytesIO(data)).convert("RGB").save(path, quality=88)
 
 
 def _tile(data: bytes, path: Path) -> None:

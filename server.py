@@ -23,8 +23,8 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from standin import voice
-from standin.art import background, background_prompt, portraits, scene, scene_expressions
-from standin.builder import BuildReply, Person, World, as_situation, build_turn, lock, others
+from standin.art import background, background_prompt, portraits, scene, scene_edit
+from standin.builder import Person, World, as_situation, build_turn, lock, others
 from standin.coach import coach_turn
 from standin.compiler import compile_scenario, structural_problems
 from standin.debrief import debrief
@@ -211,6 +211,7 @@ def find_build(bid: str, owner: str) -> Build | None:
                                                      data["faces"], data["drawn"])
     b.talk = [tuple(x) for x in data["talk"]]
     builds[b.id] = b
+    draw_changes(b, b.world)  # worlds saved before they had a photograph get one now
     return b
 
 
@@ -224,39 +225,34 @@ def prepare(b: Build) -> Future:
     return b.prepared[key]
 
 
-def draw_changes(b: Build, reply: BuildReply) -> None:
-    """One photograph holds the place and the people, redrawn when they change. The conversation never waits for it."""
-    w = reply.world
+def draw_changes(b: Build, w: World, redraw: bool = False) -> None:
+    """One photograph holds the place and the people. It changes only when someone is added or removed or the
+    user asks, and always by editing it, so nobody's face ever changes on its own."""
     if not w.place:
         return
-    key = w.place + "|" + "|".join(f"{p.name}:{p.look}" for p in w.people)
-    if b.drawn.get("scene") == key:
+    names = ",".join(sorted(p.name for p in w.people))
+    has_scene = "_scene" in b.background
+    if b.background and b.drawn.get("names") == names and not redraw and (has_scene or not w.people):
         return
-    b.drawn["scene"] = key
+    b.drawn["names"] = names
+    version = b.drawn["version"] = str(int(b.drawn.get("version", 0)) + 1)
 
-    def paint(place: str, people: list[Person]) -> None:
+    def paint(place: str, people: list[Person], base: str) -> None:
         stem = uuid.uuid4().hex[:10]
-        if people:
-            scene(painter, place, people, ART / f"{stem}_scene.jpg")
-            url = f"/art/{stem}_scene.jpg"
+        path = ART / f"{stem}_scene.jpg"
+        if people and base:
+            scene_edit(painter, ART / Path(base).name, place, people, path)
+        elif people:
+            scene(painter, place, people, path)
         else:
+            path = ART / f"{stem}_bg.jpg"
             background(painter, ("Candid photograph from the viewer's own eyes, standing in this place: "
-                                 f"{place} No people, no text, no logos. Natural light."), ART / f"{stem}_bg.jpg")
-            url = f"/art/{stem}_bg.jpg"
-        if b.drawn.get("scene") != key:  # a newer description wins
-            return
-        b.background, b.faces = url, {}
-        b.save()
-        for person in people:
-            easel.submit(react, person, url, key)
-
-    def react(person: Person, url: str, version: str) -> None:
-        made = scene_expressions(painter, ART / Path(url).name, person, ART, uuid.uuid4().hex[:10], "/art")
-        if b.drawn.get("scene") == version:
-            b.faces[person.name] = made
+                                 f"{place} No people, no text, no logos. Natural light."), path)
+        if b.drawn.get("version") == version:  # a newer change wins
+            b.background = f"/art/{path.name}"
             b.save()
 
-    easel.submit(paint, w.place, list(w.people))
+    easel.submit(paint, w.place, list(w.people), b.background if has_scene else "")
 
 
 def build_state(b: Build) -> dict:
@@ -280,7 +276,7 @@ def build(req: BuildReq, request: Request):
     reply.world = others(reply.world)
     b.talk += [("User", req.message.strip()), ("You", reply.say)]
     b.world = reply.world
-    draw_changes(b, reply)
+    draw_changes(b, b.world, reply.redraw)
     b.save()
     if b.world.place and b.world.people:
         prepare(b)
@@ -335,7 +331,7 @@ def build_finish(req: FinishReq, request: Request):
     if not b:
         raise HTTPException(404, "unknown build")
     b.ui = req.ui
-    return draft(prepare(b).result(), {"background": b.background, "scene": b.faces}, None)
+    return draft(prepare(b).result(), {"background": b.background, "scene": {}}, None)
 
 
 @app.get("/api/preset/{pid}")
