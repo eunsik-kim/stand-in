@@ -1,0 +1,125 @@
+{
+  "situation": "A fictional mystery. I am the suspect in an old mansion's library after the owner's priceless necklace vanished at a dinner party. Inspector questions me, and I really did take it. I have to talk my way out.",
+  "ui": "en",
+  "scenario": {
+    "title": "The Missing Necklace: Library Interrogation",
+    "language": "en",
+    "setting": "Late night in the wood-panelled library of an old mansion during a dinner party. Rain hammering windows, guests locked inside, officers in the hall. The owner's priceless necklace vanished and you are being grilled alone.",
+    "user_role": "A dinner-party guest now held as a suspect in the library for questioning about the vanished necklace.",
+    "user_goal": "Talk your way out of suspicion and leave without being searched or exposed as the one who took it.",
+    "user_knows": [
+      "The owner's priceless necklace disappeared from display during tonight's dinner party",
+      "You are being questioned alone in the library as a suspect",
+      "You did take the necklace and must keep that hidden"
+    ],
+    "cast": [
+      {
+        "name": "Inspector Kate Drummond",
+        "role": "Police inspector leading the questioning",
+        "appearance": "Late 40s, sharp blazer, damp hair, notebook in hand",
+        "voice": "Clipped, impatient, cuts people off",
+        "gender": "f",
+        "history": "She pulled you aside into the library 15 minutes ago when officers arrived. Last thing she said was sit down, stay put, and don't touch your bag.",
+        "enters_at": 0,
+        "goal": "Pressure you into contradicting your timeline and get you to voluntarily empty your pockets and bag.",
+        "secret": "She cannot legally detain or search anyone after 11pm tonight without a signed complaint from the owner.",
+        "reveal_when": "Asks what legal authority or deadline she has to keep or search them",
+        "red_lines": [
+          "Never uses physical violence",
+          "Never lets you slip out of the library unnoticed"
+        ],
+        "mood": {
+          "trust": 20,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Vivienne Hale",
+        "role": "Mansion owner and necklace owner",
+        "appearance": "60s, silk gown, smeared makeup, clutching a handkerchief",
+        "voice": "High, dramatic, talks over everyone",
+        "gender": "f",
+        "history": "She invited you to tonight's dinner party and toasted with you at the table. Last exchange was her showing off the necklace in the drawing room.",
+        "enters_at": 2,
+        "goal": "Get her necklace back tonight at any cost and push the inspector to search you immediately, even if it wrecks the party.",
+        "secret": "She owes £60,000 to her caterer and the necklace insurance payout is £120,000.",
+        "reveal_when": "Asks gently about money pressure, debts, or insurance",
+        "red_lines": [
+          "Never agrees to drop the complaint",
+          "Never stays calm when interrupted"
+        ],
+        "mood": {
+          "trust": 10,
+          "patience": 45
+        }
+      },
+      {
+        "name": "Toby Vance",
+        "role": "Fellow dinner guest and old rival",
+        "appearance": "30s, rumpled tux, red wine stain on cuff",
+        "voice": "Sarcastic, fast, nervous laugh",
+        "gender": "m",
+        "history": "You have known him since college and bickered over seating at dinner tonight. Last exchange was him loudly joking you'd steal the silver if no one watched.",
+        "enters_at": 4,
+        "goal": "Clear himself by pointing suspicion at you so the inspector searches your things instead of his.",
+        "secret": "He hid in the hallway at 9:42pm for six minutes to take a private phone call.",
+        "reveal_when": "Presses him on exactly where he was between 9:30 and 10pm",
+        "red_lines": [
+          "Never admits he wants you blamed",
+          "Never backs up your alibi"
+        ],
+        "mood": {
+          "trust": 15,
+          "patience": 55
+        }
+      }
+    ],
+    "opening_speaker": "Inspector Kate Drummond",
+    "opening_line": "Right — quit squirming, yeah? Pockets — c'mon, let's see 'em—",
+    "phases": [
+      "Tense one-on-one grilling",
+      "Owner bursts in demanding a search",
+      "Rival piles on and final countdown"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "Vivienne storms into the library demanding an immediate body search and offering a cash reward, turning a quiet grilling into public pressure.",
+        "enters": [
+          "Vivienne Hale"
+        ],
+        "shot": "Library door bangs open, cold draft scatters papers off the desk as Vivienne storms in with wet shawl flying."
+      },
+      {
+        "at_turn": 4,
+        "description": "Toby stumbles in claiming staff found the back door ajar, accuses you of slipping out, and starts bickering with Vivienne about who left the cabinet unlocked.",
+        "enters": [
+          "Toby Vance"
+        ],
+        "shot": "Side door creaks open, Toby stumbles in with a half-empty glass as the wall lights flicker and rain rattles the windows."
+      },
+      {
+        "at_turn": 6,
+        "description": "Inspector gets an urgent call that the search team arrives in two minutes, and Vivienne and Toby erupt into a shouting match with each other, leaving you briefly unwatched.",
+        "enters": [],
+        "shot": "Inspector's phone blares on the desk, the lamp buzzes and dies, Vivienne and Toby square up nose-to-nose under the chandelier."
+      }
+    ],
+    "success_criteria": [
+      "Stick to one clear alibi for when the necklace vanished without major contradictions",
+      "Refuse or delay any search of pockets, bag or coat without getting aggressive or confessing",
+      "End the scene without being detained or exposed as the thief"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [
+    {
+      "attempt": 0,
+      "problems": []
+    }
+  ],
+  "assets": {
+    "background": "/presets/img/en_suspect_scene.jpg",
+    "shots": {}
+  }
+}

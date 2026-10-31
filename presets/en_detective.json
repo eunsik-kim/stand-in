@@ -1,0 +1,125 @@
+{
+  "situation": "A fictional mystery. I am the detective at a snowed-in mountain lodge. A prized painting vanished overnight and three guests each have a story. I have to find out who is lying before the road opens.",
+  "ui": "en",
+  "scenario": {
+    "title": "The Vanishing at Snowline Lodge",
+    "language": "en",
+    "setting": "Snowed-in mountain lodge living room at dawn. Fire low, empty frame on the wall where the prized painting hung, snow hammering the windows, landline and radio on the mantel. Road still closed.",
+    "user_role": "You are the detective staying at the snowed-in mountain lodge.",
+    "user_goal": "Find out who is lying about the vanished painting before the road opens.",
+    "user_knows": [
+      "A prized painting that was on the living room wall vanished overnight",
+      "Three guests were in the lodge overnight and each has a different story",
+      "The road out is snowed shut but will open soon"
+    ],
+    "cast": [
+      {
+        "name": "Eleanor Vance",
+        "role": "Wealthy guest who brought the painting",
+        "appearance": "Late 60s, silk scarf over pajamas, perfect makeup despite the hour",
+        "voice": "Clipped, imperious, sighs a lot",
+        "gender": "f",
+        "history": "You sat next to her at dinner last night while she showed off the painting. Last thing she said to you was a joking 'You'll keep an eye on it for me, detective, won't you?'",
+        "enters_at": 0,
+        "goal": "Shut down questions and get everyone to blame the staff so she can file a claim and leave",
+        "secret": "She hid the painting inside her locked ski coffin bag in the boot room at 4:10am",
+        "reveal_when": "asks her directly where she was between 4am and 5am",
+        "red_lines": [
+          "never confesses without being shown hard proof",
+          "will not let anyone search her bags voluntarily"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Marcus Webb",
+        "role": "Lodge handyman and ski guide",
+        "appearance": "40s, big parka, snow on boots, unshaven",
+        "voice": "Gruff, fast, swears when cornered",
+        "gender": "m",
+        "history": "He checked you in yesterday and lent you spare boots for the snow. Last exchange was him telling you not to go outside after the storm hit.",
+        "enters_at": 0,
+        "goal": "Keep anyone from digging into where he wandered after midnight so he doesn't lose this job",
+        "secret": "He slipped into Eleanor's unlocked room at 1:20am looking for cash and left the door ajar",
+        "reveal_when": "asks him directly if he entered anyone else's room last night",
+        "red_lines": [
+          "never admits to entering the room unless asked point-blank",
+          "will not hit anyone"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Priya Desai",
+        "role": "Grad student guest stuck by the storm",
+        "appearance": "20s, oversized lodge sweater, phone always in hand",
+        "voice": "Nervous, quick, apologetic laugh",
+        "gender": "f",
+        "history": "You shared hot chocolate with her by the fire last evening. Last thing you talked about was her missing her bus home because of the snow.",
+        "enters_at": 2,
+        "goal": "Stay out of the fight and get back to her room without accusing anyone to her face",
+        "secret": "Her phone has a 2:47am hallway audio of canvas-dragging and a woman humming",
+        "reveal_when": "asks her to play or show what is on her phone from last night",
+        "red_lines": [
+          "will not name who she suspects without being pressed twice",
+          "will not lie for anyone else"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 70
+        }
+      }
+    ],
+    "opening_speaker": "Marcus Webb",
+    "opening_line": "Oh good, you're up — tell her I didn't touch her damn painting, I was out shovelin' since like—",
+    "phases": [
+      "Crossed accusations",
+      "Timelines crack",
+      "Corner the liar"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "Priya bursts in from the hall saying the back deck door that was bolted last night is now banging open with fresh footprints in the snow.",
+        "enters": [
+          "Priya Desai"
+        ],
+        "shot": "Back hallway door slams in wind, blast of cold and snow swirls into the warm living room as Priya stumbles in dripping."
+      },
+      {
+        "at_turn": 4,
+        "description": "The lodge landline rings and Marcus answers on speaker - it's Eleanor's insurer confirming she called to report a theft early this morning before telling anyone in the lodge.",
+        "enters": [],
+        "shot": "Crackling speakerphone on the mantel fills the room, everyone freezes around the fire as Eleanor's smile drops."
+      },
+      {
+        "at_turn": 6,
+        "description": "The radio crackles that the plow is ten minutes out, Eleanor tries to slip out to the hall and Marcus physically blocks her, and they start shouting over each other.",
+        "enters": [],
+        "shot": "Chairs scrape back, firelight flickers as Eleanor lunges for the hallway and Marcus steps into the doorway chest-to-chest."
+      }
+    ],
+    "success_criteria": [
+      "Get all three guests to state their overnight timelines on the record",
+      "Name the liar and cite the specific contradiction that exposes them",
+      "Reach a clear decision on what to do about the painting before the road opens"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [
+    {
+      "attempt": 0,
+      "problems": []
+    }
+  ],
+  "assets": {
+    "background": "/presets/img/en_detective_scene.jpg",
+    "shots": {
+      "4": "/presets/img/en_detective_4_scene.jpg"
+    }
+  }
+}
