@@ -94,6 +94,7 @@ def load_presets() -> dict[str, dict]:
             assets["background"] = versioned(assets["background"])
         for name, faces in assets.get("portraits", {}).items():
             assets["portraits"][name] = {expr: versioned(url) for expr, url in faces.items()}
+        assets["shots"] = {turn: versioned(url) for turn, url in assets.get("shots", {}).items()}
     return out
 
 
@@ -105,7 +106,7 @@ def public_line(ln: Line) -> dict:
 def public_scenario(s: Scenario) -> dict:
     return {"title": s.title, "language": s.language, "setting": s.setting, "user_role": s.user_role,
             "user_goal": s.user_goal, "max_turns": s.max_turns, "success_criteria": s.success_criteria,
-            "cast": [{"name": c.name, "role": c.role, "appearance": c.appearance, "voice": c.voice}
+            "cast": [{"name": c.name, "role": c.role, "appearance": c.appearance, "voice": c.voice, "enters_at": c.enters_at}
                      for c in s.cast]}
 
 
@@ -181,6 +182,7 @@ class Build:
         self.ui = "en"
         self.owner = ""
         self.ready = False
+        self.shots: dict[str, str] = {}  # turn -> photograph, prepared ahead for a template
         self.background = ""
         self.faces: dict[str, dict] = {}  # name -> that person's reactions in the same photograph
         self.drawn: dict[str, str] = {}  # what each image was drawn from, to redraw only on a real change
@@ -250,7 +252,8 @@ def draw_changes(b: Build, w: World, redraw: bool = False) -> None:
         stem = uuid.uuid4().hex[:10]
         path = ART / f"{stem}_scene.jpg"
         if people and base:
-            scene_edit(painter, ART / Path(base).name, place, people, path)
+            source = PRESETS / "img" / Path(base.split("?")[0]).name
+            scene_edit(painter, source if source.exists() else ART / Path(base).name, place, people, path)
         elif people:
             scene(painter, place, people, path)
         else:
@@ -354,7 +357,9 @@ def build_finish(req: FinishReq, request: Request):
     if not b:
         raise HTTPException(404, "unknown build")
     b.ui = req.ui
-    return draft(prepare(b).result(), {"background": b.background, "scene": {}}, None)
+    key_was_edited = b.world.model_dump_json() not in b.prepared
+    scenario = prepare(b).result()
+    return draft(scenario, {"background": b.background, "scene": {}, "shots": {} if key_was_edited else b.shots}, None)
 
 
 class TemplateReq(BaseModel):
@@ -371,14 +376,17 @@ def template(req: TemplateReq, request: Request):
     s = Scenario.model_validate(p["scenario"])
     b = Build()
     b.owner, b.ui = visitor(request), req.ui
+    # who is there at the start; anyone else is a surprise
     b.world = World(title=s.title, place=s.setting, language=s.language, me=s.user_role, goal=s.user_goal,
-                    people=[Person(name=c.name, role=c.role, gender=c.gender, look=c.appearance, manner=c.voice, history=c.history) for c in s.cast])
+                    people=[Person(name=c.name, role=c.role, gender=c.gender, look=c.appearance, manner=c.voice, history=c.history)
+                            for c in s.cast if not c.enters_at])
     done: Future = Future()
     done.set_result(s)
     b.prepared[b.world.model_dump_json()] = done
-    b.background = p.get("assets", {}).get("background", "").split("?")[0].replace("/presets/img/", "/presets/img/")
+    assets = p.get("assets", {})
+    b.background, b.shots = assets.get("background", ""), assets.get("shots", {})
+    b.drawn["names"] = ",".join(sorted(person.name for person in b.world.people))
     builds[b.id] = b
-    draw_changes(b, b.world)
     return build_state(b)
 
 
@@ -428,7 +436,7 @@ def turn(req: TurnReq):
                 return
             sc = s.scene
             s.history.append((len(sc.lines), {k: m.model_copy() for k, m in sc.moods.items()},
-                              set(sc.revealed), set(sc.left), s.turn, list(s.goals)))
+                              set(sc.revealed), set(sc.left), s.turn, list(s.goals), set(sc.arrived), sc.beat, sc.advance))
             s.turn += 1
             cues = describe(req.signals, s.ui)
             t0, first = time.time(), True
@@ -474,11 +482,12 @@ def rewind(req: RewindReq):
     if not s or not 0 <= index < len(s.history):
         raise HTTPException(400, "nothing to take back")
     with s.lock:
-        size, moods, revealed, left, turn, goals = s.history[index]
+        size, moods, revealed, left, turn, goals, arrived, beat, advance = s.history[index]
         del s.history[index:]
         sc = s.scene
         del sc.lines[size:]
         sc.moods, sc.revealed, sc.left, sc.ended = moods, revealed, left, ""
+        sc.arrived, sc.beat, sc.advance = arrived, beat, advance
         s.turn, s.goals = turn, goals
     return {"turn": s.turn, "goals": s.goals, "found": len(sc.revealed)}
 

@@ -65,12 +65,12 @@ def scene(painter: LLM, place: str, people: list, path: Path) -> None:
     img.save(path, quality=88)
 
 
-def scene_edit(painter: LLM, source: Path, place: str, people: list, path: Path) -> None:
+def scene_edit(painter: LLM, source: Path, place: str, people: list, path: Path, change: str = "") -> None:
     """Change the photograph without touching anyone already in it."""
     who = "; ".join(f"{p.name}: {p.role}, {p.look}" for p in people)
     data = edit_image(painter, source.read_bytes(), (
         "Same photograph, same camera, framing and light. Keep every person already in it exactly as they are, the same face. "
-        f"Update it only as needed so that the place is: {place} and the people present are: {who}."))
+        f"Update it only as needed so that the place is: {place} and the people present are: {who}. {change}"))
     Image.open(io.BytesIO(data)).convert("RGB").save(path, quality=88)
 
 

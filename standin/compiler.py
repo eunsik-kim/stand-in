@@ -21,10 +21,10 @@ WRITER_SYSTEM = (
 
 SHAPE = (
     '{"title": "...", "language": "ko|en|ja|...", "setting": "...", "user_role": "...", "user_goal": "...", "user_knows": ["..."], '
-    '"cast": [{"name": "...", "role": "...", "appearance": "...", "voice": "...", "gender": "m|f", "history": "...", "goal": "...", '
+    '"cast": [{"name": "...", "role": "...", "appearance": "...", "voice": "...", "gender": "m|f", "history": "...", "enters_at": 0, "goal": "...", '
     '"secret": "...", "reveal_when": "...", "red_lines": ["..."], "mood": {"trust": 0-100, "patience": 0-100}}], '
     '"opening_speaker": "<cast name>", "opening_line": "...", "phases": ["..."], '
-    '"events": [{"at_turn": 3, "description": "..."}], "success_criteria": ["..."], "max_turns": 12}'
+    '"events": [{"at_turn": 3, "description": "...", "enters": [], "shot": ""}], "success_criteria": ["..."], "max_turns": 12}'
 )
 
 
@@ -98,7 +98,7 @@ def told_text(situation: str, answers: list[tuple[str, str]], material: str = ""
 
 
 def compile_scenario(writer: LLM, checker: LLM, situation: str, material: str = "",
-                     answers: list[tuple[str, str]] = (), difficulty: str = "real", ui: str = "", locked: bool = False,
+                     answers: list[tuple[str, str]] = (), difficulty: str = "real", ui: str = "", locked: bool = False, episode: bool = False,
                      repairs: int = 2, log=print) -> tuple[Scenario, list[dict]]:
     """Returns the scenario and the gate history (problems found per attempt)."""
     told = told_text(situation, list(answers), material)
@@ -107,6 +107,12 @@ def compile_scenario(writer: LLM, checker: LLM, situation: str, material: str = 
         + ("The user built this world themselves. Keep the place, every person, their names, roles, looks and "
            "manners and the user's goal exactly as given, add nobody. Invent only what is hidden: private goals, secrets, "
            "reveal conditions, moods, events, criteria, the opening line.\n" if locked else "")
+        + ("This is a short interactive episode that must be genuinely fun for three minutes. Write it like a great TV scene:\n"
+           "- 3-4 people in total, and one or two of them are not there at first: they have enters_at set to the turn they walk in, and an event with them in `enters`.\n"
+           "- Exactly 3 events, at turns 2, 4 and 6: real turning points that change what the scene is about (someone walks in with news, a phone call exposes something, "
+           "two of the others start fighting each other). Each one raises the stakes or flips the situation. Each has `shot`: a short visual description of how the room changes.\n"
+           "- The others have conflicts with each other too, not only with the user. They interrupt, take sides, say funny or painful things.\n"
+           "- The opening line grabs immediately, mid-situation. No small talk. max_turns 8.\n" if episode else "")
         + "Design the scene. Rules:\n"
         "- language: what the people in the scene actually speak (a Tokyo cafe is 'ja' even if the request is in Korean); otherwise the user's language. opening_line and all spoken lines use only that language.\n"
         + (f"- Everything else (title, setting, roles, goals, user_knows, phases, events, success_criteria, character notes) is read by the user: write it in language '{ui}'.\n" if ui else "")

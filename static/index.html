@@ -721,7 +721,12 @@ async function streamTurn(body){
 
   const onEvent = ev => {
     setThinking(false);
-    if(ev.type === "narration") push(Object.assign(() => playLine({speaker:"narration", say:ev.text}), {}));
+    if(ev.type === "narration") push(Object.assign(async () => {
+      const shot = S.assets?.shots?.[ev.shot];
+      if(shot){ S.assets.background = shot; showShot(shot); }  // made ahead, so it lands instantly
+      (ev.enters || []).forEach(n => S.here.add(n));
+      await playLine({speaker:"narration", say:ev.text});
+    }, {}));
     if(ev.type === "line_start"){
       const i = S.scenario.cast.findIndex(c => c.name === ev.speaker);
       lines[ev.index] = "";
@@ -799,7 +804,9 @@ function showShot(url){
   img.src = url;
 }
 function focusOn(i){
-  const n = S.scenario.cast.length, x = i === null ? 50 : (i + .5) / n * 100;
+  const here = S.scenario.cast.filter(c => !c.enters_at || S.here?.has(c.name));
+  const n = here.length, at = i === null ? 0 : here.indexOf(S.scenario.cast[i]);
+  const x = i === null ? 50 : (Math.max(at, 0) + .5) / n * 100;
   [$("shotA"), $("shotB")].forEach(s => {
     s.style.transformOrigin = `${x}% 42%`;
     s.style.transform = i === null ? "scale(1)" : `scale(${n > 1 ? 1.3 : 1.08})`;
@@ -1166,6 +1173,7 @@ async function enter(){
   $("log").innerHTML = ""; $("caption").textContent = ""; $("typed").value = "";
   $("doneBtn").style.width = ""; $("doneBtn").innerHTML = icon("send"); $("doneBtn").onclick = () => finish(); $("endBtn").classList.remove("hidden");
   S.goals = []; S.lastBetter = ""; S.found = 0; showFound();
+  S.here = new Set(); S.opening = S.assets?.background;
   $("stage").classList.toggle("coached", COACH && !S.assets?.scene); renderGoals(); coachText();
   $("title").textContent = S.scenario.title;
   $("setting").textContent = t("goalLabel") + S.scenario.user_goal;
@@ -1403,15 +1411,15 @@ $("bauto").onclick = () => { AUTO = true; stepInside(); };
 $("takeBtn").onclick = () => { AUTO = false; stopVoice(); };
 $("autoBtn").onclick = () => { if(state !== "listen") return; stopRec(); choiceSeq++; clearTimeout(pickTimer); $("choices").innerHTML = ""; AUTO = true; autoRun(); };
 $("choiceBtn").onclick = () => {
-  CHOICES = !CHOICES; choiceLabel(); pickLabel();
+  CHOICES = !CHOICES; choiceLabel();
+  try{ localStorage.setItem("standin-choices", CHOICES ? "1" : "0"); }catch(e){}
+  if(state === "listen") offerReplies();
+};
+choiceLabel(); pickLabel();
 $("pickBtn").onclick = () => {
   PICK_S = PICK_OPTIONS[(PICK_OPTIONS.indexOf(PICK_S) + 1) % PICK_OPTIONS.length];
   try{ localStorage.setItem("standin-pick", PICK_S); }catch(e){}
   pickLabel(); holdPick();
 };
-  try{ localStorage.setItem("standin-choices", CHOICES ? "1" : "0"); }catch(e){}
-  if(state === "listen") offerReplies();
-};
-choiceLabel();
 </script>
 </html>

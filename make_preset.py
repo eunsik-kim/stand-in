@@ -15,9 +15,10 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from standin.art import background, background_prompt, portraits
+from standin.art import background, background_prompt, portraits, scene, scene_edit
 from standin.compiler import compile_scenario
 from standin.llm import LLM, Spend
+from standin.builder import Person
 from standin.spec import Scenario
 
 ROOT = Path(__file__).parent
@@ -35,6 +36,7 @@ def main() -> None:
     ap.add_argument("situation", nargs="?")
     ap.add_argument("--ui", default="en", help="language the user reads")
     ap.add_argument("--no-images", action="store_true")
+    ap.add_argument("--episode", action="store_true", help="people arrive and twists land, with a photograph for each")
     ap.add_argument("--portraits", action="store_true", help="remake all portraits")
     ap.add_argument("--budget", type=float, default=0.60)
     args = ap.parse_args()
@@ -50,12 +52,30 @@ def main() -> None:
             raise SystemExit(f"no preset '{args.id}' yet; give a situation")
         writer = LLM(os.getenv("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.7, "writer")
         checker = LLM(os.getenv("STANDIN_CHECK_MODEL", CHECK_MODEL), spend, cache, 0.0, "checker", "low")
-        scenario, gate1 = compile_scenario(writer, checker, args.situation, ui=args.ui)
+        scenario, gate1 = compile_scenario(writer, checker, args.situation, ui=args.ui, episode=args.episode)
         preset = {"situation": args.situation, "ui": args.ui, "scenario": scenario.model_dump(), "gate1": gate1}
         path.write_text(json.dumps(preset, indent=2, ensure_ascii=False))
         print(f"scenario: {scenario.title} ({len(scenario.cast)} people) | {spend.summary()}")
 
     s = Scenario.model_validate(preset["scenario"])
+    if args.episode:
+        painter = LLM(os.getenv("STANDIN_IMAGE_MODEL", IMAGE_MODEL), spend, cache, 1.0, "painter")
+        here = [c for c in s.cast if not c.enters_at]
+        as_person = lambda c: Person(name=c.name, role=c.role, gender=c.gender, look=c.appearance)
+        current = IMG / f"{args.id}_scene.jpg"
+        scene(painter, s.setting, [as_person(c) for c in here], current)
+        shots = {}
+        for e in s.events:
+            here += [c for c in s.cast if c.name in e.enters]
+            if e.shot or e.enters:
+                next_shot = IMG / f"{args.id}_{e.at_turn}_scene.jpg"
+                scene_edit(painter, current, s.setting, [as_person(c) for c in here], next_shot, e.shot)
+                shots[str(e.at_turn)] = f"/presets/img/{next_shot.name}"
+                current = next_shot
+        preset["assets"] = {"background": f"/presets/img/{args.id}_scene.jpg", "shots": shots}
+        path.write_text(json.dumps(preset, indent=2, ensure_ascii=False))
+        print(f"done {path} | {len(shots)} shots | {spend.summary()}")
+        return
     if not args.no_images:
         painter = LLM(os.getenv("STANDIN_IMAGE_MODEL", IMAGE_MODEL), spend, cache, 1.0, "painter")
         assets = preset.setdefault("assets", {})

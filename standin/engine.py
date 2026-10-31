@@ -38,6 +38,7 @@ class Beat(BaseModel):
 
 class Take(BaseModel):
     lines: list[Beat]
+    advance: bool = False  # this moment has peaked: bring on the next turning point
     end: bool = False
     end_reason: str = ""
 
@@ -69,6 +70,9 @@ class Scene:
     moods: dict[str, Mood] = field(default_factory=dict)
     revealed: set[str] = field(default_factory=set)
     left: set[str] = field(default_factory=set)  # characters who walked out
+    arrived: set[str] = field(default_factory=set)  # people who came in during the scene
+    beat: int = 0  # how many planned turning points have happened
+    advance: bool = False  # the scene judged that the next one should land now
     ended: str = ""
 
     def __post_init__(self):
@@ -121,23 +125,38 @@ def _openness(m: Mood) -> str:
     return ""
 
 
+def present(scene: Scene, turn: int) -> list[str]:
+    return [c.name for c in scene.scenario.cast
+            if (not c.enters_at or c.name in scene.arrived) and c.name not in scene.left]
+
+
+def next_beat(scene: Scene) -> Event | None:
+    beats = sorted(scene.scenario.events, key=lambda e: e.at_turn)
+    return beats[scene.beat] if scene.beat < len(beats) else None
+
+
 def take_prompt(scene: Scene, turn: int) -> str:
     s = scene.scenario
-    names = [c.name for c in s.cast if c.name not in scene.left]
+    names = present(scene, turn)
     moods = "\n".join(
         f"- {n}: trust {scene.moods[n].trust}, patience {scene.moods[n].patience}"
         + (" (secret already out, may refer to it)" if n in scene.revealed else _openness(scene.moods[n])) for n in names)
+    absent = [c.name for c in s.cast if c.name not in names and c.name not in scene.left]
+    coming = next_beat(scene)
     return (
         f"Turn {turn} of at most {s.max_turns}. Mood now:\n{moods}\n\n"
-        f"Transcript:\n{scene.public(viewer='*')}\n\n"
+        + (f"Not in the room yet, so they cannot speak and nobody mentions them: {', '.join(absent)}.\n\n" if absent else "")
+        + f"Transcript:\n{scene.public(viewer='*')}\n\n"
         "Write who reacts to the user's last line. Usually one person; two only if a second would really jump in. "
         "Each spoken line is 1-2 short sentences, the length a person says in one breath while talking: "
         "one point or one question at a time, plain spoken language, no stage directions. "
         "Set end=true only if the conversation has reached a natural conclusion.\n"
-        f"speaker must be one of {names}. Keep exactly this key order:\n"
+        + (f"You are also the director. The next planned turning point is: {coming.description} Set advance=true when this moment has "
+           "peaked or gone quiet and it is the right time for that to happen next. Keep the scene moving; never let it drag.\n" if coming else "")
+        + f"speaker must be one of {names}. Keep exactly this key order:\n"
         '{"lines": [{"speaker": "...", "expression": "neutral|pleased|skeptical|annoyed", '
         '"inner": "one private thought", "say": "...", "mood_delta": {"trust": -25..25, "patience": -25..25}}], '
-        '"end": false, "end_reason": ""}'
+        '"advance": false, "end": false, "end_reason": ""}'
     )
 
 
@@ -247,12 +266,15 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, checker: LLM, cu
         out.append(ln)
 
     add(Line(turn, "user", said, cues=cues, signals=signals))
-    for e in s.events:
-        if e.at_turn == turn:
-            add(Line(turn, "narration", e.description))
-            yield {"type": "narration", "text": e.description}
+    e = next_beat(scene)
+    if e and (scene.advance or turn >= e.at_turn):  # the scene called for it, or it can wait no longer
+        scene.beat += 1
+        scene.advance = False
+        scene.arrived |= set(e.enters)
+        add(Line(turn, "narration", e.description))
+        yield {"type": "narration", "text": e.description, "shot": e.at_turn, "enters": e.enters}
 
-    names = [c.name for c in s.cast if c.name not in scene.left]
+    names = present(scene, turn)
     spoken = facts(scene.public())
     partial, sent, checks, gates, replaced = _Partial(), [], {}, {}, {}
     stream = actor.stream(_bible(s), take_prompt(scene, turn))
@@ -307,6 +329,7 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, checker: LLM, cu
         take = Take.model_validate_json(_extract_json(actor.stream_full(_bible(s), take_prompt(scene, turn))))
 
     ended_by_take = take.end and not replaced
+    scene.advance = take.advance and not replaced
     for i, beat in enumerate(take.lines[:2]):
         c = who(i, beat.speaker)
         if c.name in scene.left:

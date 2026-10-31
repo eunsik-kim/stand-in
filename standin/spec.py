@@ -24,6 +24,7 @@ class Character(BaseModel):
     voice: str = Field(description="how they sound and talk: pace, register, verbal habits")
     gender: str = Field(default="", description="'m' or 'f', picks their speaking voice")
     history: str = Field(default="", description="what has already happened between them and the user; both remember it")
+    enters_at: int = Field(default=0, description="user turn when they walk in; 0 means they are there from the start")
     goal: str = Field(description="PRIVATE: what they want out of this conversation")
     secret: str = Field(description="PRIVATE: a concrete fact the user does not know that would change the user's strategy")
     reveal_when: str = Field(description="PRIVATE: what the user must do/say before they let the secret slip")
@@ -34,6 +35,8 @@ class Character(BaseModel):
 class Event(BaseModel):
     at_turn: int = Field(ge=1, description="user turn after which the event happens")
     description: str = Field(description="what happens, written as stage narration")
+    enters: list[str] = Field(default=[], description="names of people who walk in now")
+    shot: str = Field(default="", description="how the photograph changes at this moment")
 
 
 class Scenario(BaseModel):
