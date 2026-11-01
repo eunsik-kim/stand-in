@@ -80,6 +80,10 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .acts button.off{opacity:.55}
 .autobar{display:none;align-items:center;justify-content:space-between;gap:12px;padding:2px 4px 2px 10px;font-size:14px;color:#dfe2e8}
 .autobar button{flex:none}
+.smenu{position:relative}
+.spop{position:absolute;right:0;bottom:calc(100% + 8px);min-width:84px;padding:4px;border-radius:12px;background:#14161cf5;box-shadow:0 0 0 1px #ffffff1f,0 8px 24px #0009;display:grid;gap:2px}
+.spop button{padding:7px 12px;border-radius:8px;background:none;text-align:left;font-size:14px}
+.spop button:hover,.spop button.on{background:#ffffff1a}
 .auto .bar{display:none}.auto .autobar{display:flex}
 .field{flex:1;min-width:0;display:grid}
 .mic .heard{font-size:17px;padding:4px 8px}.mic .heard:empty{display:none}
@@ -365,7 +369,7 @@ h2{margin:0;font-size:22px}
       <button class="tbtn" id="autoBtn" data-t="cAutoShort"></button>
       <button class="ibtn send" id="doneBtn" data-ic="send" data-tl="bSendTip"></button>
     </div>
-    <div class="autobar"><span></span><span class="row"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><button class="primary" id="takeBtn" data-t="aTake"></button></span></div>
+    <div class="autobar"><span></span><span class="row"><span class="smenu"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><span class="spop hidden" id="speedPop"></span></span><button class="primary" id="takeBtn" data-t="aTake"></button></span></div>
   </div></div>
   <div class="me"><video id="selfView" class="self" autoplay muted playsinline></video>
     <span class="badge cam-state"><span id="eyeDot" class="dot"></span><span id="eyeText" data-t="noCam"></span></span></div>
@@ -505,7 +509,7 @@ const loadVoices = () => { voices = speechSynthesis.getVoices(); };
 loadVoices(); speechSynthesis.onvoiceschanged = loadVoices;
 
 // conversation speed: how fast they speak and how soon a pause counts as finished
-const SPEEDS = [1, 1.25, 1.5];
+const SPEEDS = [1, 1.25, 1.5, 2];
 let SPEED = 1.5;
 try{ SPEED = +localStorage.getItem("standin-speed") || 1.5; }catch(e){}
 function speedLabel(){ $("speedBtn").textContent = `${SPEED}x`; }
@@ -1088,7 +1092,8 @@ async function autoRun(){
     if(done.ended){ AUTO = false; $("stage").classList.remove("auto"); over(done.ended); return; }
     next = upcoming || nextLine();
   }
-  AUTO = false; $("stage").classList.remove("auto"); listen();
+  AUTO = false; $("stage").classList.remove("auto");
+  if(!$("stage").classList.contains("hidden")) listen();  // unless they already left
 }
 async function stepInside(){  // the scene plays by itself until they choose to take over
   AUTO = true;
@@ -1285,8 +1290,7 @@ async function enter(){
 
 function over(reason){
   state = "over"; stopRec(); cam.rec = false; choiceSeq++; clearTimeout(pickTimer); $("choices").innerHTML = "";
-  $("caption").className = "caption narr"; $("caption").textContent = reason;
-  clearInterval(subTimer);
+  clearInterval(subTimer); $("caption").textContent = "";
   $("endCard").classList.remove("hidden");
 }
 
@@ -1296,17 +1300,29 @@ $("retryBtn").onclick = $("againLine").onclick = () => {
     stopRec(); $("typed").value = ""; listen();
   }else takeBack();
 };
-$("speedBtn").onclick = () => {
-  SPEED = SPEEDS[(SPEEDS.indexOf(SPEED) + 1) % SPEEDS.length];
+function setSpeed(v){
+  SPEED = v;
   try{ localStorage.setItem("standin-speed", SPEED); }catch(e){}
-  speedLabel();
+  speedLabel(); $("speedPop").classList.add("hidden");
   if(nowPlaying) nowPlaying.playbackRate = SPEED;
+}
+$("speedPop").innerHTML = SPEEDS.map(v => `<button type="button" data-v="${v}">${v}x</button>`).join("");
+$("speedPop").querySelectorAll("button").forEach(b => b.onclick = () => setSpeed(+b.dataset.v));
+$("speedBtn").onclick = e => {
+  e.stopPropagation();
+  $("speedPop").classList.toggle("hidden");
+  $("speedPop").querySelectorAll("button").forEach(b => b.classList.toggle("on", +b.dataset.v === SPEED));
 };
+document.addEventListener("click", () => $("speedPop").classList.add("hidden"));
 speedLabel();
 $("logBtn").onclick = () => { $("log").classList.toggle("hidden"); $("stage").classList.toggle("logopen"); };
 $("endAgain").onclick = () => { $("endCard").classList.add("hidden"); enter(); };
 $("endNew").onclick = () => { $("endCard").classList.add("hidden"); leaveStage(); show("build"); newStory(); };
-$("endBtn").onclick = () => { AUTO = false; stopVoice(); over(t("endedByYou")); };
+$("endBtn").onclick = () => {  // leaving just leaves: back to the stories, nothing in between
+  AUTO = false; choiceSeq++; clearTimeout(pickTimer); clearInterval(subTimer);
+  $("choices").innerHTML = ""; $("caption").textContent = "";
+  leaveStage(); show("build"); newStory();
+};
 
 async function showDebrief(){
   if(state === "debrief") return;
