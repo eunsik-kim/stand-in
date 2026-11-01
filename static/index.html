@@ -336,7 +336,7 @@ h2{margin:0;font-size:22px}
       <div id="histBody"></div>
     </div>
     <div class="bfoot hidden" id="bfoot">
-      <div class="bfrow"><div id="bsummary"></div><span class="bgo"><button id="bauto" data-t="bAuto"></button><button id="benter" class="primary" data-t="bEnter" disabled></button></span></div>
+      <div class="bfrow"><div id="bsummary"></div><span class="bgo"><button id="benter" class="primary" data-t="bEnter" disabled></button></span></div>
       <small id="bstate" class="sub" style="margin:0"></small>
     </div>
   </div>
@@ -1051,8 +1051,10 @@ async function autoRun(){
     let say;
     try{ say = (await post("/api/auto", {id:S.id})).say; }catch(e){ break; }
     if(!AUTO) break;
-    state = "wait"; caption(t("me"), say); addLog(t("me"), say);
-    await sleep(Math.min(5000, 1200 + say.length * 45) / SPEED);
+    state = "wait"; addLog(t("me"), say);
+    const ms = Math.min(3500, 600 + say.length * 70) / SPEED;
+    subtitle(t("me"), say, ms / 1000);
+    await sleep(ms + 200);
     turn++; $("turnText").textContent = `${turn} / ${S.scenario.max_turns}`;
     setThinking(true);
     let done = null;
@@ -1063,7 +1065,8 @@ async function autoRun(){
   }
   AUTO = false; $("stage").classList.remove("auto"); listen();
 }
-async function stepInside(){
+async function stepInside(){  // the scene plays by itself until they choose to take over
+  AUTO = true;
   const w = B?.world;
   if(!(w?.place && w.people.length)){ buildSay(t("bEnter")); return; }  // the guide asks for what is still missing
   talk.on = false; talkStop(); micButton();
@@ -1455,8 +1458,7 @@ micLabel(); applyLang();
 if(store.get("standin-seen")) startBuilding(); else onboard();
 $("bsend").onclick = () => buildSay($("bsay").value);
 $("bsay").addEventListener("keydown", e => { if(e.key === "Enter" && !e.shiftKey && !e.isComposing){ e.preventDefault(); buildSay($("bsay").value); } });
-$("benter").onclick = () => { AUTO = false; stepInside(); };
-$("bauto").onclick = () => { AUTO = true; stepInside(); };
+$("benter").onclick = stepInside;
 $("takeBtn").onclick = () => { AUTO = false; stopVoice(); };
 $("autoBtn").onclick = () => { if(state !== "listen") return; stopRec(); choiceSeq++; clearTimeout(pickTimer); $("choices").innerHTML = ""; AUTO = true; autoRun(); };
 $("choiceBtn").onclick = () => {
