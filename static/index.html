@@ -366,8 +366,8 @@ h2{margin:0;font-size:22px}
     <div class="bar">
       <button class="ibtn micb" id="micToggle" data-ic="mic" data-tl="bMicTip"></button>
       <div class="field"><div class="heard" id="heard"></div><input type="text" id="typed" data-tp="typePh"></div>
+      <button class="ibtn hidden" id="againLine" data-ic="x" data-tl="bClearTip"></button>
       <button class="ibtn" id="choiceBtn" data-ic="list" data-tl="cShow"></button>
-      <button class="ibtn" id="againLine" data-ic="undo" data-tl="bRetryTip"></button>
       <button class="tbtn" id="autoBtn" data-t="cAutoShort"></button>
       <button class="ibtn send" id="doneBtn" data-ic="send" data-tl="bSendTip"></button>
     </div>
@@ -639,7 +639,7 @@ function listen(){
   offerReplies();
   ear.final = ""; ear.interim = ""; ear.t0 = performance.now(); ear.first = 0; ear.last = 0; ear.firstKey = 0;
   Object.assign(cam, {rec:true, n:0, present:0, contact:0, down:0});
-  $("heard").innerHTML = ""; $("doneBtn").disabled = false; $("typed").disabled = false;
+  $("heard").innerHTML = ""; $("doneBtn").disabled = false; $("typed").disabled = false; clearButton();
   $("micToggle").classList.toggle("on", $("voiceIn").checked && !!SR);
   setPeople(null);
   if($("voiceIn").checked && SR){
@@ -668,6 +668,7 @@ function startRec(){
     }
     ear.interim = interim;
     $("heard").innerHTML = esc(ear.final) + "<i>" + esc(interim) + "</i>";
+    clearButton();
   };
   r.onend = () => { if(state === "listen" && ear.rec === r) startRec(); };  // Chrome stops on its own after silence
   r.onerror = e => { if(e.error === "not-allowed"){ $("micStatus").textContent = t("micDenied"); } };
@@ -718,7 +719,7 @@ async function finish(typedText){
   if(!text){ return; }
   stopRec(); cam.rec = false; choiceSeq++; clearTimeout(pickTimer); $("choices").innerHTML = "";
   const signals = measureSignals(text, typed);
-  state = "wait"; $("typed").value = ""; $("typed").disabled = true; $("doneBtn").disabled = true;
+  state = "wait"; $("typed").value = ""; $("typed").disabled = true; $("doneBtn").disabled = true; clearButton();
   $("micStatus").textContent = t("thinking");
   addLog(t("me"), text);
   turnLog = $("log").children.length - 1;
@@ -1079,7 +1080,7 @@ function typeOut(text, ms){
     const tick = () => {
       if(!AUTO) return res(false);
       const shown = Math.min(text.length, Math.ceil(text.length * (performance.now() - t0) / ms));
-      box.value = text.slice(0, shown);
+      box.value = text.slice(0, shown); clearButton();
       if(shown >= text.length) return res(true);
       setTimeout(tick, 30);
     };
@@ -1102,7 +1103,7 @@ async function autoRun(){
     addLog(t("me"), say);
     turn++; $("turnText").textContent = `${turn} / ${S.scenario.max_turns}`;
     let upcoming = null, done = null;
-    const sent = sleep(HOLD / SPEED).then(() => { if(AUTO) $("typed").value = ""; });
+    const sent = sleep(HOLD / SPEED).then(() => { if(AUTO){ $("typed").value = ""; clearButton(); } });
     // both sides are prepared ahead, so nobody waits between lines
     try{
       done = await streamTurn({id:S.id, say, signals:{}}, sent, ev => { if(AUTO && !ev.ended) upcoming = nextLine(); });
@@ -1313,12 +1314,15 @@ function over(reason){
   $("endCard").classList.remove("hidden");
 }
 
-// one "say it again": wipes what is being said, or takes back the line already sent
-$("retryBtn").onclick = $("againLine").onclick = () => {
-  if(state === "listen" && ($("heard").textContent.trim() || $("typed").value.trim())){
-    stopRec(); $("typed").value = ""; listen();
-  }else takeBack();
+// an X appears only while there is something in the box
+function clearButton(){ $("againLine").classList.toggle("hidden", !($("heard").textContent.trim() || $("typed").value.trim())); }
+$("typed").addEventListener("input", clearButton);
+$("againLine").onclick = () => {
+  if(AUTO) stopAuto();
+  $("typed").value = ""; $("heard").innerHTML = ""; clearButton();
+  if(state === "listen"){ stopRec(); listen(); }
 };
+$("retryBtn").onclick = takeBack;
 function setSpeed(v){
   SPEED = v;
   try{ localStorage.setItem("standin-speed", SPEED); }catch(e){}
