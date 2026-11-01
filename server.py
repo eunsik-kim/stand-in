@@ -514,6 +514,7 @@ def speak(req: SpeakReq):
 
 class AutoReq(BaseModel):
     id: str
+    tone: str = ""  # how this person likes to talk, set in onboarding
 
 
 @app.post("/api/auto")
@@ -522,7 +523,8 @@ def autopilot(req: AutoReq):
     s = sessions.get(req.id)
     if not s:
         raise HTTPException(404, "unknown session")
-    persona = f"Speak casually, in very short lines of a few words, the way this person really would, working toward: {s.scene.scenario.user_goal}"
+    persona = (f"Speak in very short lines of a few words, the way this person really would, working toward: {s.scene.scenario.user_goal}. "
+               f"How they talk: {req.tone or 'casual'}")
     return {"say": simulated_user(actor, persona)(s.scene, s.turn + 1).strip()}
 
 
@@ -542,6 +544,7 @@ def replies(req: AutoReq):
         f"Setting: {sc.setting}\nThe person: {sc.user_role}\nWhat they want: {sc.user_goal}\n\nTranscript:\n{s.scene.public()}\n\n"
         f"Write 3 different things they could say next, in language '{sc.language}', in the first person. {SPOKEN} "
         "Keep each one really light and short, what someone actually blurts out: 2 to 8 words, like 'Wait, seriously?' or '아니 그건 좀...' or '왜요?'. "
+        f"How this person talks, follow it closely: {req.tone or 'casual'}. "
         "Put the one you recommend first. Make them really different: push back, ask something, or dodge. "
         "No quotation marks. Do not repeat anything already said.\n"
         'Return {"replies": ["...", "...", "..."]}',
