@@ -78,13 +78,11 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .choices.held .pick i{visibility:hidden}.choices.held .pick .pp{display:none}
 #stage:has(.choices:not(:empty)) .caption{bottom:calc(92px + var(--choices,132px))}
 .acts button.off{opacity:.55}
-.autobar{display:none;align-items:center;justify-content:space-between;gap:12px;padding:2px 4px 2px 10px;font-size:14px;color:#dfe2e8}
-.autobar button{flex:none}
 .smenu{position:relative}
 .spop{position:absolute;right:0;bottom:calc(100% + 8px);min-width:84px;padding:4px;border-radius:12px;background:#14161cf5;box-shadow:0 0 0 1px #ffffff1f,0 8px 24px #0009;display:grid;gap:2px}
 .spop button{padding:7px 12px;border-radius:8px;background:none;text-align:left;font-size:14px}
 .spop button:hover,.spop button.on{background:#ffffff1a}
-.auto .bar{display:none}.auto .autobar{display:flex}
+.auto #autoBtn{background:#f2c14e2e;color:var(--acc)}
 .field{flex:1;min-width:0;display:grid}
 .mic .heard{font-size:17px;padding:4px 8px}.mic .heard:empty{display:none}
 .heard:not(:empty)+input{display:none}
@@ -366,10 +364,10 @@ h2{margin:0;font-size:22px}
       <div class="field"><div class="heard" id="heard"></div><input type="text" id="typed" data-tp="typePh"></div>
       <button class="ibtn" id="choiceBtn" data-ic="list" data-tl="cShow"></button>
       <button class="ibtn" id="againLine" data-ic="undo" data-tl="bRetryTip"></button>
+      <span class="smenu"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><span class="spop hidden" id="speedPop"></span></span>
       <button class="tbtn" id="autoBtn" data-t="cAutoShort"></button>
       <button class="ibtn send" id="doneBtn" data-ic="send" data-tl="bSendTip"></button>
     </div>
-    <div class="autobar"><span></span><span class="row"><span class="smenu"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><span class="spop hidden" id="speedPop"></span></span><button class="primary" id="takeBtn" data-t="aTake"></button></span></div>
   </div></div>
   <div class="me"><video id="selfView" class="self" autoplay muted playsinline></video>
     <span class="badge cam-state"><span id="eyeDot" class="dot"></span><span id="eyeText" data-t="noCam"></span></span></div>
@@ -1071,28 +1069,46 @@ $("bmic").onclick = () => { talk.on = !talk.on; micButton(); if(talk.on) talkLis
 
 // autopilot: a stand-in plays the user's part; they can step in at any moment
 let AUTO = false;
+// your line writes itself in the message box; click or type there any time and it's yours
+function typeOut(text, ms){
+  const box = $("typed"), t0 = performance.now();
+  return new Promise(res => {
+    const tick = () => {
+      if(!AUTO) return res(false);
+      const shown = Math.min(text.length, Math.ceil(text.length * (performance.now() - t0) / ms));
+      box.value = text.slice(0, shown);
+      if(shown >= text.length) return res(true);
+      setTimeout(tick, 30);
+    };
+    tick();
+  });
+}
+function stopAuto(){ AUTO = false; $("stage").classList.remove("auto"); }
 async function autoRun(){
   $("stage").classList.add("auto");
+  $("typed").disabled = false; $("doneBtn").disabled = true; $("heard").innerHTML = "";
   const nextLine = () => post("/api/auto", {id:S.id});
   let next = nextLine();
   while(AUTO){
     let say;
     try{ say = (await next).say; }catch(e){ break; }
     if(!AUTO) break;
-    state = "wait"; addLog(t("me"), say);
-    const ms = Math.min(3500, 600 + say.length * 70) / SPEED;
-    subtitle(t("me"), say, ms / 1000);
+    state = "wait";
+    const ms = Math.min(3000, 400 + say.length * 55) / SPEED;
+    if(!await typeOut(say, ms)) break;  // they stepped in: the words stay for them to finish
+    addLog(t("me"), say);
     turn++; $("turnText").textContent = `${turn} / ${S.scenario.max_turns}`;
     let upcoming = null, done = null;
+    const sent = sleep(HOLD / SPEED).then(() => { if(AUTO) $("typed").value = ""; });
     // both sides are prepared ahead, so nobody waits between lines
     try{
-      done = await streamTurn({id:S.id, say, signals:{}}, sleep(ms + HOLD / SPEED), ev => { if(AUTO && !ev.ended) upcoming = nextLine(); });
+      done = await streamTurn({id:S.id, say, signals:{}}, sent, ev => { if(AUTO && !ev.ended) upcoming = nextLine(); });
     }catch(e){ console.warn(e); }
     if(!done) break;
-    if(done.ended){ AUTO = false; $("stage").classList.remove("auto"); over(done.ended); return; }
+    if(done.ended){ stopAuto(); over(done.ended); return; }
     next = upcoming || nextLine();
   }
-  AUTO = false; $("stage").classList.remove("auto");
+  stopAuto();
   if(!$("stage").classList.contains("hidden")) listen();  // unless they already left
 }
 async function stepInside(){  // the scene plays by itself until they choose to take over
@@ -1500,8 +1516,12 @@ if(store.get("standin-seen")) startBuilding(); else onboard();
 $("bsend").onclick = () => buildSay($("bsay").value);
 $("bsay").addEventListener("keydown", e => { if(e.key === "Enter" && !e.shiftKey && !e.isComposing){ e.preventDefault(); buildSay($("bsay").value); } });
 $("benter").onclick = stepInside;
-$("takeBtn").onclick = () => { AUTO = false; stopVoice(); };
-$("autoBtn").onclick = () => { if(state !== "listen") return; stopRec(); choiceSeq++; clearTimeout(pickTimer); $("choices").innerHTML = ""; AUTO = true; autoRun(); };
+["pointerdown", "keydown"].forEach(ev => $("typed").addEventListener(ev, () => { if(AUTO) stopAuto(); }));
+$("autoBtn").onclick = () => {
+  if(AUTO){ stopAuto(); return; }
+  if(state !== "listen") return;
+  stopRec(); choiceSeq++; clearTimeout(pickTimer); $("choices").innerHTML = ""; AUTO = true; autoRun();
+};
 $("choiceBtn").onclick = () => setChoices(true);
 $("choiceBtn").classList.toggle("hidden", CHOICES);
 $("soundOpt").checked = SOUND;
