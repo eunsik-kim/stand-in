@@ -47,7 +47,7 @@ def portrait_prompt(setting: str, gender: str, appearance: str, role: str) -> st
     )
 
 
-def scene_prompt(place: str, people: list) -> str:
+def scene_prompt(place: str, people: list, look: str = "") -> str:
     who = "; ".join(f"{p.name}: {'man' if p.gender == 'm' else 'woman' if p.gender == 'f' else 'person'}, {p.role}, {p.look}" for p in people)
     return (
         f"Candid unretouched first-person photograph: we ARE the viewer, looking through our own eyes at the {len(people)} "
@@ -58,11 +58,12 @@ def scene_prompt(place: str, people: list) -> str:
         "not far across the room, with clear space above the head. Each head is about one fifth of the image height, and the place "
         "fills the rest of the wide frame. Real skin, natural imperfect faces, not models, mild sensor noise. "
         "No text, no borders, no logos."
+        + (f" Overall look of the image, follow it closely: {look}." if look else "")
     )
 
 
-def scene(painter: LLM, place: str, people: list, path: Path) -> None:
-    img = Image.open(io.BytesIO(generate_image(painter, scene_prompt(place, people), aspect_ratio="16:9"))).convert("RGB")
+def scene(painter: LLM, place: str, people: list, path: Path, look: str = "") -> None:
+    img = Image.open(io.BytesIO(generate_image(painter, scene_prompt(place, people, look), aspect_ratio="16:9"))).convert("RGB")
     img.thumbnail((1792, 1792))
     img.save(path, quality=88)
 

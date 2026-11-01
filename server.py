@@ -375,6 +375,7 @@ def load_scene(b: Build, s: Scenario) -> None:
 class EpisodeReq(BaseModel):
     idea: str
     genre: str = ""
+    look: str = ""  # how the pictures should look
     ui: str = "en"
 
 
@@ -393,9 +394,9 @@ def episode(req: EpisodeReq, request: Request):
     stem = uuid.uuid4().hex[:10]
     first = ART / f"{stem}_scene.jpg"
     try:
-        scene(painter, s.setting, [as_person(c) for c in here], first)
+        scene(painter, s.setting, [as_person(c) for c in here], first, req.look)
     except Exception:  # the content filter misfires on ordinary scenes
-        scene(painter, s.setting.split(".")[0] + ".", [as_person(c) for c in here], first)
+        scene(painter, s.setting.split(".")[0] + ".", [as_person(c) for c in here], first, req.look)
     b.background = f"/art/{first.name}"
     b.drawn["names"] = ",".join(sorted(person.name for person in b.world.people))
 
