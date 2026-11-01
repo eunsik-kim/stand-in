@@ -1,0 +1,134 @@
+{
+  "situation": "통장을 열었더니 3천만 원이 없다. 남편이 막 들어왔다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "통장이 비었다",
+    "language": "ko",
+    "setting": "밤 9시의 집 주방. 식탁 위 휴대폰, 식어 버린 저녁.",
+    "user_role": "남편의 아내",
+    "user_goal": "돈이 어디로 갔는지 알아내고 어떻게 할지 정한다.",
+    "user_knows": [
+      "그 돈은 아이 학비로 모은 것이다",
+      "남편은 몇 주째 예민했다"
+    ],
+    "cast": [
+      {
+        "name": "민호",
+        "role": "남편",
+        "appearance": "Man about 42, loosened tie, tired eyes, keys still in his hand",
+        "voice": "농담으로 넘기다 방어적이 되고 마침내 조용해진다",
+        "gender": "m",
+        "history": "결혼 12년 차다.",
+        "enters_at": 0,
+        "goal": "돈이 돌아올 때까지 시간을 번다",
+        "secret": "친구의 코인 투자에 전부 넣었고 2주 전 출금이 막혔다",
+        "reveal_when": "화내지 않고 뭘 말하기 무서운지 물을 때",
+        "red_lines": [
+          "두 번 직접 물으면 거짓말을 못 한다"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 50
+        }
+      },
+      {
+        "name": "시어머니",
+        "role": "근처 사는 시어머니",
+        "appearance": "Woman about 68, neat short hair, patterned blouse, side dishes in a bag",
+        "voice": "겉은 다정하고 언제나 아들 편이다",
+        "gender": "f",
+        "history": "말없이 찾아오는 일이 잦다.",
+        "enters_at": 2,
+        "goal": "아들을 지킨다",
+        "secret": "지난달 그녀도 돈을 줬고 며느리에게 말하지 말라고 들었다",
+        "reveal_when": "탓하지 않고 물을 때",
+        "red_lines": [
+          "아들 욕은 못 듣는다"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 45
+        }
+      },
+      {
+        "name": "창수 씨",
+        "role": "스피커폰의 친구",
+        "appearance": "Man about 44, shiny jacket, seen in a video call on a phone propped against a bottle",
+        "voice": "자신만만하고 빠르게 '나만 믿어'를 외친다",
+        "gender": "m",
+        "history": "결혼식 때 본 사이다.",
+        "enters_at": 4,
+        "goal": "경찰에 못 가게 막는다",
+        "secret": "금요일까지 신청하면 일부를 돌려받을 수 있는데 숨기고 있다",
+        "reveal_when": "변호사 이야기를 꺼낼 때",
+        "red_lines": [
+          "사기라고는 인정 안 한다"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "민호",
+    "opening_line": "어, 왜 이렇게 조용해? 밥은 먹었어?",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "초인종이 울리고 시어머니가 반찬 봉지를 들고 들어온다.",
+        "enters": [
+          "시어머니"
+        ],
+        "shot": "An older woman with a bag of side dishes stands in the kitchen beside the man."
+      },
+      {
+        "at_turn": 4,
+        "description": "식탁 위 휴대폰이 울리고 남편이 실수로 스피커로 받는다.",
+        "enters": [
+          "창수 씨"
+        ],
+        "shot": "A phone propped on the table shows a video call; the man stares at it, frozen."
+      },
+      {
+        "at_turn": 6,
+        "description": "남편이 자리에 앉아 두 손을 식탁에 올려놓는다.",
+        "enters": [],
+        "shot": "The man sits at the kitchen table with both palms flat, looking at you."
+      }
+    ],
+    "success_criteria": [
+      "남편에게 사실을 듣는다",
+      "금요일 기한을 찾아낸다",
+      "함께 다음 할 일을 정한다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_husband_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_husband_2_scene.jpg",
+      "6": "/presets/img/ko_husband_6_scene.jpg"
+    },
+    "clues": {
+      "민호": {
+        "img": "/presets/img/clue_husband_0.jpg",
+        "name": "멈춘 투자 앱"
+      },
+      "시어머니": {
+        "img": "/presets/img/clue_husband_1.jpg",
+        "name": "또 다른 입금 영수증"
+      },
+      "창수 씨": {
+        "img": "/presets/img/clue_husband_2.jpg",
+        "name": "환급 안내문"
+      }
+    }
+  }
+}

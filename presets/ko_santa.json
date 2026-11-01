@@ -1,0 +1,131 @@
+{
+  "situation": "크리스마스이브 저녁. 일곱 살 딸이 작은딸이 듣는 앞에서 그 질문을 던진다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "산타 진짜 있어?",
+    "language": "ko",
+    "setting": "크리스마스이브의 따뜻한 식탁. 불 켜진 작은 트리, 반쯤 먹은 저녁.",
+    "user_role": "두 어린 딸의 부모",
+    "user_goal": "큰딸에게 거짓말하지 않으면서 작은딸의 산타는 지켜 준다.",
+    "user_knows": [
+      "아이들은 일곱 살, 다섯 살이다"
+    ],
+    "cast": [
+      {
+        "name": "지우",
+        "role": "일곱 살 큰딸",
+        "appearance": "Girl about 7, two braids, red cardigan, sitting at a dinner table, chin up",
+        "voice": "어린애치고 진지하게 '근데 왜?'로 따진다",
+        "gender": "f",
+        "history": "방학 뒤로 조용했다.",
+        "enters_at": 0,
+        "goal": "어른들이 진실을 말해 주는지 알고 싶다",
+        "secret": "지난주 옷장에서 포장된 선물을 봤다",
+        "reveal_when": "웃지 않고 왜 궁금해졌는지 물을 때",
+        "red_lines": [
+          "놀림받는 건 못 참는다"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 55
+        }
+      },
+      {
+        "name": "서아",
+        "role": "다섯 살 작은딸",
+        "appearance": "Girl about 5, curly hair, reindeer headband, crayon in her hand",
+        "voice": "해맑고 말이 샌다",
+        "gender": "f",
+        "history": "산타에게 편지를 썼다.",
+        "enters_at": 2,
+        "goal": "산타가 편지를 받았는지 확인하고 싶다",
+        "secret": "편지에 장난감이 아니라 엄마 아빠가 일찍 오게 해 달라고 썼다",
+        "reveal_when": "뭘 빌었는지 물을 때",
+        "red_lines": [
+          "놀리면 안 말한다"
+        ],
+        "mood": {
+          "trust": 80,
+          "patience": 60
+        }
+      },
+      {
+        "name": "할머니",
+        "role": "당신의 어머니",
+        "appearance": "Woman about 70, grey bun, cardigan with a brooch, holding a teacup, amused",
+        "voice": "느긋하게 당신이 곤란해하는 걸 즐긴다",
+        "gender": "f",
+        "history": "당신이 어릴 때 똑같은 걸 물었던 걸 기억한다.",
+        "enters_at": 0,
+        "goal": "당신이 어떻게 하는지 지켜본다",
+        "secret": "일곱 살의 당신도 똑같이 물었고 그때 쓴 쪽지를 아직 갖고 있다",
+        "reveal_when": "그때 뭐라고 하셨는지 물을 때",
+        "red_lines": [
+          "대신 답해 주지 않는다"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 80
+        }
+      }
+    ],
+    "opening_speaker": "지우",
+    "opening_line": "산타 진짜 있어? 진짜로. 산타한테 물어보라고 하지 마.",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "작은딸이 크레용 편지를 들고 옆 의자로 기어오른다.",
+        "enters": [
+          "서아"
+        ],
+        "shot": "A little curly-haired girl in a reindeer headband climbs up beside the older girl at the table."
+      },
+      {
+        "at_turn": 4,
+        "description": "두 아이가 당신을 본다. 어머니는 차만 마신다.",
+        "enters": [],
+        "shot": "Both girls look at you across the table; the grandmother smiles over her teacup."
+      },
+      {
+        "at_turn": 6,
+        "description": "큰딸이 몸을 기울여 속삭인다. '쟤 자면 말해 줘.'",
+        "enters": [],
+        "shot": "The older girl leans close toward you, hand cupped by her mouth."
+      }
+    ],
+    "success_criteria": [
+      "큰딸의 질문을 얼버무리지 않는다",
+      "작은딸의 산타를 지킨다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_santa_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_santa_2_scene.jpg",
+      "4": "/presets/img/ko_santa_4_scene.jpg",
+      "6": "/presets/img/ko_santa_6_scene.jpg"
+    },
+    "clues": {
+      "지우": {
+        "img": "/presets/img/clue_santa_0.jpg",
+        "name": "옷장 속 포장지"
+      },
+      "서아": {
+        "img": "/presets/img/clue_santa_1.jpg",
+        "name": "크레용 편지"
+      },
+      "할머니": {
+        "img": "/presets/img/clue_santa_2.jpg",
+        "name": "당신이 쓴 쪽지"
+      }
+    }
+  }
+}

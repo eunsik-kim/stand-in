@@ -1,0 +1,135 @@
+{
+  "situation": "It's 11 pm. Your sixteen-year-old took the car, and it is now wedged against the hardware store wall.",
+  "ui": "en",
+  "scenario": {
+    "title": "He Took the Car",
+    "language": "en",
+    "setting": "A narrow street at night outside a shuttered hardware store, a car with a crumpled bumper against a wall, a streetlight.",
+    "user_role": "His mother",
+    "user_goal": "Find out what really happened, and deal with it.",
+    "user_knows": [
+      "He is sixteen and has no licence",
+      "Nobody is hurt"
+    ],
+    "cast": [
+      {
+        "name": "Ethan",
+        "role": "your sixteen-year-old son",
+        "appearance": "Teenage boy about 16, black hoodie, staring at the ground, car key in his fist",
+        "voice": "Mumbling, one word answers, flares up",
+        "gender": "m",
+        "history": "You argued about his phone this morning.",
+        "enters_at": 0,
+        "goal": "Keep his friend out of it",
+        "secret": "He wasn't driving: his friend was, and he is taking the blame",
+        "reveal_when": "You stop shouting and ask who he is protecting",
+        "red_lines": [
+          "Won't name his friend to a stranger"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 40
+        }
+      },
+      {
+        "name": "Mr. Park",
+        "role": "the hardware store owner",
+        "appearance": "Man about 62, cardigan over pyjamas, slippers, torch in his hand",
+        "voice": "Gruff, tired, softer than he sounds",
+        "gender": "m",
+        "history": "You have bought from him for ten years.",
+        "enters_at": 2,
+        "goal": "Get his wall paid for",
+        "secret": "His security camera caught who was at the wheel",
+        "reveal_when": "You apologise first and ask if he saw anything",
+        "red_lines": [
+          "Won't call the police if treated with respect"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Your husband",
+        "role": "your husband, just arrived",
+        "appearance": "Man about 46, work shirt, coat thrown on, out of breath",
+        "voice": "Loud at first, then guilty and quiet",
+        "gender": "m",
+        "history": "Twenty years of marriage.",
+        "enters_at": 4,
+        "goal": "Show the boy who's boss",
+        "secret": "He did the same thing at seventeen and never told you",
+        "reveal_when": "You ask him why he's so angry",
+        "red_lines": [
+          "Won't hit the boy"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "Ethan",
+    "opening_line": "It's—I know. I know, okay? Don't.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "A shutter rattles up. The owner comes out in his slippers with a torch.",
+        "enters": [
+          "Mr. Park"
+        ],
+        "shot": "An older man in slippers shines a torch on the dented car beside the teenage boy."
+      },
+      {
+        "at_turn": 4,
+        "description": "A taxi door slams. Your husband comes up the street fast.",
+        "enters": [
+          "Your husband"
+        ],
+        "shot": "A man in a work shirt strides up the street toward the boy and the older man."
+      },
+      {
+        "at_turn": 6,
+        "description": "The boy's phone lights up in his hand. He turns it over before anyone can see.",
+        "enters": [],
+        "shot": "The teenage boy turns his glowing phone face down while the two men watch him."
+      }
+    ],
+    "success_criteria": [
+      "Finds out who was really driving",
+      "Settles things with the owner",
+      "Keeps the boy talking to you"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_son_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_son_2_scene.jpg",
+      "4": "/presets/img/en_son_4_scene.jpg",
+      "6": "/presets/img/en_son_6_scene.jpg"
+    },
+    "clues": {
+      "Ethan": {
+        "img": "/presets/img/clue_son_0.jpg",
+        "name": "The passenger seat"
+      },
+      "Mr. Park": {
+        "img": "/presets/img/clue_son_1.jpg",
+        "name": "The camera footage"
+      },
+      "Your husband": {
+        "img": "/presets/img/clue_son_2.jpg",
+        "name": "An old photo of a car"
+      }
+    }
+  }
+}

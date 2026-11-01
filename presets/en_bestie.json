@@ -1,0 +1,136 @@
+{
+  "situation": "Everything's great with your boyfriend, except his best friend of eight years. Tonight, your movie plans just got cancelled for her again.",
+  "ui": "en",
+  "scenario": {
+    "title": "It's Normal Where I'm From",
+    "language": "en",
+    "setting": "Your shared flat at 8 pm, two movie tickets on a phone, his coat half on, keys in his hand.",
+    "user_role": "His girlfriend",
+    "user_goal": "Set a boundary without turning into the jealous one.",
+    "user_knows": [
+      "He says close friendships like this are normal where he grew up",
+      "She's just broken up with someone"
+    ],
+    "cast": [
+      {
+        "name": "Mateo",
+        "role": "your boyfriend",
+        "appearance": "Man about 27, dark curly hair, coat half on, car keys in hand, apologetic eyes",
+        "voice": "Warm, expressive, 'she needs me right now'",
+        "gender": "m",
+        "history": "Two years together.",
+        "enters_at": 0,
+        "goal": "Be there for both of you",
+        "secret": "He told her they should talk less, and she said she'd have no one left",
+        "reveal_when": "You ask how he's feeling about all this",
+        "red_lines": [
+          "Won't cut her off on command"
+        ],
+        "mood": {
+          "trust": 65,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Lucia",
+        "role": "his best friend, on a video call",
+        "appearance": "Woman about 27, messy bun, tear-stained, blanket around her shoulders, seen on a phone video call",
+        "voice": "Tearful, then surprisingly sharp",
+        "gender": "f",
+        "history": "You've tried to like her; you've said so more than once.",
+        "enters_at": 2,
+        "goal": "Keep her friend",
+        "secret": "She knows you've felt pushed out and has been meaning to say sorry",
+        "reveal_when": "You speak to her directly and kindly",
+        "red_lines": [
+          "Won't be spoken about like she's not there"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 45
+        }
+      },
+      {
+        "name": "Your friend",
+        "role": "your friend, who calls",
+        "appearance": "Woman about 28, in a bright kitchen, seen on a phone video call, stirring a pot",
+        "voice": "Blunt and loving",
+        "gender": "f",
+        "history": "You've told her everything.",
+        "enters_at": 5,
+        "goal": "Make you say what you want",
+        "secret": "She went through the same thing and has one question for you",
+        "reveal_when": "You ask what she'd do",
+        "red_lines": [
+          "Won't tell you what to do"
+        ],
+        "mood": {
+          "trust": 80,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "Mateo",
+    "opening_line": "I know. I know, the movie. But she's—she's really not good tonight. Twenty minutes, okay?",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "His phone starts ringing in his hand. He answers, and turns the screen so you're in it too.",
+        "enters": [
+          "Lucia"
+        ],
+        "shot": "A man holds up a phone showing a tearful woman with a blanket on a video call."
+      },
+      {
+        "at_turn": 5,
+        "description": "Your own phone buzzes. Your friend, right on time.",
+        "enters": [
+          "Your friend"
+        ],
+        "shot": "A second phone held up shows a woman in a bright kitchen on a video call."
+      },
+      {
+        "at_turn": 7,
+        "description": "He takes off his coat and puts the keys on the shelf, but doesn't sit down.",
+        "enters": [],
+        "shot": "The man stands in the hallway with his coat off, keys on a shelf, looking at you."
+      }
+    ],
+    "success_criteria": [
+      "Sets a clear boundary without an ultimatum",
+      "Hears what he's going through",
+      "Talks directly to his friend"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_bestie_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_bestie_2_scene.jpg",
+      "5": "/presets/img/en_bestie_5_scene.jpg",
+      "7": "/presets/img/en_bestie_7_scene.jpg"
+    },
+    "clues": {
+      "Mateo": {
+        "img": "/presets/img/clue_bestie_0.jpg",
+        "name": "His text to her"
+      },
+      "Lucia": {
+        "img": "/presets/img/clue_bestie_1.jpg",
+        "name": "A photo of three"
+      },
+      "Your friend": {
+        "img": "/presets/img/clue_bestie_2.jpg",
+        "name": "Her old diary page"
+      }
+    },
+    "basis": "Adapted from a story someone really posted online. Names and details are changed."
+  }
+}

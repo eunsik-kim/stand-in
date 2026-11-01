@@ -149,7 +149,13 @@ def take_prompt(scene: Scene, turn: int) -> str:
         + f"Transcript:\n{scene.public(viewer='*')}\n\n"
         "Write who reacts to the user's last line. Usually one person; two only if a second would really jump in. "
         "Each spoken line is what a person says in one breath: one point or one question at a time, no stage directions. "
-        "Set end=true only if the conversation has reached a natural conclusion.\n"
+        "Every reply must move the story: a new fact, a decision, an action or a change of heart. Never reuse a phrase, joke or "
+        "complaint already in the transcript, and do not echo the last words of the user's line back at them. "
+        "Speech fits the time and place of the setting. A private alliance stays private in front of others.\n"
+        + ("This is the last turn. Land the ending now: someone decides, the truth comes out or the deal closes, and the last line "
+           "closes the matter. Set end=true.\n" if turn >= s.max_turns
+           else "The story is nearly over: start bringing things to a head.\n" if turn >= s.max_turns - 2
+           else "Set end=true only if the conversation has reached a natural conclusion.\n")
         + (f"You are also the director. The next planned turning point is: {coming.description} Set advance=true when this moment has "
            "peaked or gone quiet and it is the right time for that to happen next. Keep the scene moving; never let it drag.\n" if coming else "")
         + f"speaker must be one of {names}. Keep exactly this key order:\n"

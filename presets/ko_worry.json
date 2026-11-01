@@ -1,0 +1,134 @@
+{
+  "situation": "새벽 3시에 깨 보니 남편이 식탁에서 계산기로 미래를 더하고 있다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "새벽 3시의 식탁",
+    "language": "ko",
+    "setting": "새벽 3시의 어두운 주방. 펜던트 조명 하나, 식탁 위 고지서와 계산기, 식은 머그잔.",
+    "user_role": "남편의 아내",
+    "user_goal": "그의 곁에 있어 주고 진짜 잠 못 드는 이유를 알아낸다.",
+    "user_knows": [
+      "올해 대출 금리가 올랐다",
+      "아들은 3년 뒤 대학에 간다"
+    ],
+    "cast": [
+      {
+        "name": "상우",
+        "role": "남편",
+        "appearance": "Man about 47, grey T-shirt, reading glasses pushed up, unshaven, pencil in hand",
+        "voice": "건조하게 말끝을 흐리고 '아무것도 아니야'를 반복한다",
+        "gender": "m",
+        "history": "함께한 지 20년이다.",
+        "enters_at": 0,
+        "goal": "당신을 걱정시키지 않으려 한다",
+        "secret": "회사 구조조정 명단에 그의 이름이 있다는 소문을 들었다",
+        "reveal_when": "해결책 대신 옆에 앉아 들어 줄 때",
+        "red_lines": [
+          "동정받고 싶어 하지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 50
+        }
+      },
+      {
+        "name": "친정엄마",
+        "role": "며칠 와 계신 친정엄마",
+        "appearance": "Woman about 72, quilted robe, slippers, white hair loose, holding a glass of water",
+        "voice": "조용하고 느리게 한 마디씩 꽂는다",
+        "gender": "f",
+        "history": "병원 검진 때문에 와 계신다.",
+        "enters_at": 3,
+        "goal": "말없이 돕고 싶다",
+        "secret": "손주 이름으로 조금씩 모은 통장이 있다",
+        "reveal_when": "힘든 시절을 어떻게 넘겼는지 물을 때",
+        "red_lines": [
+          "편을 들지 않는다"
+        ],
+        "mood": {
+          "trust": 75,
+          "patience": 70
+        }
+      },
+      {
+        "name": "상우 친구 재석",
+        "role": "문자 뒤 전화한 남편의 친구",
+        "appearance": "Man about 48, seen on a phone screen, sitting in a parked car at night",
+        "voice": "피곤하고 친근하다",
+        "gender": "m",
+        "history": "오래 알던 사이다.",
+        "enters_at": 5,
+        "goal": "들은 걸 친구에게 알려 주고 싶다",
+        "secret": "가게를 내는데 남편을 동업자로 데려가고 싶다",
+        "reveal_when": "왜 이 시간에 전화했는지 물을 때",
+        "red_lines": [
+          "못 지킬 약속은 안 한다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "상우",
+    "opening_line": "어, 왜 깼어. 들어가 자. 아무것도 아니야, 그냥 숫자 좀.",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "복도 끝 문이 열리고 어머니가 물 마시러 나온다.",
+        "enters": [
+          "친정엄마"
+        ],
+        "shot": "An older woman in a robe stands at the kitchen door with a glass; the man looks up."
+      },
+      {
+        "at_turn": 5,
+        "description": "이 시간에 휴대폰이 울린다. 남편이 화면을 보고 당신을 본다.",
+        "enters": [
+          "상우 친구 재석"
+        ],
+        "shot": "A phone glows on the kitchen table showing a video call from a man in a parked car."
+      },
+      {
+        "at_turn": 7,
+        "description": "남편이 안경을 벗고 계산기를 밀어 놓는다.",
+        "enters": [],
+        "shot": "The man has pushed the calculator aside and sits rubbing his eyes under the pendant light."
+      }
+    ],
+    "success_criteria": [
+      "남편이 속을 말하게 한다",
+      "바로 해결하려 들지 않는다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_worry_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_worry_3_scene.jpg",
+      "5": "/presets/img/ko_worry_5_scene.jpg",
+      "7": "/presets/img/ko_worry_7_scene.jpg"
+    },
+    "clues": {
+      "상우": {
+        "img": "/presets/img/clue_worry_0.jpg",
+        "name": "이름에 동그라미 친 종이"
+      },
+      "친정엄마": {
+        "img": "/presets/img/clue_worry_1.jpg",
+        "name": "작은 통장"
+      },
+      "상우 친구 재석": {
+        "img": "/presets/img/clue_worry_2.jpg",
+        "name": "가게 도면"
+      }
+    }
+  }
+}

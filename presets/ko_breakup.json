@@ -1,0 +1,135 @@
+{
+  "situation": "5년을 만난 그가 처음 왔던 곳에서 보자고 한다. 뭔가 온다는 걸 안다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "우리 얘기 좀 해",
+    "language": "ko",
+    "setting": "해 질 녘 강변 벤치. 자전거 길, 테이크아웃 커피 두 잔, 켜지기 시작하는 다리 불빛.",
+    "user_role": "5년 사귄 여자친구",
+    "user_goal": "이유를 듣고 후회 없게 대화를 끝낸다.",
+    "user_knows": [
+      "올해 서로 덜 만났다",
+      "그가 일부러 여기로 정했다"
+    ],
+    "cast": [
+      {
+        "name": "태민",
+        "role": "5년 사귄 남자친구",
+        "appearance": "Man about 33, dark coat, staring at the river, coffee untouched",
+        "voice": "조용하고 말을 시작해 놓고 끝을 못 맺는다",
+        "gender": "m",
+        "history": "5년을 함께했다.",
+        "enters_at": 0,
+        "goal": "이유를 말하지 않고 좋게 끝낸다",
+        "secret": "해외 발령을 받았고 당신이 커리어를 버리고 따라올까 봐 헤어지려 한다",
+        "reveal_when": "매달리지 않고 말 못 한 게 뭔지 물을 때",
+        "red_lines": [
+          "다른 사람이 있다고 거짓말은 안 한다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 55
+        }
+      },
+      {
+        "name": "하나",
+        "role": "조깅 중 마주친 친구",
+        "appearance": "Woman about 32, running jacket, earbuds in, slowing to a stop",
+        "voice": "어색해서 말이 많고 다정하다",
+        "gender": "f",
+        "history": "셋이 오랜 친구다.",
+        "enters_at": 3,
+        "goal": "이 순간에서 빠져나가고 싶다",
+        "secret": "지난달 그가 밴쿠버 시차를 물어봤다",
+        "reveal_when": "그가 뭐라도 말했냐고 물을 때",
+        "red_lines": [
+          "편을 들지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 40
+        }
+      },
+      {
+        "name": "태민 누나",
+        "role": "당신에게 전화한 그의 누나",
+        "appearance": "Woman about 38, seen on a phone video call in a kitchen, worried face",
+        "voice": "따뜻하고 직설적인 누나 말투",
+        "gender": "f",
+        "history": "늘 가족처럼 대해 줬다.",
+        "enters_at": 6,
+        "goal": "동생의 실수를 막는다",
+        "secret": "요즘 그녀 집에서 자며 울고 있다",
+        "reveal_when": "무슨 일인지 말할 때",
+        "red_lines": [
+          "대화를 가로채지 않는다"
+        ],
+        "mood": {
+          "trust": 75,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "태민",
+    "opening_line": "이 벤치 기억나? 그냥… 어떻게 말을 꺼내야 할지 모르겠다.",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "달리던 사람이 속도를 줄이더니 둘을 알아보고 이어폰을 뺀다.",
+        "enters": [
+          "하나"
+        ],
+        "shot": "A woman in a running jacket stops beside the bench, the man looking up at her."
+      },
+      {
+        "at_turn": 5,
+        "description": "친구가 떠난다. 다리 불빛이 한꺼번에 켜진다.",
+        "enters": [],
+        "shot": "The man sits alone on the bench, bridge lights on behind him across the dark river."
+      },
+      {
+        "at_turn": 6,
+        "description": "휴대폰이 울린다. 전화를 안 하던 그의 누나다.",
+        "enters": [
+          "태민 누나"
+        ],
+        "shot": "A phone held up shows a worried woman on a video call, the man on the bench beside you."
+      }
+    ],
+    "success_criteria": [
+      "진짜 이유를 알아낸다",
+      "내가 정말 원하는 걸 말한다",
+      "끝내거나 새로 계획한다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_breakup_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_breakup_3_scene.jpg",
+      "5": "/presets/img/ko_breakup_5_scene.jpg",
+      "6": "/presets/img/ko_breakup_6_scene.jpg"
+    },
+    "clues": {
+      "태민": {
+        "img": "/presets/img/clue_breakup_0.jpg",
+        "name": "해외 발령 통지서"
+      },
+      "하나": {
+        "img": "/presets/img/clue_breakup_1.jpg",
+        "name": "세계 시계"
+      },
+      "태민 누나": {
+        "img": "/presets/img/clue_breakup_2.jpg",
+        "name": "누나네 빈방"
+      }
+    }
+  }
+}

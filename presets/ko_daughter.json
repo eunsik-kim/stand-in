@@ -1,0 +1,135 @@
+{
+  "situation": "열일곱 살 딸이 자퇴하겠다고 말한다. 방문은 반쯤 닫혀 있다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "나 자퇴할래",
+    "language": "ko",
+    "setting": "저녁, 고등학생 딸의 방문 앞. 포스터, 바닥의 책가방, 은은한 스탠드.",
+    "user_role": "딸의 부모",
+    "user_goal": "방문을 닫히지 않게 하고 진짜 이유를 알아낸다.",
+    "user_knows": [
+      "이번 달에 학교를 두 번 빠졌다",
+      "작년 성적은 괜찮았다"
+    ],
+    "cast": [
+      {
+        "name": "서윤",
+        "role": "열일곱 살 딸",
+        "appearance": "Girl about 17, oversized hoodie, hair tied up, sitting on her bed, arms crossed",
+        "voice": "무심하게 비꼬다가 들어 주면 무너진다",
+        "gender": "f",
+        "history": "지난주 성적 문제로 싸웠다.",
+        "enters_at": 0,
+        "goal": "간섭을 끊고 싶다",
+        "secret": "미대에 가고 싶은데 돈 얘기를 엿듣고 포기하려 한다",
+        "reveal_when": "훈계를 멈추고 대신 뭘 하고 싶은지 물을 때",
+        "red_lines": [
+          "두 번 훈계하면 문을 닫는다"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 35
+        }
+      },
+      {
+        "name": "동생 도윤",
+        "role": "열두 살 남동생",
+        "appearance": "Boy about 12, gaming headset around his neck, peeking from the hallway",
+        "voice": "불쑥불쑥 말하고 도움이 되고 싶어 한다",
+        "gender": "m",
+        "history": "누나를 좋아한다.",
+        "enters_at": 3,
+        "goal": "싸움을 멈추고 싶다",
+        "secret": "침대 밑 스케치북을 봤다",
+        "reveal_when": "다정하게 뭘 아는지 물을 때",
+        "red_lines": [
+          "혼내면 누나를 안 판다"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 50
+        }
+      },
+      {
+        "name": "담임 선생님",
+        "role": "전화 온 담임",
+        "appearance": "Woman about 38, teacher's lanyard, seen on a phone video call at a desk",
+        "voice": "조심스럽고 따뜻하게 말을 고른다",
+        "gender": "f",
+        "history": "학부모 상담 때 만났다.",
+        "enters_at": 5,
+        "goal": "학생을 학교에 남긴다",
+        "secret": "미술 장학금 마감이 이번 달이고 이미 추천서를 써 뒀다",
+        "reveal_when": "딸의 어떤 점을 봤는지 물을 때",
+        "red_lines": [
+          "학생의 비밀을 함부로 말하지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 55
+        }
+      }
+    ],
+    "opening_speaker": "서윤",
+    "opening_line": "그만둔다고. 상의하자는 거 아니야.",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "복도 바닥이 삐걱거린다. 동생이 듣고 있었다.",
+        "enters": [
+          "동생 도윤"
+        ],
+        "shot": "A young boy with a headset peeks around the door frame behind you, the girl on the bed."
+      },
+      {
+        "at_turn": 5,
+        "description": "휴대폰이 울린다. 담임의 영상 통화다.",
+        "enters": [
+          "담임 선생님"
+        ],
+        "shot": "A phone held up shows a teacher on a video call; the girl on the bed looks up."
+      },
+      {
+        "at_turn": 7,
+        "description": "딸이 침대 밑에서 납작한 걸 꺼내 가슴에 안는다.",
+        "enters": [],
+        "shot": "The girl sits on the bed hugging a large sketchbook to her chest."
+      }
+    ],
+    "success_criteria": [
+      "훈계로 몰아붙이지 않는다",
+      "미대 이야기를 알아낸다",
+      "딸이 계속 이야기하기로 한다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_daughter_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_daughter_3_scene.jpg",
+      "5": "/presets/img/ko_daughter_5_scene.jpg",
+      "7": "/presets/img/ko_daughter_7_scene.jpg"
+    },
+    "clues": {
+      "서윤": {
+        "img": "/presets/img/clue_daughter_0.jpg",
+        "name": "미대 입시 안내"
+      },
+      "동생 도윤": {
+        "img": "/presets/img/clue_daughter_1.jpg",
+        "name": "가족 스케치"
+      },
+      "담임 선생님": {
+        "img": "/presets/img/clue_daughter_2.jpg",
+        "name": "장학금 신청서"
+      }
+    }
+  }
+}

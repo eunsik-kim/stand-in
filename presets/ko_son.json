@@ -1,0 +1,135 @@
+{
+  "situation": "밤 11시. 열여섯 살 아들이 차를 몰래 끌고 나갔고, 차는 철물점 벽에 박혀 있다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "차 키가 없어졌다",
+    "language": "ko",
+    "setting": "밤 11시, 셔터 내린 철물점 앞 좁은 골목. 범퍼가 찌그러진 차가 벽에 붙어 있고 가로등이 켜져 있다.",
+    "user_role": "아이의 엄마",
+    "user_goal": "진짜 무슨 일인지 알아내고 수습한다.",
+    "user_knows": [
+      "아이는 열여섯 살이고 면허가 없다",
+      "다친 사람은 없다"
+    ],
+    "cast": [
+      {
+        "name": "준호",
+        "role": "열여섯 살 아들",
+        "appearance": "Teenage boy about 16, black hoodie, staring at the ground, car key in his fist",
+        "voice": "웅얼거리고 단답이며 욱한다",
+        "gender": "m",
+        "history": "아침에 휴대폰으로 싸웠다.",
+        "enters_at": 0,
+        "goal": "친구가 말려들지 않게 한다",
+        "secret": "운전한 건 친구다. 대신 뒤집어쓰고 있다",
+        "reveal_when": "소리치지 않고 누굴 감싸는 건지 물을 때",
+        "red_lines": [
+          "남 앞에서 친구 이름은 안 댄다"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 40
+        }
+      },
+      {
+        "name": "철물점 사장님",
+        "role": "철물점 주인",
+        "appearance": "Man about 62, cardigan over pyjamas, slippers, torch in his hand",
+        "voice": "툴툴대지만 말보다 마음이 약하다",
+        "gender": "m",
+        "history": "10년 단골이다.",
+        "enters_at": 2,
+        "goal": "벽값을 받고 싶다",
+        "secret": "가게 CCTV에 운전석이 찍혔다",
+        "reveal_when": "먼저 사과하고 뭘 봤는지 물을 때",
+        "red_lines": [
+          "존중받으면 경찰은 안 부른다"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 50
+        }
+      },
+      {
+        "name": "남편",
+        "role": "막 도착한 남편",
+        "appearance": "Man about 46, work shirt, coat thrown on, out of breath",
+        "voice": "처음엔 목소리가 크고 곧 미안해서 작아진다",
+        "gender": "m",
+        "history": "결혼 20년 차다.",
+        "enters_at": 4,
+        "goal": "아이를 단단히 혼내고 싶다",
+        "secret": "그도 열일곱 때 똑같은 짓을 했고 당신에게 말한 적 없다",
+        "reveal_when": "왜 그렇게까지 화내는지 물을 때",
+        "red_lines": [
+          "아이에게 손대지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "준호",
+    "opening_line": "알아. 안다고. 하지 마, 제발.",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "셔터가 올라가고 주인이 슬리퍼 차림에 손전등을 들고 나온다.",
+        "enters": [
+          "철물점 사장님"
+        ],
+        "shot": "An older man in slippers shines a torch on the dented car beside the teenage boy."
+      },
+      {
+        "at_turn": 4,
+        "description": "택시 문이 쾅 닫히고 남편이 빠르게 걸어온다.",
+        "enters": [
+          "남편"
+        ],
+        "shot": "A man in a work shirt strides up the street toward the boy and the older man."
+      },
+      {
+        "at_turn": 6,
+        "description": "아이의 휴대폰이 켜진다. 아이가 얼른 뒤집는다.",
+        "enters": [],
+        "shot": "The teenage boy turns his glowing phone face down while the two men watch him."
+      }
+    ],
+    "success_criteria": [
+      "진짜 운전자를 알아낸다",
+      "철물점 주인과 수습한다",
+      "아이가 입을 닫지 않게 한다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_son_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_son_2_scene.jpg",
+      "4": "/presets/img/ko_son_4_scene.jpg",
+      "6": "/presets/img/ko_son_6_scene.jpg"
+    },
+    "clues": {
+      "준호": {
+        "img": "/presets/img/clue_son_0.jpg",
+        "name": "조수석"
+      },
+      "철물점 사장님": {
+        "img": "/presets/img/clue_son_1.jpg",
+        "name": "CCTV 화면"
+      },
+      "남편": {
+        "img": "/presets/img/clue_son_2.jpg",
+        "name": "오래된 차 사진"
+      }
+    }
+  }
+}

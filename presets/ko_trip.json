@@ -1,0 +1,135 @@
+{
+  "situation": "남자친구가 여사친과 여행을 간단다. 다 같이 가는 거라는데 어딘가 이상하다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "여사친이랑 여행 간대",
+    "language": "ko",
+    "setting": "일요일 오후 작은 카페. 창밖엔 비, 탁자 위 커피 두 잔과 그의 휴대폰.",
+    "user_role": "2년 사귄 여자친구",
+    "user_goal": "그가 말하는 '예민한 사람'이 되지 않고 진짜 상황을 알아낸다.",
+    "user_knows": [
+      "어제야 말해 줬다",
+      "다섯 명이 간다고 한다"
+    ],
+    "cast": [
+      {
+        "name": "현우",
+        "role": "남자친구",
+        "appearance": "Man about 29, grey hoodie, easy smile, spinning his phone on the table",
+        "voice": "태평하게 '별거 아니야' 하다가 까칠해진다",
+        "gender": "m",
+        "history": "2년째 사귀고 있다.",
+        "enters_at": 0,
+        "goal": "싸우지 않고 여행을 가고 싶다",
+        "secret": "세 명이 빠져서 이제 둘만 간다",
+        "reveal_when": "침착하게 지금 누가 가는지 이름으로 물을 때",
+        "red_lines": [
+          "휴대폰은 안 넘긴다"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 50
+        }
+      },
+      {
+        "name": "지은",
+        "role": "방금 들어온 그의 여사친",
+        "appearance": "Woman about 29, denim jacket, wet hair from the rain, big confident grin",
+        "voice": "밝고 장난스럽게 그를 별명으로 부른다",
+        "gender": "f",
+        "history": "두 번 본 사이다.",
+        "enters_at": 2,
+        "goal": "그와의 우정을 지킨다",
+        "secret": "몇 년 전 그에게 고백한 적 있고 그는 당신에게 말하지 않았다",
+        "reveal_when": "친절하게 둘이 어떻게 만났는지 물을 때",
+        "red_lines": [
+          "여우 취급은 못 참는다"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 55
+        }
+      },
+      {
+        "name": "내 친구 미나",
+        "role": "우연히 온 내 친구",
+        "appearance": "Woman about 28, round glasses, tote bag, coffee to go, curious eyes",
+        "voice": "빠르고 의리 있고 비밀을 못 지킨다",
+        "gender": "f",
+        "history": "대학 때부터 절친이다.",
+        "enters_at": 4,
+        "goal": "당신을 지킨다",
+        "secret": "그의 친구 SNS에서 더블룸 예약 인증을 봤다",
+        "reveal_when": "뭘 아는지 물을 때",
+        "red_lines": [
+          "당신에게 거짓말 안 한다"
+        ],
+        "mood": {
+          "trust": 80,
+          "patience": 60
+        }
+      }
+    ],
+    "opening_speaker": "현우",
+    "opening_line": "야, 표정 왜 그래. 여행이야. 진짜 그냥 여행이라니까.",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "문종이 울리고 그녀가 비를 털며 들어와 그에게 손을 흔든다.",
+        "enters": [
+          "지은"
+        ],
+        "shot": "A woman in a denim jacket with wet hair stands by the table, grinning at the man in the hoodie."
+      },
+      {
+        "at_turn": 4,
+        "description": "카운터에 있던 내 친구가 당신을 보고 다가온다.",
+        "enters": [
+          "내 친구 미나"
+        ],
+        "shot": "A woman in round glasses comes to the table with a takeaway cup, looking between the other two."
+      },
+      {
+        "at_turn": 6,
+        "description": "탁자 위 휴대폰이 켜진다. 다들 보지만 아무도 움직이지 않는다.",
+        "enters": [],
+        "shot": "A phone glows on the cafe table; three people look at it, frozen."
+      }
+    ],
+    "success_criteria": [
+      "둘만 간다는 걸 알아낸다",
+      "소리치지 않고 내 마음을 말한다",
+      "여행을 어떻게 할지 결론을 낸다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_trip_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_trip_2_scene.jpg",
+      "4": "/presets/img/ko_trip_4_scene.jpg",
+      "6": "/presets/img/ko_trip_6_scene.jpg"
+    },
+    "clues": {
+      "현우": {
+        "img": "/presets/img/clue_trip_0.jpg",
+        "name": "단체 대화방"
+      },
+      "지은": {
+        "img": "/presets/img/clue_trip_1.jpg",
+        "name": "오래된 폴라로이드"
+      },
+      "내 친구 미나": {
+        "img": "/presets/img/clue_trip_2.jpg",
+        "name": "더블룸 예약 화면"
+      }
+    }
+  }
+}

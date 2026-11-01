@@ -1,0 +1,133 @@
+{
+  "situation": "Dating simulation. First dinner with his parents, and his mother already has a list.",
+  "ui": "en",
+  "scenario": {
+    "title": "Meeting His Parents",
+    "language": "en",
+    "setting": "A formal private dining room in a nice restaurant, white tablecloth, set for four, tea being poured.",
+    "user_role": "His fiancée",
+    "user_goal": "Get through dinner as yourself and win them over.",
+    "user_knows": [
+      "You're getting married next spring",
+      "He says 'just be yourself'"
+    ],
+    "cast": [
+      {
+        "name": "His mother",
+        "role": "his mother",
+        "appearance": "Elegant woman about 60, pearl earrings, tailored jacket, sitting very straight",
+        "voice": "Smiling, polite, questions with a blade in them",
+        "gender": "f",
+        "history": "You've never met.",
+        "enters_at": 0,
+        "goal": "Find out if you're good enough",
+        "secret": "She was rejected by her own in-laws at this very restaurant, and she's testing if you'll stand your ground",
+        "reveal_when": "You answer honestly instead of flattering",
+        "red_lines": [
+          "Won't be flattered"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Eric",
+        "role": "your fiancé",
+        "appearance": "Man about 32, navy suit, tie slightly crooked, smiling too much",
+        "voice": "Over-cheerful, changes the subject when it gets hard",
+        "gender": "m",
+        "history": "Three years together.",
+        "enters_at": 0,
+        "goal": "Keep the peace",
+        "secret": "He promised his mother you'd live near them, without asking you",
+        "reveal_when": "You ask him directly at the table where you'll live",
+        "red_lines": [
+          "Won't openly oppose his mother unprompted"
+        ],
+        "mood": {
+          "trust": 65,
+          "patience": 55
+        }
+      },
+      {
+        "name": "His father",
+        "role": "his father, arrived late",
+        "appearance": "Quiet man about 63, grey suit, reading glasses, napkin folded carefully",
+        "voice": "Almost silent, then one dry joke",
+        "gender": "m",
+        "history": "You've never met.",
+        "enters_at": 3,
+        "goal": "See his son happy",
+        "secret": "He already likes you: he read the article you wrote",
+        "reveal_when": "You talk about your work",
+        "red_lines": [
+          "Won't raise his voice"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 70
+        }
+      }
+    ],
+    "opening_speaker": "His mother",
+    "opening_line": "So you're the one. Sit, sit. Eric says you work a lot. How will that go, after the wedding?",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "The sliding door opens. His father comes in, nods once and sits down.",
+        "enters": [
+          "His father"
+        ],
+        "shot": "A quiet older man in a grey suit sits down beside the elegant woman and the younger man."
+      },
+      {
+        "at_turn": 5,
+        "description": "His mother sets down her chopsticks and mentions 'the flat near us'.",
+        "enters": [],
+        "shot": "The elegant woman sets down her chopsticks and looks at you; the younger man freezes."
+      },
+      {
+        "at_turn": 7,
+        "description": "The father takes a folded page from his jacket and puts it by your plate.",
+        "enters": [],
+        "shot": "An older man places a folded paper on the white tablecloth beside your plate."
+      }
+    ],
+    "success_criteria": [
+      "Holds her ground politely",
+      "Brings the housing promise into the open",
+      "Wins over at least one parent"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_inlaws_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_inlaws_3_scene.jpg",
+      "5": "/presets/img/en_inlaws_5_scene.jpg",
+      "7": "/presets/img/en_inlaws_7_scene.jpg"
+    },
+    "clues": {
+      "His mother": {
+        "img": "/presets/img/clue_inlaws_0.jpg",
+        "name": "An old restaurant photo"
+      },
+      "Eric": {
+        "img": "/presets/img/clue_inlaws_1.jpg",
+        "name": "The apartment floor plan"
+      },
+      "His father": {
+        "img": "/presets/img/clue_inlaws_2.jpg",
+        "name": "Your article, cut out"
+      }
+    }
+  }
+}

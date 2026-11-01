@@ -1,0 +1,134 @@
+{
+  "situation": "연애 시뮬레이션. 썸 타던 동료가 내일 퇴사한다. 지금 아니면 없다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "옥상, 마지막 야근",
+    "language": "ko",
+    "setting": "밤 10시 회사 옥상. 도시 불빛, 캔커피 두 개, 따뜻한 봄바람.",
+    "user_role": "일 년째 그를 좋아하는 동료",
+    "user_goal": "오늘 밤이 끝나기 전에 마음을 전한다.",
+    "user_knows": [
+      "그는 내일 퇴사한다",
+      "거의 매일 점심을 같이 먹었다"
+    ],
+    "cast": [
+      {
+        "name": "서준",
+        "role": "동료",
+        "appearance": "Man about 30, rolled-up shirt sleeves, lanyard loose around his neck, leaning on a rail",
+        "voice": "조용하고 다정하며 긴장하면 농담한다",
+        "gender": "m",
+        "history": "일 년간 함께 점심을 먹었다.",
+        "enters_at": 0,
+        "goal": "어색하지 않게 작별하고 싶다",
+        "secret": "당신이 자기에게 관심 없는 줄 알고 이직을 결심한 면이 있다",
+        "reveal_when": "둘 사이에 대해 솔직한 말을 꺼낼 때",
+        "red_lines": [
+          "먼저 나서지는 않는다"
+        ],
+        "mood": {
+          "trust": 65,
+          "patience": 60
+        }
+      },
+      {
+        "name": "이 팀장",
+        "role": "담배 피우러 올라온 팀장",
+        "appearance": "Woman about 45, trench coat, cigarette unlit, tired and amused",
+        "voice": "직설적이고 건조하며 다 알고 있다",
+        "gender": "f",
+        "history": "일 년째 둘을 지켜봤다.",
+        "enters_at": 3,
+        "goal": "한 번 등 떠밀고 사라진다",
+        "secret": "사표 낼 때 그가 당신 이야기를 물었다",
+        "reveal_when": "직접 물을 때",
+        "red_lines": [
+          "오래 있지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 40
+        }
+      },
+      {
+        "name": "아나",
+        "role": "그를 찾으러 온 동료",
+        "appearance": "Woman about 28, cardigan, holding a cake box and a card, out of breath",
+        "voice": "밝고 눈치 없이 분위기를 깬다",
+        "gender": "f",
+        "history": "친한 동료다.",
+        "enters_at": 5,
+        "goal": "그를 송별회로 데려간다",
+        "secret": "그가 당신이 써 준 쪽지를 다 모아 둔 걸 책상 치우다 봤다",
+        "reveal_when": "그의 책상을 치우다 뭘 봤는지 물을 때",
+        "red_lines": [
+          "오래 혼자 내려가지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "서준",
+    "opening_line": "이게 마지막 캔커피네. 맛없는 이 커피도 그립겠다.",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "옥상 문이 끼익 열린다. 팀장이 나와 둘을 쓱 본다.",
+        "enters": [
+          "이 팀장"
+        ],
+        "shot": "A woman in a trench coat stands by the rooftop door, looking at the man at the rail."
+      },
+      {
+        "at_turn": 5,
+        "description": "동료가 케이크 상자를 들고 뛰어온다. 다들 아래서 기다린단다.",
+        "enters": [
+          "아나"
+        ],
+        "shot": "A woman with a cake box hurries across the rooftop toward the man at the rail."
+      },
+      {
+        "at_turn": 7,
+        "description": "도시 불빛만 남았다. 다시 둘뿐이고 그가 당신 쪽으로 돌아서 있다.",
+        "enters": [],
+        "shot": "Night city behind him, the man stands alone facing you with a small smile."
+      }
+    ],
+    "success_criteria": [
+      "솔직하게 말한다",
+      "그의 마음을 알아낸다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_confess_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_confess_3_scene.jpg",
+      "5": "/presets/img/ko_confess_5_scene.jpg",
+      "7": "/presets/img/ko_confess_7_scene.jpg"
+    },
+    "clues": {
+      "서준": {
+        "img": "/presets/img/clue_confess_0.jpg",
+        "name": "새 근로계약서"
+      },
+      "이 팀장": {
+        "img": "/presets/img/clue_confess_1.jpg",
+        "name": "사직서"
+      },
+      "아나": {
+        "img": "/presets/img/clue_confess_2.jpg",
+        "name": "모아 둔 쪽지들"
+      }
+    }
+  }
+}

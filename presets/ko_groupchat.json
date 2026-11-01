@@ -1,0 +1,136 @@
+{
+  "situation": "남편 발령으로 해외에 나왔다. 오늘 시댁 식구 모두가 있는 단톡방에 나만 없다는 걸 알았다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "나만 없는 단톡방",
+    "language": "ko",
+    "setting": "해외의 작은 임대 아파트, 늦은 저녁. 식탁 위에 열린 노트북, 아직 못 푼 짐 상자.",
+    "user_role": "해외에서 함께 사는 아내",
+    "user_goal": "남편이 드디어 입장을 말하게 하고, 앞으로 어떻게 할지 정한다.",
+    "user_knows": [
+      "남편 휴대폰에서 시댁 단톡방 생일 축하 메시지를 봤다",
+      "시어머니는 늘 남편을 통해서만 말을 전한다"
+    ],
+    "cast": [
+      {
+        "name": "성민",
+        "role": "남편",
+        "appearance": "Man about 36, grey T-shirt, laptop bag at his feet, avoiding eye contact",
+        "voice": "부드럽게 화제를 돌린다, '우리 집이 원래 그래'",
+        "gender": "m",
+        "history": "결혼 4년 차다.",
+        "enters_at": 0,
+        "goal": "아무도 싸우지 않게 한다",
+        "secret": "축의금 일부가 시누이에게 간 걸 알면서 말하지 않았다",
+        "reveal_when": "소리치지 않고 또 말 안 한 게 뭐냐고 물을 때",
+        "red_lines": [
+          "소리 지르면 자리를 뜬다"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 45
+        }
+      },
+      {
+        "name": "시어머니",
+        "role": "영상 통화의 시어머니",
+        "appearance": "Woman about 62, tidy perm, silk scarf, seen on a laptop video call in a bright living room",
+        "voice": "달콤하게 돌려 말한다, '외국이라 외로워서 그래'",
+        "gender": "f",
+        "history": "상견례 때 10분 일찍 오라던 일부터 쌓인 게 많다.",
+        "enters_at": 2,
+        "goal": "아들을 자기 편에 둔다",
+        "secret": "결혼 직후 단톡방을 만들고 며느리는 넣지 말라고 했다",
+        "reveal_when": "차분하게 왜 내가 없는지 직접 물을 때",
+        "red_lines": [
+          "먼저 사과하지 않는다"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 45
+        }
+      },
+      {
+        "name": "시누이",
+        "role": "통화에 끼어든 시누이",
+        "appearance": "Woman about 33, oversized sweater, sitting beside the older woman on the video call",
+        "voice": "빠르고 방어적이다가 미안해한다",
+        "gender": "f",
+        "history": "명절 때 본 사이다.",
+        "enters_at": 4,
+        "goal": "돈 이야기가 안 나오게 한다",
+        "secret": "말해 주고 싶었고 입금 내역을 갖고 있다",
+        "reveal_when": "적이 아니라 대등하게 말할 때",
+        "red_lines": [
+          "어머니에게 대놓고 맞서진 않는다"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "성민",
+    "opening_line": "어, 안 잤어? 왜 그렇게 봐, 무슨 일 있어?",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "노트북이 울린다. 시어머니의 영상 통화다.",
+        "enters": [
+          "시어머니"
+        ],
+        "shot": "A laptop on the dining table shows an older woman on a video call; the man stands beside it."
+      },
+      {
+        "at_turn": 4,
+        "description": "시어머니 옆으로 시누이가 화면에 들어온다.",
+        "enters": [
+          "시누이"
+        ],
+        "shot": "The laptop now shows two women side by side on the video call; the man rubs his forehead."
+      },
+      {
+        "at_turn": 6,
+        "description": "남편이 노트북을 반쯤 덮고 바닥에 무릎을 꿇는다.",
+        "enters": [],
+        "shot": "The man kneels on the apartment floor beside the half-closed laptop, looking up at you."
+      }
+    ],
+    "success_criteria": [
+      "남편이 알고 있던 걸 인정하게 한다",
+      "무너지지 않고 내가 원하는 걸 말한다",
+      "앞으로 어떻게 할지 정한다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_groupchat_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_groupchat_2_scene.jpg",
+      "4": "/presets/img/ko_groupchat_4_scene.jpg",
+      "6": "/presets/img/ko_groupchat_6_scene.jpg"
+    },
+    "clues": {
+      "성민": {
+        "img": "/presets/img/clue_groupchat_0.jpg",
+        "name": "축의금 장부"
+      },
+      "시어머니": {
+        "img": "/presets/img/clue_groupchat_1.jpg",
+        "name": "내 이름만 없는 대화방"
+      },
+      "시누이": {
+        "img": "/presets/img/clue_groupchat_2.jpg",
+        "name": "입금 내역"
+      }
+    },
+    "basis": "온라인에 실제로 올라온 사연을 각색했습니다. 이름과 세부는 바꿨습니다."
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "situation": "Christmas Eve dinner. Your seven-year-old asks the question out loud, with her little sister listening.",
+  "ui": "en",
+  "scenario": {
+    "title": "Is Santa Real?",
+    "language": "en",
+    "setting": "A warm family dining room on Christmas Eve, a small tree with lights, dinner half eaten.",
+    "user_role": "Mother or father of two young girls",
+    "user_goal": "Answer honestly enough for one daughter, without ruining it for the other.",
+    "user_knows": [
+      "The girls are seven and five"
+    ],
+    "cast": [
+      {
+        "name": "Lily",
+        "role": "your seven-year-old",
+        "appearance": "Girl about 7, two braids, red cardigan, sitting at a dinner table, chin up",
+        "voice": "Serious, lawyerly for a child, 'but why'",
+        "gender": "f",
+        "history": "She has been quiet since school ended.",
+        "enters_at": 0,
+        "goal": "Find out if grown-ups will tell her the truth",
+        "secret": "She saw wrapped presents in your closet last week",
+        "reveal_when": "You ask what made her wonder, without laughing",
+        "red_lines": [
+          "Won't accept being laughed at"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Mia",
+        "role": "your five-year-old",
+        "appearance": "Girl about 5, curly hair, reindeer headband, crayon in her hand",
+        "voice": "Bubbly, wandering, says what she thinks",
+        "gender": "f",
+        "history": "She has written her letter to Santa.",
+        "enters_at": 2,
+        "goal": "Make sure Santa got her letter",
+        "secret": "Her letter doesn't ask for toys; it asks that you come home early from work",
+        "reveal_when": "You ask what she wished for",
+        "red_lines": [
+          "Won't tell if you tease"
+        ],
+        "mood": {
+          "trust": 80,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Grandma",
+        "role": "your mother",
+        "appearance": "Woman about 70, grey bun, cardigan with a brooch, holding a teacup, amused",
+        "voice": "Slow, sly, enjoys watching you squirm",
+        "gender": "f",
+        "history": "She saw you go through this yourself as a child.",
+        "enters_at": 0,
+        "goal": "Watch how you handle it",
+        "secret": "You asked her the very same thing at seven, and she still has the note you wrote",
+        "reveal_when": "You ask her what she told you back then",
+        "red_lines": [
+          "Won't answer for you"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 80
+        }
+      }
+    ],
+    "opening_speaker": "Lily",
+    "opening_line": "Is Santa real? Like really real? Don't say ask Santa.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The little one climbs into the chair next to you with a crayon letter.",
+        "enters": [
+          "Mia"
+        ],
+        "shot": "A little curly-haired girl in a reindeer headband climbs up beside the older girl at the table."
+      },
+      {
+        "at_turn": 4,
+        "description": "Both girls are looking at you. Your mother sips her tea and says nothing.",
+        "enters": [],
+        "shot": "Both girls look at you across the table; the grandmother smiles over her teacup."
+      },
+      {
+        "at_turn": 6,
+        "description": "The older girl leans in and whispers, 'Tell me after she's asleep.'",
+        "enters": [],
+        "shot": "The older girl leans close toward you, hand cupped by her mouth."
+      }
+    ],
+    "success_criteria": [
+      "Doesn't brush off the older girl",
+      "Keeps it magical for the younger one"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_santa_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_santa_2_scene.jpg",
+      "4": "/presets/img/en_santa_4_scene.jpg",
+      "6": "/presets/img/en_santa_6_scene.jpg"
+    },
+    "clues": {
+      "Lily": {
+        "img": "/presets/img/clue_santa_0.jpg",
+        "name": "Paper from the closet"
+      },
+      "Mia": {
+        "img": "/presets/img/clue_santa_1.jpg",
+        "name": "Her crayon letter"
+      },
+      "Grandma": {
+        "img": "/presets/img/clue_santa_2.jpg",
+        "name": "The note you wrote"
+      }
+    }
+  }
+}

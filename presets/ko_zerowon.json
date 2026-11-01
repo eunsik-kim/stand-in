@@ -1,0 +1,137 @@
+{
+  "situation": "결혼 10년 차. 남편은 몇 년째 생활비를 주지 않는데, 시댁은 살고 있는 집을 비우라고 한다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "생활비 0원",
+    "language": "ko",
+    "setting": "시골의 소박한 집, 밤. 냉장고에 붙은 아이 그림, 식탁 위 고지서 더미.",
+    "user_role": "결혼 10년 차 아내이자 엄마",
+    "user_goal": "남편이 현실을 보게 하고, 어디서 살지 누가 낼지 답을 받는다.",
+    "user_knows": [
+      "결혼 전 모은 돈을 헐어 살아왔다",
+      "집은 시부모 명의다",
+      "그는 집안일과 육아는 잘한다"
+    ],
+    "cast": [
+      {
+        "name": "경태",
+        "role": "남편",
+        "appearance": "Man about 41, work fleece, drying dishes with a towel, gentle face",
+        "voice": "다정하고 어리둥절하다, '내가 벌잖아'",
+        "gender": "m",
+        "history": "결혼 10년 차다.",
+        "enters_at": 0,
+        "goal": "부모님을 계속 챙긴다",
+        "secret": "말하지 말라는 부탁을 받고 알려진 것보다 더 많이 보내 왔다",
+        "reveal_when": "실제 숫자를 차분히 꺼낼 때",
+        "red_lines": [
+          "부모님을 욕심쟁이라 하면 입을 닫는다"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 50
+        }
+      },
+      {
+        "name": "시아버지",
+        "role": "시아버지",
+        "appearance": "Man about 70, weathered face, cap in hand, standing in the doorway",
+        "voice": "짧고 옛날식이며 설명하지 않는다",
+        "gender": "m",
+        "history": "지금 사는 집의 주인이다.",
+        "enters_at": 3,
+        "goal": "집을 돌려받는다",
+        "secret": "아들이 모르는 빚 때문에 집을 팔아야 한다",
+        "reveal_when": "공손하게 왜 지금인지 물을 때",
+        "red_lines": [
+          "아랫사람이 소리치면 나가 버린다"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 45
+        }
+      },
+      {
+        "name": "시누이",
+        "role": "전화 온 시누이",
+        "appearance": "Woman about 44, seen on a phone video call inside a parked car",
+        "voice": "빠르게 '부모 챙기는 게 당연하지'를 외친다",
+        "gender": "f",
+        "history": "명절 때 말을 섞는다.",
+        "enters_at": 5,
+        "goal": "부모님께 돈이 계속 가게 한다",
+        "secret": "본인은 2년 전부터 한 푼도 안 드리고 있다",
+        "reveal_when": "본인은 얼마 드리는지 물을 때",
+        "red_lines": [
+          "두 번 묻기 전엔 인정 안 한다"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "경태",
+    "opening_line": "또 고지서야? 놔둬, 내가 볼게. 애는 잤어?",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "창밖으로 헤드라이트가 스치고 시아버지가 모자를 들고 문간에 선다.",
+        "enters": [
+          "시아버지"
+        ],
+        "shot": "An older man with a cap stands in the kitchen doorway; the husband turns with a towel in his hand."
+      },
+      {
+        "at_turn": 5,
+        "description": "식탁 위 휴대폰이 울린다. 시누이가 스피커로 말한다.",
+        "enters": [
+          "시누이"
+        ],
+        "shot": "A phone on the table shows a woman on a video call; the two men look down at it."
+      },
+      {
+        "at_turn": 7,
+        "description": "시아버지가 고지서 위에 봉투를 놓고 아무 말이 없다.",
+        "enters": [],
+        "shot": "A white envelope lies on top of the stack of bills; the older man stands silent."
+      }
+    ],
+    "success_criteria": [
+      "실제 숫자를 꺼내 놓는다",
+      "집을 비워야 하는 이유를 알아낸다",
+      "남편에게 구체적인 약속을 받는다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_zerowon_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_zerowon_3_scene.jpg",
+      "5": "/presets/img/ko_zerowon_5_scene.jpg",
+      "7": "/presets/img/ko_zerowon_7_scene.jpg"
+    },
+    "clues": {
+      "경태": {
+        "img": "/presets/img/clue_zerowon_0.jpg",
+        "name": "결혼 전 통장"
+      },
+      "시아버지": {
+        "img": "/presets/img/clue_zerowon_1.jpg",
+        "name": "빚 독촉장"
+      },
+      "시누이": {
+        "img": "/presets/img/clue_zerowon_2.jpg",
+        "name": "시누이의 이체 내역"
+      }
+    },
+    "basis": "온라인에 실제로 올라온 사연을 각색했습니다. 이름과 세부는 바꿨습니다."
+  }
+}

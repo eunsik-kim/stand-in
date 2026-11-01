@@ -1,0 +1,135 @@
+{
+  "situation": "You open the banking app, and thirty thousand dollars of savings is gone. Your husband has just walked in.",
+  "ui": "en",
+  "scenario": {
+    "title": "Where Did the Money Go?",
+    "language": "en",
+    "setting": "A family kitchen, 9 pm, a phone on the table, dinner gone cold.",
+    "user_role": "His wife",
+    "user_goal": "Find out where the money went and what you do now.",
+    "user_knows": [
+      "The savings were for your child's school",
+      "He has been on edge for weeks"
+    ],
+    "cast": [
+      {
+        "name": "Jason",
+        "role": "your husband",
+        "appearance": "Man about 42, loosened tie, tired eyes, keys still in his hand",
+        "voice": "Jokes it off, then defensive, then very quiet",
+        "gender": "m",
+        "history": "Twelve years of marriage.",
+        "enters_at": 0,
+        "goal": "Buy time until the money comes back",
+        "secret": "He put it all into a friend's crypto scheme, which froze withdrawals two weeks ago",
+        "reveal_when": "You stay calm and ask what he's afraid of telling you",
+        "red_lines": [
+          "Won't lie once directly asked twice"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Your mother-in-law",
+        "role": "his mother, who lives nearby",
+        "appearance": "Woman about 68, neat short hair, patterned blouse, side dishes in a bag",
+        "voice": "Sweet on the surface, always takes her son's side",
+        "gender": "f",
+        "history": "She drops in unannounced.",
+        "enters_at": 2,
+        "goal": "Protect her son",
+        "secret": "She gave him money last month too, and he told her not to tell you",
+        "reveal_when": "You ask without accusing her",
+        "red_lines": [
+          "Won't hear him insulted"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 45
+        }
+      },
+      {
+        "name": "Greg",
+        "role": "the friend, on speakerphone",
+        "appearance": "Man about 44, shiny jacket, seen in a video call on a phone propped against a bottle",
+        "voice": "Overconfident, fast, 'trust me'",
+        "gender": "m",
+        "history": "You met at the wedding.",
+        "enters_at": 4,
+        "goal": "Stop you from going to the police",
+        "secret": "There's a Friday deadline to get some of it back and he hasn't told anyone",
+        "reveal_when": "You mention a lawyer",
+        "red_lines": [
+          "Won't admit it's a scam"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "Jason",
+    "opening_line": "Hey, what's—why's it so quiet? Did you eat?",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The doorbell rings. His mother lets herself in with side dishes.",
+        "enters": [
+          "Your mother-in-law"
+        ],
+        "shot": "An older woman with a bag of side dishes stands in the kitchen beside the man."
+      },
+      {
+        "at_turn": 4,
+        "description": "His phone rings on the table. He answers on speaker by mistake.",
+        "enters": [
+          "Greg"
+        ],
+        "shot": "A phone propped on the table shows a video call; the man stares at it, frozen."
+      },
+      {
+        "at_turn": 6,
+        "description": "Your husband sits down and puts both hands flat on the table.",
+        "enters": [],
+        "shot": "The man sits at the kitchen table with both palms flat, looking at you."
+      }
+    ],
+    "success_criteria": [
+      "Gets the truth out of him",
+      "Finds the Friday deadline",
+      "Decides together what to do"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_husband_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_husband_2_scene.jpg",
+      "4": "/presets/img/en_husband_4_scene.jpg",
+      "6": "/presets/img/en_husband_6_scene.jpg"
+    },
+    "clues": {
+      "Jason": {
+        "img": "/presets/img/clue_husband_0.jpg",
+        "name": "The frozen app"
+      },
+      "Your mother-in-law": {
+        "img": "/presets/img/clue_husband_1.jpg",
+        "name": "A second bank slip"
+      },
+      "Greg": {
+        "img": "/presets/img/clue_husband_2.jpg",
+        "name": "The refund notice"
+      }
+    }
+  }
+}

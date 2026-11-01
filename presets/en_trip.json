@@ -1,0 +1,135 @@
+{
+  "situation": "Your boyfriend is going on a trip with his female best friend. He says it's a group thing. You're not so sure.",
+  "ui": "en",
+  "scenario": {
+    "title": "Just Friends, Right?",
+    "language": "en",
+    "setting": "A small coffee shop on Sunday afternoon, rain on the window, two cups and his phone on the table.",
+    "user_role": "His girlfriend of two years",
+    "user_goal": "Find out what is really going on without turning into the person he says you are.",
+    "user_knows": [
+      "He told you about it only yesterday",
+      "He says it's a group of five"
+    ],
+    "cast": [
+      {
+        "name": "Ryan",
+        "role": "your boyfriend",
+        "appearance": "Man about 29, grey hoodie, easy smile, spinning his phone on the table",
+        "voice": "Easy, breezy, 'it's nothing', gets prickly",
+        "gender": "m",
+        "history": "Two years together.",
+        "enters_at": 0,
+        "goal": "Go on the trip without a fight",
+        "secret": "Three people dropped out: it's just the two of them now",
+        "reveal_when": "You ask calmly who is going now, by name",
+        "red_lines": [
+          "Won't hand over his phone"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Jess",
+        "role": "his best friend, who just walked in",
+        "appearance": "Woman about 29, denim jacket, wet hair from the rain, big confident grin",
+        "voice": "Bright, teasing, calls him by a nickname",
+        "gender": "f",
+        "history": "You've met twice.",
+        "enters_at": 2,
+        "goal": "Keep her friendship with him",
+        "secret": "She confessed to him once, years ago, and he has never told you",
+        "reveal_when": "You're kind to her and ask how they met",
+        "red_lines": [
+          "Won't be called a homewrecker"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Mina",
+        "role": "your friend, who happens to be there",
+        "appearance": "Woman about 28, round glasses, tote bag, coffee to go, curious eyes",
+        "voice": "Fast, loyal, can't keep a secret",
+        "gender": "f",
+        "history": "Best friends since college.",
+        "enters_at": 4,
+        "goal": "Protect you",
+        "secret": "She saw a booking confirmation for one double room on his friend's social post",
+        "reveal_when": "You ask what she knows",
+        "red_lines": [
+          "Won't lie to you"
+        ],
+        "mood": {
+          "trust": 80,
+          "patience": 60
+        }
+      }
+    ],
+    "opening_speaker": "Ryan",
+    "opening_line": "Okay, you've got the face on. It's a trip. It's literally a trip.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The bell over the door rings. She walks in shaking off the rain and waves at him.",
+        "enters": [
+          "Jess"
+        ],
+        "shot": "A woman in a denim jacket with wet hair stands by the table, grinning at the man in the hoodie."
+      },
+      {
+        "at_turn": 4,
+        "description": "Your friend spots you from the counter and comes over with her coffee.",
+        "enters": [
+          "Mina"
+        ],
+        "shot": "A woman in round glasses comes to the table with a takeaway cup, looking between the other two."
+      },
+      {
+        "at_turn": 6,
+        "description": "His phone lights up on the table, face up. Everyone sees it light up. Nobody moves.",
+        "enters": [],
+        "shot": "A phone glows on the cafe table; three people look at it, frozen."
+      }
+    ],
+    "success_criteria": [
+      "Finds out it's just the two of them",
+      "Says how she feels without yelling",
+      "Reaches a decision about the trip"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_trip_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_trip_2_scene.jpg",
+      "4": "/presets/img/en_trip_4_scene.jpg",
+      "6": "/presets/img/en_trip_6_scene.jpg"
+    },
+    "clues": {
+      "Ryan": {
+        "img": "/presets/img/clue_trip_0.jpg",
+        "name": "The group chat"
+      },
+      "Jess": {
+        "img": "/presets/img/clue_trip_1.jpg",
+        "name": "An old polaroid"
+      },
+      "Mina": {
+        "img": "/presets/img/clue_trip_2.jpg",
+        "name": "A double room"
+      }
+    }
+  }
+}

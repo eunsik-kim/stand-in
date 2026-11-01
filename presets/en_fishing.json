@@ -1,0 +1,136 @@
+{
+  "situation": "Five months in, your girlfriend says she's going night fishing, alone, with her sister's husband. She's never held a rod.",
+  "ui": "en",
+  "scenario": {
+    "title": "One Night, Fishing",
+    "language": "en",
+    "setting": "A cosy neighbourhood bar on a weeknight, two glasses on the table, new rubber boots in a shopping bag by her chair.",
+    "user_role": "Her boyfriend of five months",
+    "user_goal": "Work out whether you're overreacting, and say what you feel without looking small.",
+    "user_knows": [
+      "She has known him for almost twenty years",
+      "You haven't met her family yet"
+    ],
+    "cast": [
+      {
+        "name": "Sophie",
+        "role": "your girlfriend",
+        "appearance": "Woman about 35, denim shirt, relaxed, laughing, beer in hand",
+        "voice": "Breezy, 'he's basically my brother'",
+        "gender": "f",
+        "history": "Five months together.",
+        "enters_at": 0,
+        "goal": "Go without a fuss",
+        "secret": "The trip is really to plan a surprise for her sister's anniversary",
+        "reveal_when": "You stop accusing and tell her you're uneasy",
+        "red_lines": [
+          "Won't be told who she can see"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Clara",
+        "role": "her older sister",
+        "appearance": "Woman about 40, trench coat, surprised smile, arriving at the pub table",
+        "voice": "Warm, sizing you up, frank",
+        "gender": "f",
+        "history": "You've never met.",
+        "enters_at": 2,
+        "goal": "See who her sister is dating",
+        "secret": "She isn't bothered, but she never actually said yes to the trip",
+        "reveal_when": "You ask her how she feels, not what she allows",
+        "red_lines": [
+          "Won't gossip about her husband"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Mark",
+        "role": "her brother-in-law",
+        "appearance": "Man about 44, fleece vest, ruddy cheerful face, fishing hat, big laugh",
+        "voice": "Loud, friendly, too friendly",
+        "gender": "m",
+        "history": "You've never met.",
+        "enters_at": 4,
+        "goal": "Keep the trip on",
+        "secret": "He's already asked her not to tell anyone the location",
+        "reveal_when": "You ask him to invite you along",
+        "red_lines": [
+          "Won't take a threat"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 55
+        }
+      }
+    ],
+    "opening_speaker": "Sophie",
+    "opening_line": "Don't make that face. It's fishing. He's basically my brother.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "Her sister turns up at the table: she was in the area.",
+        "enters": [
+          "Clara"
+        ],
+        "shot": "A woman in a trench coat stands at the pub table smiling, the younger woman looking up in surprise."
+      },
+      {
+        "at_turn": 4,
+        "description": "A big laugh from the door. Her brother-in-law, in his fishing hat.",
+        "enters": [
+          "Mark"
+        ],
+        "shot": "A ruddy man in a fishing hat joins the two women at the pub table with a loud laugh."
+      },
+      {
+        "at_turn": 6,
+        "description": "Her phone lights up on the table. She turns it over quickly.",
+        "enters": [],
+        "shot": "The woman in the denim shirt turns her glowing phone face down while the others look on."
+      }
+    ],
+    "success_criteria": [
+      "Says what's bothering him without accusing",
+      "Finds out why they're really going",
+      "Gets to an honest agreement"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_fishing_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_fishing_2_scene.jpg",
+      "4": "/presets/img/en_fishing_4_scene.jpg",
+      "6": "/presets/img/en_fishing_6_scene.jpg"
+    },
+    "clues": {
+      "Sophie": {
+        "img": "/presets/img/clue_fishing_0.jpg",
+        "name": "The party list"
+      },
+      "Clara": {
+        "img": "/presets/img/clue_fishing_1.jpg",
+        "name": "An anniversary photo"
+      },
+      "Mark": {
+        "img": "/presets/img/clue_fishing_2.jpg",
+        "name": "A pin on a map"
+      }
+    },
+    "basis": "Adapted from a story someone really posted online. Names and details are changed."
+  }
+}

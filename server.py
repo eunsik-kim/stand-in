@@ -24,6 +24,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from standin import voice
+from standin.ending import ending
 from standin.art import background, background_prompt, portraits, scene, scene_edit, scene_from
 from standin.builder import Person, World, as_situation, build_turn, lock, others
 from standin.coach import coach_turn
@@ -88,12 +89,14 @@ def versioned(url: str) -> str:
 
 
 CATEGORY = {"mystery": {"detective", "suspect", "holmes", "lupin", "celeste", "tip"}, "history": {"eiffel", "tesla", "seondal"},
-            "sim": {"lawyer", "judge", "auction", "anchor", "pitch", "deal", "debate"}}
+            "sim": {"lawyer", "judge", "auction", "anchor", "pitch", "deal", "debate", "exit", "apartment"},
+            "family": {"toddler", "santa", "son", "husband", "daughter", "worry", "dinner", "groupchat", "zerowon"},
+            "love": {"trip", "date", "confess", "inlaws", "breakup", "reunion", "fishing", "manofhonor", "bestie"}}
 
 
 def category(preset_id: str) -> str:
     name = preset_id.split("_", 1)[-1]
-    return next((c for c, names in CATEGORY.items() if name in names), "drama")
+    return next((c for c, names in CATEGORY.items() if name in names), "sim")
 
 
 def load_presets() -> dict[str, dict]:
@@ -196,6 +199,7 @@ class Build:
         self.ready = False
         self.shots: dict[str, str] = {}  # turn -> photograph, prepared ahead for a template
         self.background = ""
+        self.extras: dict = {}  # a template's clues and what it's based on
         self.faces: dict[str, dict] = {}  # name -> that person's reactions in the same photograph
         self.drawn: dict[str, str] = {}  # what each image was drawn from, to redraw only on a real change
         self.prepared: dict[str, Future] = {}  # world as JSON -> its scene, written before the user asks
@@ -371,7 +375,8 @@ def build_finish(req: FinishReq, request: Request):
     b.ui = req.ui
     key_was_edited = b.world.model_dump_json() not in b.prepared
     scenario = prepare(b).result()
-    return draft(scenario, {"background": b.background, "scene": {}, "shots": {} if key_was_edited else b.shots}, None)
+    return draft(scenario, {"background": b.background, "scene": {}, "shots": {} if key_was_edited else b.shots,
+                            **({} if key_was_edited else b.extras)}, None)
 
 
 def load_scene(b: Build, s: Scenario) -> None:
@@ -450,6 +455,7 @@ def template(req: TemplateReq, request: Request):
     load_scene(b, s)
     assets = p.get("assets", {})
     b.background, b.shots = assets.get("background", ""), assets.get("shots", {})
+    b.extras = {k: assets[k] for k in ("clues", "basis") if k in assets}
     b.drawn["names"] = ",".join(sorted(person.name for person in b.world.people))
     builds[b.id] = b
     return build_state(b)
@@ -589,7 +595,7 @@ def autopilot(req: AutoReq):
     if not s:
         raise HTTPException(404, "unknown session")
     persona = (f"Speak in very short lines of a few words, the way this person really would, working toward: {s.scene.scenario.user_goal}. "
-               f"How they talk: {req.tone or 'casual'}")
+               f"How they talk: {req.tone or 'casual'}. Fit the time and place of the setting, and do not start the way their last line started.")
     return {"say": simulated_user(actor, persona)(s.scene, s.turn + 1).strip()}
 
 
@@ -619,6 +625,18 @@ def replies(req: AutoReq):
 
 class EndReq(BaseModel):
     id: str
+
+
+@app.post("/api/ending")
+def closing_page(req: EndReq):
+    s = sessions.get(req.id)
+    if not s:
+        raise HTTPException(404, "unknown session")
+    sc = s.scene
+    e = ending(quick_writer, sc, s.ui)
+    criteria = sc.scenario.success_criteria
+    return {"title": e.title, "story": e.story, "best_line": e.best_line, "found": sorted(sc.revealed),
+            "goals": [{"text": c, "met": i < len(e.met) and e.met[i]} for i, c in enumerate(criteria)]}
 
 
 @app.post("/api/end")

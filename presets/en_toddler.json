@@ -1,0 +1,134 @@
+{
+  "situation": "Your four-year-old is lying on the supermarket floor, screaming, and everyone is watching.",
+  "ui": "en",
+  "scenario": {
+    "title": "The Floor of Aisle 7",
+    "language": "en",
+    "setting": "A busy supermarket snack aisle, Saturday evening, a half-full cart, a checkout queue backing up.",
+    "user_role": "The parent of a four-year-old",
+    "user_goal": "Get him up and calm without giving in or losing it.",
+    "user_knows": [
+      "He has refused to walk for five minutes",
+      "You told him no to the sweets"
+    ],
+    "cast": [
+      {
+        "name": "Max",
+        "role": "your four-year-old son",
+        "appearance": "A four-year-old boy in a yellow raincoat lying on a supermarket floor, red-faced, one shoe off",
+        "voice": "Sobs, single words, repeats himself, a small child's speech",
+        "gender": "m",
+        "history": "He has been tired and clingy all day.",
+        "enters_at": 0,
+        "goal": "Be held and have what he lost back",
+        "secret": "He isn't crying about sweets: he dropped his toy dinosaur somewhere near the door",
+        "reveal_when": "You crouch to his level, stop arguing and ask what's wrong",
+        "red_lines": [
+          "Won't stand up while being scolded"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 40
+        }
+      },
+      {
+        "name": "Mrs. Doyle",
+        "role": "a shopper with opinions",
+        "appearance": "Woman about 65, permed hair, quilted vest, shopping basket on her arm",
+        "voice": "Kind and meddling, 'in my day'",
+        "gender": "f",
+        "history": "A stranger.",
+        "enters_at": 2,
+        "goal": "Tell you how to raise him",
+        "secret": "She raised three and has a sticker book in her bag for moments like this",
+        "reveal_when": "You thank her instead of bristling",
+        "red_lines": [
+          "Won't take sides against a child"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Tessa",
+        "role": "a store employee",
+        "appearance": "Young woman about 23, store apron, name badge, walkie-talkie on her belt",
+        "voice": "Bright, apologetic, in a hurry",
+        "gender": "f",
+        "history": "A stranger.",
+        "enters_at": 4,
+        "goal": "Clear the aisle before the manager sees",
+        "secret": "A dinosaur toy was handed in at the service desk ten minutes ago",
+        "reveal_when": "You mention he has lost something",
+        "red_lines": [
+          "Can't leave her post for long"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "Max",
+    "opening_line": "NOOOO! No no no! Mommy NO!",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "A shopper stops her cart right beside you and leans down.",
+        "enters": [
+          "Mrs. Doyle"
+        ],
+        "shot": "A permed older woman with a basket leans over the boy lying on the floor."
+      },
+      {
+        "at_turn": 4,
+        "description": "An employee hurries up the aisle with a walkie-talkie crackling.",
+        "enters": [
+          "Tessa"
+        ],
+        "shot": "A young store employee in an apron crouches beside the boy and the older woman."
+      },
+      {
+        "at_turn": 6,
+        "description": "The boy goes quiet and holds his empty hand out to you.",
+        "enters": [],
+        "shot": "The small boy sits up on the floor, tear-stained, reaching a hand toward you."
+      }
+    ],
+    "success_criteria": [
+      "Finds out what he is really crying about",
+      "Gets him calm without buying the sweets"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_toddler_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_toddler_2_scene.jpg",
+      "4": "/presets/img/en_toddler_4_scene.jpg",
+      "6": "/presets/img/en_toddler_6_scene.jpg"
+    },
+    "clues": {
+      "Max": {
+        "img": "/presets/img/clue_toddler_0.jpg",
+        "name": "His toy dinosaur"
+      },
+      "Mrs. Doyle": {
+        "img": "/presets/img/clue_toddler_1.jpg",
+        "name": "A sticker book"
+      },
+      "Tessa": {
+        "img": "/presets/img/clue_toddler_2.jpg",
+        "name": "The lost-property tag"
+      }
+    }
+  }
+}

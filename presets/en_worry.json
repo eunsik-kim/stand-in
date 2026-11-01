@@ -1,0 +1,134 @@
+{
+  "situation": "You wake at 3 am. Your husband is at the kitchen table with a calculator, adding up the future.",
+  "ui": "en",
+  "scenario": {
+    "title": "3 am, Kitchen Table",
+    "language": "en",
+    "setting": "A dim kitchen at 3 am, one pendant light, bills and a calculator on the table, a cold mug.",
+    "user_role": "His wife",
+    "user_goal": "Be with him and find out what is really keeping him up.",
+    "user_knows": [
+      "The mortgage rate went up this year",
+      "Your son starts college in three years"
+    ],
+    "cast": [
+      {
+        "name": "Dan",
+        "role": "your husband",
+        "appearance": "Man about 47, grey T-shirt, reading glasses pushed up, unshaven, pencil in hand",
+        "voice": "Dry, trails off, says 'it's nothing'",
+        "gender": "m",
+        "history": "Twenty years together.",
+        "enters_at": 0,
+        "goal": "Not worry you",
+        "secret": "His name is on a rumoured layoff list at work",
+        "reveal_when": "You sit with him and stop offering fixes",
+        "red_lines": [
+          "Won't be pitied"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Your mother",
+        "role": "your mother, staying over",
+        "appearance": "Woman about 72, quilted robe, slippers, white hair loose, holding a glass of water",
+        "voice": "Soft, unhurried, says little but it lands",
+        "gender": "f",
+        "history": "She's here for her check-up week.",
+        "enters_at": 3,
+        "goal": "Help without being asked",
+        "secret": "She has quietly saved a little account in your son's name",
+        "reveal_when": "You ask how she got through bad years",
+        "red_lines": [
+          "Won't take sides"
+        ],
+        "mood": {
+          "trust": 75,
+          "patience": 70
+        }
+      },
+      {
+        "name": "Paul",
+        "role": "his old friend, texting then calling",
+        "appearance": "Man about 48, seen on a phone screen, sitting in a parked car at night",
+        "voice": "Tired, friendly, swears a little",
+        "gender": "m",
+        "history": "You've known him for years.",
+        "enters_at": 5,
+        "goal": "Let his friend know what he heard",
+        "secret": "He's opening a shop and wants your husband as a partner",
+        "reveal_when": "You ask why he's calling so late",
+        "red_lines": [
+          "Won't promise what he can't"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "Dan",
+    "opening_line": "Hey. Go back to bed. It's nothing, just—numbers.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "A door opens down the hall. Your mother shuffles in for a glass of water.",
+        "enters": [
+          "Your mother"
+        ],
+        "shot": "An older woman in a robe stands at the kitchen door with a glass; the man looks up."
+      },
+      {
+        "at_turn": 5,
+        "description": "His phone buzzes on the table at this hour. He looks at it and then at you.",
+        "enters": [
+          "Paul"
+        ],
+        "shot": "A phone glows on the kitchen table showing a video call from a man in a parked car."
+      },
+      {
+        "at_turn": 7,
+        "description": "He takes his glasses off and pushes the calculator away.",
+        "enters": [],
+        "shot": "The man has pushed the calculator aside and sits rubbing his eyes under the pendant light."
+      }
+    ],
+    "success_criteria": [
+      "Gets him to say what's wrong",
+      "Doesn't try to fix it right away"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_worry_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_worry_3_scene.jpg",
+      "5": "/presets/img/en_worry_5_scene.jpg",
+      "7": "/presets/img/en_worry_7_scene.jpg"
+    },
+    "clues": {
+      "Dan": {
+        "img": "/presets/img/clue_worry_0.jpg",
+        "name": "A list with one name circled"
+      },
+      "Your mother": {
+        "img": "/presets/img/clue_worry_1.jpg",
+        "name": "Her little bankbook"
+      },
+      "Paul": {
+        "img": "/presets/img/clue_worry_2.jpg",
+        "name": "The shop's floor plan"
+      }
+    }
+  }
+}

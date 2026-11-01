@@ -1,0 +1,136 @@
+{
+  "situation": "Her boyfriend was asked to be 'man of honor' for his female best friend, and invited on the bachelorette trip. He's the only man going.",
+  "ui": "en",
+  "scenario": {
+    "title": "The Man of Honor",
+    "language": "en",
+    "setting": "Your living room on a Saturday morning, a half-packed suitcase open on the sofa, a printed trip itinerary on the coffee table.",
+    "user_role": "His girlfriend",
+    "user_goal": "Find out why you're always left out, and whether this is really about a trip.",
+    "user_knows": [
+      "You're not usually invited when they meet",
+      "He once admitted he used to have feelings for her"
+    ],
+    "cast": [
+      {
+        "name": "Will",
+        "role": "your boyfriend",
+        "appearance": "Man about 32, packing a suitcase, folded shirts in his hands, defensive smile",
+        "voice": "Reasonable-sounding, 'you're making this weird'",
+        "gender": "m",
+        "history": "Three years together.",
+        "enters_at": 0,
+        "goal": "Go, and not be the bad guy",
+        "secret": "She asked him to come so he could talk her out of her doubts about the wedding",
+        "reveal_when": "You ask what she actually said to him",
+        "red_lines": [
+          "Won't cancel if ordered to"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Nora",
+        "role": "the bride, stopping by",
+        "appearance": "Woman about 32, sunglasses on her head, iced coffee, huge smile that doesn't reach her eyes",
+        "voice": "Bubbly, a little too fast, calls him 'my person'",
+        "gender": "f",
+        "history": "You've met a few times; she's never asked you anything about you.",
+        "enters_at": 2,
+        "goal": "Keep him close this week",
+        "secret": "She suggested leaving you off the invitations to their dinners",
+        "reveal_when": "You ask her kindly why you're never invited",
+        "red_lines": [
+          "Won't admit to cold feet in front of you unless pressed"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Beth",
+        "role": "your friend",
+        "appearance": "Woman about 31, gym bag, ponytail, unimpressed face, leaning in the doorway",
+        "voice": "Dry and direct, 'that's weird, right?'",
+        "gender": "f",
+        "history": "Your friend for ten years.",
+        "enters_at": 4,
+        "goal": "Stick up for you",
+        "secret": "She saw the groom-to-be crying in his car last week",
+        "reveal_when": "You ask what she's heard",
+        "red_lines": [
+          "Won't stay polite for long"
+        ],
+        "mood": {
+          "trust": 80,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "Will",
+    "opening_line": "It's four days. Everyone's fine with it. Why are you looking at the itinerary like that?",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The doorbell. The bride lets herself in with iced coffee and a wave.",
+        "enters": [
+          "Nora"
+        ],
+        "shot": "A woman with sunglasses on her head stands by the sofa, hugging the man holding the shirts."
+      },
+      {
+        "at_turn": 4,
+        "description": "Your friend arrives to pick you up for the gym, and stops in the doorway.",
+        "enters": [
+          "Beth"
+        ],
+        "shot": "A woman with a gym bag stands in the doorway, eyebrows raised at the two by the suitcase."
+      },
+      {
+        "at_turn": 6,
+        "description": "He stops packing and sits down on the edge of the suitcase.",
+        "enters": [],
+        "shot": "The man sits on the edge of the suitcase with his hands empty, the two women watching."
+      }
+    ],
+    "success_criteria": [
+      "Finds out what the bride really asked him",
+      "Names being left out, not just the trip",
+      "Reaches a decision about the relationship"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_manofhonor_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_manofhonor_2_scene.jpg",
+      "4": "/presets/img/en_manofhonor_4_scene.jpg",
+      "6": "/presets/img/en_manofhonor_6_scene.jpg"
+    },
+    "clues": {
+      "Will": {
+        "img": "/presets/img/clue_manofhonor_0.jpg",
+        "name": "Her late-night message"
+      },
+      "Nora": {
+        "img": "/presets/img/clue_manofhonor_1.jpg",
+        "name": "The guest list"
+      },
+      "Beth": {
+        "img": "/presets/img/clue_manofhonor_2.jpg",
+        "name": "A car park at night"
+      }
+    },
+    "basis": "Adapted from a story someone really posted online. Names and details are changed."
+  }
+}

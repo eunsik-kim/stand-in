@@ -1,0 +1,136 @@
+{
+  "situation": "남자친구가 여사친 결혼식의 '남자 들러리'를 맡아, 신부 친구들 여행까지 간단다. 남자는 그 혼자다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "신부의 남자 들러리",
+    "language": "ko",
+    "setting": "토요일 아침 거실. 소파 위 반쯤 싼 캐리어, 탁자 위 여행 일정표.",
+    "user_role": "그의 여자친구",
+    "user_goal": "왜 늘 나만 빠지는지, 이게 정말 여행 문제인지 알아낸다.",
+    "user_knows": [
+      "둘이 만날 때 당신은 대개 초대받지 않는다",
+      "그는 예전에 그녀를 좋아했다고 인정한 적 있다"
+    ],
+    "cast": [
+      {
+        "name": "지훈",
+        "role": "남자친구",
+        "appearance": "Man about 32, packing a suitcase, folded shirts in his hands, defensive smile",
+        "voice": "합리적인 척 '네가 이상하게 만드는 거야'",
+        "gender": "m",
+        "history": "3년 사귀었다.",
+        "enters_at": 0,
+        "goal": "가되 나쁜 사람은 되기 싫다",
+        "secret": "결혼이 망설여진다며 말려 달라고 불렀다",
+        "reveal_when": "그녀가 정확히 뭐라고 했는지 물을 때",
+        "red_lines": [
+          "명령하면 안 취소한다"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 50
+        }
+      },
+      {
+        "name": "예린",
+        "role": "들른 신부",
+        "appearance": "Woman about 32, sunglasses on her head, iced coffee, huge smile that doesn't reach her eyes",
+        "voice": "밝고 조금 빠르며 그를 '내 사람'이라 부른다",
+        "gender": "f",
+        "history": "몇 번 봤지만 당신에 대해 물은 적 없다.",
+        "enters_at": 2,
+        "goal": "이번 주 그를 곁에 둔다",
+        "secret": "둘의 모임에 당신을 부르지 말자고 한 건 그녀다",
+        "reveal_when": "다정하게 왜 안 부르는지 물을 때",
+        "red_lines": [
+          "몰아붙이기 전엔 결혼 망설임을 인정 안 한다"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 50
+        }
+      },
+      {
+        "name": "내 친구 보라",
+        "role": "내 친구",
+        "appearance": "Woman about 31, gym bag, ponytail, unimpressed face, leaning in the doorway",
+        "voice": "건조하고 직설적이다",
+        "gender": "f",
+        "history": "10년 친구다.",
+        "enters_at": 4,
+        "goal": "당신 편을 든다",
+        "secret": "지난주 신랑이 차에서 우는 걸 봤다",
+        "reveal_when": "뭘 들었는지 물을 때",
+        "red_lines": [
+          "오래 예의를 차리지 않는다"
+        ],
+        "mood": {
+          "trust": 80,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "지훈",
+    "opening_line": "나흘이야. 다들 괜찮대. 일정표는 왜 그렇게 봐?",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "초인종이 울리고 신부가 아이스커피를 들고 손을 흔들며 들어온다.",
+        "enters": [
+          "예린"
+        ],
+        "shot": "A woman with sunglasses on her head stands by the sofa, hugging the man holding the shirts."
+      },
+      {
+        "at_turn": 4,
+        "description": "헬스장에 같이 가려던 친구가 문간에서 멈춰 선다.",
+        "enters": [
+          "내 친구 보라"
+        ],
+        "shot": "A woman with a gym bag stands in the doorway, eyebrows raised at the two by the suitcase."
+      },
+      {
+        "at_turn": 6,
+        "description": "그가 짐 싸기를 멈추고 캐리어 끝에 앉는다.",
+        "enters": [],
+        "shot": "The man sits on the edge of the suitcase with his hands empty, the two women watching."
+      }
+    ],
+    "success_criteria": [
+      "신부가 정말 뭘 부탁했는지 알아낸다",
+      "여행보다 '늘 빠지는 것'을 말한다",
+      "관계에 대한 결론을 낸다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_manofhonor_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_manofhonor_2_scene.jpg",
+      "4": "/presets/img/ko_manofhonor_4_scene.jpg",
+      "6": "/presets/img/ko_manofhonor_6_scene.jpg"
+    },
+    "clues": {
+      "지훈": {
+        "img": "/presets/img/clue_manofhonor_0.jpg",
+        "name": "새벽의 메시지"
+      },
+      "예린": {
+        "img": "/presets/img/clue_manofhonor_1.jpg",
+        "name": "모임 명단"
+      },
+      "내 친구 보라": {
+        "img": "/presets/img/clue_manofhonor_2.jpg",
+        "name": "밤 주차장"
+      }
+    },
+    "basis": "온라인에 실제로 올라온 사연을 각색했습니다. 이름과 세부는 바꿨습니다."
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "situation": "Your seventeen-year-old says she's dropping out. The door is half closed.",
+  "ui": "en",
+  "scenario": {
+    "title": "I'm Quitting School",
+    "language": "en",
+    "setting": "The doorway of a teenager's bedroom, evening, posters, a schoolbag on the floor, soft lamp light.",
+    "user_role": "Her mother or father",
+    "user_goal": "Keep the door open and find out what this is really about.",
+    "user_knows": [
+      "She has missed school twice this month",
+      "Her grades were fine last year"
+    ],
+    "cast": [
+      {
+        "name": "Hannah",
+        "role": "your seventeen-year-old daughter",
+        "appearance": "Girl about 17, oversized hoodie, hair tied up, sitting on her bed, arms crossed",
+        "voice": "Flat, sarcastic, 'whatever', cracks when listened to",
+        "gender": "f",
+        "history": "You fought about her grades last week.",
+        "enters_at": 0,
+        "goal": "Get you off her back",
+        "secret": "She wants to go to art school and quit because she heard you talking about money",
+        "reveal_when": "You stop lecturing and ask what she'd do instead",
+        "red_lines": [
+          "Shuts the door if lectured twice"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 35
+        }
+      },
+      {
+        "name": "Noah",
+        "role": "her twelve-year-old brother",
+        "appearance": "Boy about 12, gaming headset around his neck, peeking from the hallway",
+        "voice": "Blurts things, wants to be useful",
+        "gender": "m",
+        "history": "He worships his sister.",
+        "enters_at": 3,
+        "goal": "Stop the fighting",
+        "secret": "He's seen her sketchbooks under the bed",
+        "reveal_when": "You ask him kindly what he knows",
+        "red_lines": [
+          "Won't betray her if scolded"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Ms. Reyes",
+        "role": "her homeroom teacher, phoning",
+        "appearance": "Woman about 38, teacher's lanyard, seen on a phone video call at a desk",
+        "voice": "Careful, warm, chooses her words",
+        "gender": "f",
+        "history": "You met at the parents' evening.",
+        "enters_at": 5,
+        "goal": "Keep the girl in school",
+        "secret": "A scholarship for art students closes this month, and she has recommended her",
+        "reveal_when": "You ask what she has noticed about your daughter",
+        "red_lines": [
+          "Won't break a student's confidence"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 55
+        }
+      }
+    ],
+    "opening_speaker": "Hannah",
+    "opening_line": "I said I'm done. It's not a discussion.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "The hallway floor creaks. Her little brother has been listening.",
+        "enters": [
+          "Noah"
+        ],
+        "shot": "A young boy with a headset peeks around the door frame behind you, the girl on the bed."
+      },
+      {
+        "at_turn": 5,
+        "description": "Your phone rings. It's her teacher, by video.",
+        "enters": [
+          "Ms. Reyes"
+        ],
+        "shot": "A phone held up shows a teacher on a video call; the girl on the bed looks up."
+      },
+      {
+        "at_turn": 7,
+        "description": "She pulls something flat from under the bed and holds it to her chest.",
+        "enters": [],
+        "shot": "The girl sits on the bed hugging a large sketchbook to her chest."
+      }
+    ],
+    "success_criteria": [
+      "Doesn't lecture",
+      "Finds out about art school",
+      "She agrees to keep talking"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_daughter_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_daughter_3_scene.jpg",
+      "5": "/presets/img/en_daughter_5_scene.jpg",
+      "7": "/presets/img/en_daughter_7_scene.jpg"
+    },
+    "clues": {
+      "Hannah": {
+        "img": "/presets/img/clue_daughter_0.jpg",
+        "name": "Art school brochure"
+      },
+      "Noah": {
+        "img": "/presets/img/clue_daughter_1.jpg",
+        "name": "A sketch of the family"
+      },
+      "Ms. Reyes": {
+        "img": "/presets/img/clue_daughter_2.jpg",
+        "name": "The scholarship form"
+      }
+    }
+  }
+}

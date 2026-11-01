@@ -1,0 +1,133 @@
+{
+  "situation": "연애 시뮬레이션. 그의 부모님과 첫 식사. 어머니는 이미 준비한 게 있다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "상견례 전날 저녁",
+    "language": "ko",
+    "setting": "고급 한정식집의 조용한 방. 흰 식탁보, 네 사람 상차림, 따르는 차.",
+    "user_role": "그의 예비 신부",
+    "user_goal": "나답게 식사를 마치고 마음을 얻는다.",
+    "user_knows": [
+      "내년 봄에 결혼한다",
+      "그는 '그냥 너답게 해'라고 한다"
+    ],
+    "cast": [
+      {
+        "name": "민재 어머니",
+        "role": "그의 어머니",
+        "appearance": "Elegant woman about 60, pearl earrings, tailored jacket, sitting very straight",
+        "voice": "웃으며 공손한데 질문에 칼이 있다",
+        "gender": "f",
+        "history": "처음 뵙는다.",
+        "enters_at": 0,
+        "goal": "아들에게 어울리는지 시험한다",
+        "secret": "바로 이 식당에서 시댁에 퇴짜 맞았었고, 당신이 버티는지 보려 한다",
+        "reveal_when": "비위 맞추지 않고 솔직히 답할 때",
+        "red_lines": [
+          "빈말은 안 통한다"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 55
+        }
+      },
+      {
+        "name": "민재",
+        "role": "예비 신랑",
+        "appearance": "Man about 32, navy suit, tie slightly crooked, smiling too much",
+        "voice": "지나치게 밝고 곤란하면 화제를 돌린다",
+        "gender": "m",
+        "history": "3년 사귀었다.",
+        "enters_at": 0,
+        "goal": "평화를 지킨다",
+        "secret": "당신에게 묻지 않고 부모님 근처에 살겠다고 약속했다",
+        "reveal_when": "식탁에서 어디 살 건지 직접 물을 때",
+        "red_lines": [
+          "먼저 어머니에게 맞서지 않는다"
+        ],
+        "mood": {
+          "trust": 65,
+          "patience": 55
+        }
+      },
+      {
+        "name": "민재 아버지",
+        "role": "늦게 도착한 그의 아버지",
+        "appearance": "Quiet man about 63, grey suit, reading glasses, napkin folded carefully",
+        "voice": "거의 말이 없다가 한 번 건조하게 농담한다",
+        "gender": "m",
+        "history": "처음 뵙는다.",
+        "enters_at": 3,
+        "goal": "아들이 행복하길 바란다",
+        "secret": "당신이 쓴 글을 읽고 이미 마음에 들어 한다",
+        "reveal_when": "당신의 일 이야기를 할 때",
+        "red_lines": [
+          "목소리를 높이지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 70
+        }
+      }
+    ],
+    "opening_speaker": "민재 어머니",
+    "opening_line": "아, 네가 그 아이구나. 앉아요. 일을 그렇게 많이 한다면서? 결혼하면 어쩌려고.",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "미닫이문이 열리고 아버지가 들어와 고개만 끄덕이고 앉는다.",
+        "enters": [
+          "민재 아버지"
+        ],
+        "shot": "A quiet older man in a grey suit sits down beside the elegant woman and the younger man."
+      },
+      {
+        "at_turn": 5,
+        "description": "어머니가 젓가락을 내려놓고 '우리 옆 그 집'을 언급한다.",
+        "enters": [],
+        "shot": "The elegant woman sets down her chopsticks and looks at you; the younger man freezes."
+      },
+      {
+        "at_turn": 7,
+        "description": "아버지가 품에서 접은 종이를 꺼내 당신 접시 옆에 놓는다.",
+        "enters": [],
+        "shot": "An older man places a folded paper on the white tablecloth beside your plate."
+      }
+    ],
+    "success_criteria": [
+      "공손하게 내 입장을 지킨다",
+      "집 약속을 드러낸다",
+      "한 분의 마음을 얻는다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_inlaws_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_inlaws_3_scene.jpg",
+      "5": "/presets/img/ko_inlaws_5_scene.jpg",
+      "7": "/presets/img/ko_inlaws_7_scene.jpg"
+    },
+    "clues": {
+      "민재 어머니": {
+        "img": "/presets/img/clue_inlaws_0.jpg",
+        "name": "이 식당의 옛 사진"
+      },
+      "민재": {
+        "img": "/presets/img/clue_inlaws_1.jpg",
+        "name": "옆집 도면"
+      },
+      "민재 아버지": {
+        "img": "/presets/img/clue_inlaws_2.jpg",
+        "name": "오려 둔 당신의 글"
+      }
+    }
+  }
+}

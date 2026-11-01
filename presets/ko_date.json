@@ -1,0 +1,135 @@
+{
+  "situation": "연애 시뮬레이션. 친구가 잡아 준 소개팅, 테이블 하나, 90분. 애프터가 잡힐까?",
+  "ui": "ko",
+  "scenario": {
+    "title": "소개팅",
+    "language": "ko",
+    "setting": "저녁 7시 아담한 이탈리안 레스토랑. 촛불, 메뉴판 두 개, 잔잔한 음악.",
+    "user_role": "소개팅 나온 당신",
+    "user_goal": "좋은 저녁을 만들고 진짜 애프터를 잡는다.",
+    "user_knows": [
+      "친구 말로는 '진짜 착한 사람'이다",
+      "사진 한 장만 봤다"
+    ],
+    "cast": [
+      {
+        "name": "도윤",
+        "role": "소개팅 상대",
+        "appearance": "Man about 31, navy shirt, nervous smile, fiddling with a fork",
+        "voice": "긴장해서 말이 길어지고 편해지면 재밌다",
+        "gender": "m",
+        "history": "방금 처음 만났다.",
+        "enters_at": 0,
+        "goal": "망신당하지 않으려 한다",
+        "secret": "와인을 하나도 모른다. 한 시간 전 검색하고 왔다",
+        "reveal_when": "당신도 긴장했다고 털어놓을 때",
+        "red_lines": [
+          "관심 없으면 들이대지 않는다"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 60
+        }
+      },
+      {
+        "name": "직원",
+        "role": "직원",
+        "appearance": "Woman about 40, black apron, order pad, knowing smile",
+        "voice": "건조하고 소개팅을 천 번은 봤다",
+        "gender": "f",
+        "history": "처음 보는 사람이다.",
+        "enters_at": 2,
+        "goal": "테이블을 돌리고 싶다",
+        "secret": "그가 미리 전화해 조용한 자리와 이름 쓴 디저트를 부탁했다",
+        "reveal_when": "다정하게 말을 걸 때",
+        "red_lines": [
+          "손님을 망신시키지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 50
+        }
+      },
+      {
+        "name": "주선자 소라",
+        "role": "우연인 척 전화한 주선자",
+        "appearance": "Woman about 30, ponytail, seen on a phone video call, peeking and giggling",
+        "voice": "신나서 시끄럽고 다 말해 버린다",
+        "gender": "f",
+        "history": "고등학교 친구다.",
+        "enters_at": 5,
+        "goal": "어떻게 돼 가는지 알고 싶다",
+        "secret": "그가 몇 달 전부터 당신을 물어봐서 만들어 준 자리다",
+        "reveal_when": "그를 어떻게 아는지 물을 때",
+        "red_lines": [
+          "오래 안 끊을 수 없다"
+        ],
+        "mood": {
+          "trust": 80,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "도윤",
+    "opening_line": "아, 안녕하세요! 사진이랑 똑같으시네요. 어, 좋은 뜻이에요. 이상한가요?",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "직원이 와인 리스트를 그에게 바로 건넨다.",
+        "enters": [
+          "직원"
+        ],
+        "shot": "A woman in a black apron holds out a wine list to the nervous man across the table."
+      },
+      {
+        "at_turn": 5,
+        "description": "휴대폰이 켜진다. 친구가 영상 통화로 벌써 웃고 있다.",
+        "enters": [
+          "주선자 소라"
+        ],
+        "shot": "A phone held up shows a giggling friend on a video call; the man opposite laughs nervously."
+      },
+      {
+        "at_turn": 7,
+        "description": "디저트가 나온다. 그가 접시를 보고 얼른 당신을 본다.",
+        "enters": [],
+        "shot": "A small dessert plate is set on the table; the man opposite smiles shyly at you."
+      }
+    ],
+    "success_criteria": [
+      "상대가 편해지게 한다",
+      "둘이 진짜 좋아하는 걸 찾는다",
+      "애프터가 잡힌다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_date_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_date_2_scene.jpg",
+      "5": "/presets/img/ko_date_5_scene.jpg",
+      "7": "/presets/img/ko_date_7_scene.jpg"
+    },
+    "clues": {
+      "도윤": {
+        "img": "/presets/img/clue_date_0.jpg",
+        "name": "와인 리스트"
+      },
+      "직원": {
+        "img": "/presets/img/clue_date_1.jpg",
+        "name": "이름 쓴 디저트"
+      },
+      "주선자 소라": {
+        "img": "/presets/img/clue_date_2.jpg",
+        "name": "몇 달 전 사진"
+      }
+    }
+  }
+}

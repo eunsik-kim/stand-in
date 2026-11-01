@@ -1,0 +1,135 @@
+{
+  "situation": "Dating simulation. A blind date your friend set up, one table, ninety minutes. Will there be a second date?",
+  "ui": "en",
+  "scenario": {
+    "title": "Blind Date",
+    "language": "en",
+    "setting": "A cosy small Italian restaurant at 7 pm, candle on the table, two menus, soft music.",
+    "user_role": "You, on a blind date",
+    "user_goal": "Make it a good night, and get a real second date.",
+    "user_knows": [
+      "Your friend says he's 'really nice'",
+      "You've only seen one photo"
+    ],
+    "cast": [
+      {
+        "name": "Chris",
+        "role": "your blind date",
+        "appearance": "Man about 31, navy shirt, nervous smile, fiddling with a fork",
+        "voice": "Nervous, over-explains, funny when relaxed",
+        "gender": "m",
+        "history": "You've just met.",
+        "enters_at": 0,
+        "goal": "Not embarrass himself",
+        "secret": "He isn't a wine person: he looked up the list an hour ago and is terrified",
+        "reveal_when": "You admit you're nervous too",
+        "red_lines": [
+          "Won't push if you're not interested"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 60
+        }
+      },
+      {
+        "name": "The server",
+        "role": "the server",
+        "appearance": "Woman about 40, black apron, order pad, knowing smile",
+        "voice": "Dry, has seen a thousand first dates",
+        "gender": "f",
+        "history": "A stranger.",
+        "enters_at": 2,
+        "goal": "Get the table turned",
+        "secret": "He called ahead and asked for the quiet table, and for a dessert with your name on it",
+        "reveal_when": "You chat with her warmly",
+        "red_lines": [
+          "Won't embarrass a customer"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Sora",
+        "role": "your friend, who 'just happens' to call",
+        "appearance": "Woman about 30, ponytail, seen on a phone video call, peeking and giggling",
+        "voice": "Excited, loud, gives everything away",
+        "gender": "f",
+        "history": "Your friend since high school.",
+        "enters_at": 5,
+        "goal": "See how it's going",
+        "secret": "He's asked about you for months and she set this up at his request",
+        "reveal_when": "You ask how she knows him",
+        "red_lines": [
+          "Won't stay on the phone long"
+        ],
+        "mood": {
+          "trust": 80,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "Chris",
+    "opening_line": "Hi! Hi. Sorry, I—you look exactly like your photo. That's a good thing. Is that weird?",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The server arrives with the wine list and hands it straight to him.",
+        "enters": [
+          "The server"
+        ],
+        "shot": "A woman in a black apron holds out a wine list to the nervous man across the table."
+      },
+      {
+        "at_turn": 5,
+        "description": "Your phone lights up. Your friend, on video, already giggling.",
+        "enters": [
+          "Sora"
+        ],
+        "shot": "A phone held up shows a giggling friend on a video call; the man opposite laughs nervously."
+      },
+      {
+        "at_turn": 7,
+        "description": "Dessert arrives. He glances at it, then quickly at you.",
+        "enters": [],
+        "shot": "A small dessert plate is set on the table; the man opposite smiles shyly at you."
+      }
+    ],
+    "success_criteria": [
+      "Gets him to relax",
+      "Finds something real you both like",
+      "A second date is set"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_date_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_date_2_scene.jpg",
+      "5": "/presets/img/en_date_5_scene.jpg",
+      "7": "/presets/img/en_date_7_scene.jpg"
+    },
+    "clues": {
+      "Chris": {
+        "img": "/presets/img/clue_date_0.jpg",
+        "name": "The wine list"
+      },
+      "The server": {
+        "img": "/presets/img/clue_date_1.jpg",
+        "name": "Dessert with your name"
+      },
+      "Sora": {
+        "img": "/presets/img/clue_date_2.jpg",
+        "name": "A photo from months ago"
+      }
+    }
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "situation": "Five years together, and he has asked to meet at the place you first went. You can tell something is coming.",
+  "ui": "en",
+  "scenario": {
+    "title": "We Need to Talk",
+    "language": "en",
+    "setting": "A quiet riverside bench at dusk, a bicycle path, two takeaway coffees, the bridge lights coming on.",
+    "user_role": "His girlfriend of five years",
+    "user_goal": "Find out why, and end this conversation in a way you won't regret.",
+    "user_knows": [
+      "You've seen less of each other this year",
+      "He picked this place on purpose"
+    ],
+    "cast": [
+      {
+        "name": "Jay",
+        "role": "your boyfriend of five years",
+        "appearance": "Man about 33, dark coat, staring at the river, coffee untouched",
+        "voice": "Quiet, long pauses, starts sentences he can't finish",
+        "gender": "m",
+        "history": "Five years together.",
+        "enters_at": 0,
+        "goal": "End it kindly without saying why",
+        "secret": "He's been offered a job abroad, and thinks you'd give up your career to follow him",
+        "reveal_when": "You ask what he's not saying, without begging",
+        "red_lines": [
+          "Won't lie about there being someone else"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Hana",
+        "role": "a mutual friend out jogging",
+        "appearance": "Woman about 32, running jacket, earbuds in, slowing to a stop",
+        "voice": "Awkward, kind, talks too much to fill silence",
+        "gender": "f",
+        "history": "You all go back years.",
+        "enters_at": 3,
+        "goal": "Get away from this moment",
+        "secret": "He asked her last month what time difference Vancouver has",
+        "reveal_when": "You ask if he's said anything",
+        "red_lines": [
+          "Won't take sides"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 40
+        }
+      },
+      {
+        "name": "His sister",
+        "role": "his sister, phoning you",
+        "appearance": "Woman about 38, seen on a phone video call in a kitchen, worried face",
+        "voice": "Warm, direct, a big sister's voice",
+        "gender": "f",
+        "history": "She's always treated you as family.",
+        "enters_at": 6,
+        "goal": "Stop him making a mistake",
+        "secret": "He's been sleeping at her place and can't stop crying",
+        "reveal_when": "You tell her what's happening",
+        "red_lines": [
+          "Won't take over the conversation"
+        ],
+        "mood": {
+          "trust": 75,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "Jay",
+    "opening_line": "Remember this bench? I wanted to, um. I don't know how to start.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "A jogger slows down, recognises you both and stops, pulling out an earbud.",
+        "enters": [
+          "Hana"
+        ],
+        "shot": "A woman in a running jacket stops beside the bench, the man looking up at her."
+      },
+      {
+        "at_turn": 5,
+        "description": "Your friend jogs off. The bridge lights come on, all at once.",
+        "enters": [],
+        "shot": "The man sits alone on the bench, bridge lights on behind him across the dark river."
+      },
+      {
+        "at_turn": 6,
+        "description": "Your phone buzzes. It's his sister, and she never calls.",
+        "enters": [
+          "His sister"
+        ],
+        "shot": "A phone held up shows a worried woman on a video call, the man on the bench beside you."
+      }
+    ],
+    "success_criteria": [
+      "Finds out the real reason",
+      "Says what she actually wants",
+      "The two of them reach an ending or a new plan"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_breakup_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_breakup_3_scene.jpg",
+      "5": "/presets/img/en_breakup_5_scene.jpg",
+      "6": "/presets/img/en_breakup_6_scene.jpg"
+    },
+    "clues": {
+      "Jay": {
+        "img": "/presets/img/clue_breakup_0.jpg",
+        "name": "The transfer letter"
+      },
+      "Hana": {
+        "img": "/presets/img/clue_breakup_1.jpg",
+        "name": "A world clock"
+      },
+      "His sister": {
+        "img": "/presets/img/clue_breakup_2.jpg",
+        "name": "Her spare room"
+      }
+    }
+  }
+}

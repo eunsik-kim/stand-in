@@ -1,0 +1,136 @@
+{
+  "situation": "Ten years in. Your husband hasn't given you household money in years, and now his parents want their house back.",
+  "ui": "en",
+  "scenario": {
+    "title": "Zero for the Household",
+    "language": "en",
+    "setting": "A modest country house at night, a child's drawings on the fridge, a stack of bills on the kitchen table.",
+    "user_role": "A wife and mother of ten years",
+    "user_goal": "Get him to see it, and get a real answer about where you'll live and who pays.",
+    "user_knows": [
+      "You've been living on your savings from before the wedding",
+      "The house is in his parents' name",
+      "He does cook and clean and plays with your child"
+    ],
+    "cast": [
+      {
+        "name": "Tom",
+        "role": "your husband",
+        "appearance": "Man about 41, work fleece, drying dishes with a towel, gentle face",
+        "voice": "Kind, puzzled, 'it's my money, I earn it'",
+        "gender": "m",
+        "history": "Ten years of marriage.",
+        "enters_at": 0,
+        "goal": "Keep looking after his parents",
+        "secret": "He's been sending his parents more than you know because they asked him not to mention it",
+        "reveal_when": "You lay out the actual numbers calmly",
+        "red_lines": [
+          "Won't hear his parents called greedy"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Your father-in-law",
+        "role": "his father",
+        "appearance": "Man about 70, weathered face, cap in hand, standing in the doorway",
+        "voice": "Short, old-fashioned, doesn't explain",
+        "gender": "m",
+        "history": "He owns the house you live in.",
+        "enters_at": 3,
+        "goal": "Get the house back",
+        "secret": "He has to sell because of a debt nobody has told your husband about",
+        "reveal_when": "You ask respectfully why now",
+        "red_lines": [
+          "Won't be shouted at by a younger person"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 45
+        }
+      },
+      {
+        "name": "Your husband's sister",
+        "role": "his sister, on the phone",
+        "appearance": "Woman about 44, seen on a phone video call inside a parked car",
+        "voice": "Fast, says 'of course you support your parents'",
+        "gender": "f",
+        "history": "You speak at holidays.",
+        "enters_at": 5,
+        "goal": "Keep the money coming to their parents",
+        "secret": "She stopped giving anything herself two years ago",
+        "reveal_when": "You ask how much she gives",
+        "red_lines": [
+          "Won't admit it unless asked twice"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "Tom",
+    "opening_line": "Bills again? Leave 'em, I'll look at them. Kid's asleep?",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "Headlights swing past the window. His father is at the door, cap in hand.",
+        "enters": [
+          "Your father-in-law"
+        ],
+        "shot": "An older man with a cap stands in the kitchen doorway; the husband turns with a towel in his hand."
+      },
+      {
+        "at_turn": 5,
+        "description": "His phone rings on the table. His sister, on speaker.",
+        "enters": [
+          "Your husband's sister"
+        ],
+        "shot": "A phone on the table shows a woman on a video call; the two men look down at it."
+      },
+      {
+        "at_turn": 7,
+        "description": "The father puts an envelope on the bills and says nothing.",
+        "enters": [],
+        "shot": "A white envelope lies on top of the stack of bills; the older man stands silent."
+      }
+    ],
+    "success_criteria": [
+      "Puts the real numbers on the table",
+      "Finds out why the house has to go",
+      "Gets a real commitment from him"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_zerowon_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_zerowon_3_scene.jpg",
+      "7": "/presets/img/en_zerowon_7_scene.jpg"
+    },
+    "clues": {
+      "Tom": {
+        "img": "/presets/img/clue_zerowon_0.jpg",
+        "name": "Your savings passbook"
+      },
+      "Your father-in-law": {
+        "img": "/presets/img/clue_zerowon_1.jpg",
+        "name": "The debt notice"
+      },
+      "Your husband's sister": {
+        "img": "/presets/img/clue_zerowon_2.jpg",
+        "name": "Her transfer history"
+      }
+    },
+    "basis": "Adapted from a story someone really posted online. Names and details are changed."
+  }
+}

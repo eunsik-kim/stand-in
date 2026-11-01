@@ -1,0 +1,134 @@
+{
+  "situation": "Dating simulation. Your work crush is leaving the company tomorrow. It's now or never.",
+  "ui": "en",
+  "scenario": {
+    "title": "Last Night on the Roof",
+    "language": "en",
+    "setting": "The office rooftop at 10 pm, city lights, two cans of coffee, a warm spring wind.",
+    "user_role": "A coworker who has liked him for a year",
+    "user_goal": "Tell him how you feel before tonight ends.",
+    "user_knows": [
+      "He leaves the company tomorrow",
+      "You've had lunch together almost every day"
+    ],
+    "cast": [
+      {
+        "name": "Sam",
+        "role": "your coworker",
+        "appearance": "Man about 30, rolled-up shirt sleeves, lanyard loose around his neck, leaning on a rail",
+        "voice": "Quiet, gentle, jokes when nervous",
+        "gender": "m",
+        "history": "A year of lunches.",
+        "enters_at": 0,
+        "goal": "Say goodbye without making it strange",
+        "secret": "He took the new job partly because he thought you weren't interested",
+        "reveal_when": "You say something honest about the two of you",
+        "red_lines": [
+          "Won't make a move first"
+        ],
+        "mood": {
+          "trust": 65,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Ms. Lee",
+        "role": "your team lead, up for a smoke",
+        "appearance": "Woman about 45, trench coat, cigarette unlit, tired and amused",
+        "voice": "Blunt, dry, sees everything",
+        "gender": "f",
+        "history": "She's watched you two for a year.",
+        "enters_at": 3,
+        "goal": "Give someone a push, then leave",
+        "secret": "He asked her about you when he handed in his notice",
+        "reveal_when": "You ask her directly",
+        "red_lines": [
+          "Won't stay long"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 40
+        }
+      },
+      {
+        "name": "Ana",
+        "role": "a colleague looking for him",
+        "appearance": "Woman about 28, cardigan, holding a cake box and a card, out of breath",
+        "voice": "Cheerful, breaks the mood without knowing",
+        "gender": "f",
+        "history": "A friendly colleague.",
+        "enters_at": 5,
+        "goal": "Take him down to the farewell party",
+        "secret": "The card has a note you could sign; he's kept all the ones you've written",
+        "reveal_when": "You ask what she saw clearing his desk",
+        "red_lines": [
+          "Won't leave without him for long"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "Sam",
+    "opening_line": "So. Last can of terrible coffee. I'm gonna miss this terrible coffee.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "The rooftop door scrapes. Your team lead steps out and takes in the two of you.",
+        "enters": [
+          "Ms. Lee"
+        ],
+        "shot": "A woman in a trench coat stands by the rooftop door, looking at the man at the rail."
+      },
+      {
+        "at_turn": 5,
+        "description": "A colleague runs up with a cake box: everyone's waiting downstairs.",
+        "enters": [
+          "Ana"
+        ],
+        "shot": "A woman with a cake box hurries across the rooftop toward the man at the rail."
+      },
+      {
+        "at_turn": 7,
+        "description": "The city lights go on humming. It's just the two of you again, and he's turned to face you.",
+        "enters": [],
+        "shot": "Night city behind him, the man stands alone facing you with a small smile."
+      }
+    ],
+    "success_criteria": [
+      "Says it honestly",
+      "Finds out how he feels"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_confess_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_confess_3_scene.jpg",
+      "5": "/presets/img/en_confess_5_scene.jpg",
+      "7": "/presets/img/en_confess_7_scene.jpg"
+    },
+    "clues": {
+      "Sam": {
+        "img": "/presets/img/clue_confess_0.jpg",
+        "name": "His new contract"
+      },
+      "Ms. Lee": {
+        "img": "/presets/img/clue_confess_1.jpg",
+        "name": "His notice letter"
+      },
+      "Ana": {
+        "img": "/presets/img/clue_confess_2.jpg",
+        "name": "Your old notes"
+      }
+    }
+  }
+}

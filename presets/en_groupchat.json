@@ -1,0 +1,136 @@
+{
+  "situation": "You moved abroad for your husband's job. Tonight you find out his family has a group chat, and everyone is in it but you.",
+  "ui": "en",
+  "scenario": {
+    "title": "The Group Chat Without You",
+    "language": "en",
+    "setting": "A small rented apartment abroad, late evening, a laptop open on the dining table, boxes not yet unpacked.",
+    "user_role": "The wife, living abroad with him",
+    "user_goal": "Get your husband to finally say something, and decide what happens next.",
+    "user_knows": [
+      "You just saw a birthday message from a family group chat on his phone",
+      "His mother only ever sends word through him"
+    ],
+    "cast": [
+      {
+        "name": "Chris",
+        "role": "your husband",
+        "appearance": "Man about 36, grey T-shirt, laptop bag at his feet, avoiding eye contact",
+        "voice": "Soft, changes the subject, 'that's just how they are'",
+        "gender": "m",
+        "history": "Four years of marriage.",
+        "enters_at": 0,
+        "goal": "Keep everyone from fighting",
+        "secret": "He knew part of your wedding gift money went to his sister and never told you",
+        "reveal_when": "You ask what else he hasn't told you, without shouting",
+        "red_lines": [
+          "Leaves the room if you shout"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 45
+        }
+      },
+      {
+        "name": "Your mother-in-law",
+        "role": "his mother, on video",
+        "appearance": "Woman about 62, tidy perm, silk scarf, seen on a laptop video call in a bright living room",
+        "voice": "Honeyed, never direct, 'you must be lonely over there'",
+        "gender": "f",
+        "history": "She told you to come ten minutes early at the family meeting and never let it go.",
+        "enters_at": 2,
+        "goal": "Keep her son on her side",
+        "secret": "She made the group chat right after the wedding and told them not to add you",
+        "reveal_when": "You ask her calmly and directly why you aren't in it",
+        "red_lines": [
+          "Will not apologise first"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 45
+        }
+      },
+      {
+        "name": "Your sister-in-law",
+        "role": "his sister, who joins the call",
+        "appearance": "Woman about 33, oversized sweater, sitting beside the older woman on the video call",
+        "voice": "Quick, defensive, then guilty",
+        "gender": "f",
+        "history": "You've met at holidays.",
+        "enters_at": 4,
+        "goal": "Keep the money out of it",
+        "secret": "She has wanted to tell you and has kept the bank slip",
+        "reveal_when": "You speak to her as an equal, not an enemy",
+        "red_lines": [
+          "Won't turn on her mother openly"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "Chris",
+    "opening_line": "Hey, you're still up? Why's it—what's wrong?",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The laptop rings. It's his mother, on video, as if she'd heard.",
+        "enters": [
+          "Your mother-in-law"
+        ],
+        "shot": "A laptop on the dining table shows an older woman on a video call; the man stands beside it."
+      },
+      {
+        "at_turn": 4,
+        "description": "Someone slides into frame beside his mother: his sister.",
+        "enters": [
+          "Your sister-in-law"
+        ],
+        "shot": "The laptop now shows two women side by side on the video call; the man rubs his forehead."
+      },
+      {
+        "at_turn": 6,
+        "description": "He closes the laptop halfway and gets down on his knees on the floor.",
+        "enters": [],
+        "shot": "The man kneels on the apartment floor beside the half-closed laptop, looking up at you."
+      }
+    ],
+    "success_criteria": [
+      "Gets him to admit what he knew",
+      "Says what she needs without losing it",
+      "Decides what comes next"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_groupchat_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_groupchat_2_scene.jpg",
+      "4": "/presets/img/en_groupchat_4_scene.jpg",
+      "6": "/presets/img/en_groupchat_6_scene.jpg"
+    },
+    "clues": {
+      "Chris": {
+        "img": "/presets/img/clue_groupchat_0.jpg",
+        "name": "The wedding ledger"
+      },
+      "Your mother-in-law": {
+        "img": "/presets/img/clue_groupchat_1.jpg",
+        "name": "A chat with one name missing"
+      },
+      "Your sister-in-law": {
+        "img": "/presets/img/clue_groupchat_2.jpg",
+        "name": "The bank slip"
+      }
+    },
+    "basis": "Adapted from a story someone really posted online. Names and details are changed."
+  }
+}

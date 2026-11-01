@@ -1,0 +1,136 @@
+{
+  "situation": "남자친구와 다 좋은데 8년 지기 여사친만 빼고. 오늘 영화 약속이 또 그녀 때문에 취소됐다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "우리 나라에선 정상이야",
+    "language": "ko",
+    "setting": "저녁 8시 함께 사는 집. 휴대폰 속 영화표 두 장, 코트를 반쯤 입은 그, 손에 든 열쇠.",
+    "user_role": "그의 여자친구",
+    "user_goal": "질투하는 사람이 되지 않고 선을 긋는다.",
+    "user_knows": [
+      "그는 자기가 자란 곳에선 이런 우정이 흔하다고 한다",
+      "그녀는 얼마 전 연인과 헤어졌다"
+    ],
+    "cast": [
+      {
+        "name": "정우",
+        "role": "남자친구",
+        "appearance": "Man about 27, dark curly hair, coat half on, car keys in hand, apologetic eyes",
+        "voice": "다정하고 표현이 크다, '지금 나 필요하대'",
+        "gender": "m",
+        "history": "2년 사귀었다.",
+        "enters_at": 0,
+        "goal": "둘 다 챙기고 싶다",
+        "secret": "연락을 줄이자고 말했더니 그녀가 이제 아무도 없다고 했다",
+        "reveal_when": "그는 이 모든 게 어떤지 물을 때",
+        "red_lines": [
+          "명령으로는 절교하지 않는다"
+        ],
+        "mood": {
+          "trust": 65,
+          "patience": 55
+        }
+      },
+      {
+        "name": "루시아",
+        "role": "영상 통화의 여사친",
+        "appearance": "Woman about 27, messy bun, tear-stained, blanket around her shoulders, seen on a phone video call",
+        "voice": "울먹이다가 의외로 날카롭다",
+        "gender": "f",
+        "history": "좋아하려 애썼고 몇 번이나 그렇게 말했다.",
+        "enters_at": 2,
+        "goal": "친구를 지킨다",
+        "secret": "당신이 밀려난 걸 알고 미안하다고 말하려 했다",
+        "reveal_when": "직접 다정하게 말을 걸 때",
+        "red_lines": [
+          "없는 사람 취급은 못 참는다"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 45
+        }
+      },
+      {
+        "name": "내 친구 다은",
+        "role": "전화 온 내 친구",
+        "appearance": "Woman about 28, in a bright kitchen, seen on a phone video call, stirring a pot",
+        "voice": "직설적이고 다정하다",
+        "gender": "f",
+        "history": "그녀에게 다 말해 왔다.",
+        "enters_at": 5,
+        "goal": "당신이 원하는 걸 말하게 한다",
+        "secret": "같은 일을 겪었고 당신에게 물을 질문이 하나 있다",
+        "reveal_when": "너라면 어쩌겠냐고 물을 때",
+        "red_lines": [
+          "대신 결정해 주지 않는다"
+        ],
+        "mood": {
+          "trust": 80,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "정우",
+    "opening_line": "알아, 영화. 근데 걔가 오늘 진짜 안 좋아. 20분만, 응?",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "손에 든 휴대폰이 울린다. 그가 받더니 화면을 당신 쪽으로도 돌린다.",
+        "enters": [
+          "루시아"
+        ],
+        "shot": "A man holds up a phone showing a tearful woman with a blanket on a video call."
+      },
+      {
+        "at_turn": 5,
+        "description": "당신 휴대폰도 울린다. 때맞춰 친구다.",
+        "enters": [
+          "내 친구 다은"
+        ],
+        "shot": "A second phone held up shows a woman in a bright kitchen on a video call."
+      },
+      {
+        "at_turn": 7,
+        "description": "그가 코트를 벗고 열쇠를 선반에 놓지만 앉지는 않는다.",
+        "enters": [],
+        "shot": "The man stands in the hallway with his coat off, keys on a shelf, looking at you."
+      }
+    ],
+    "success_criteria": [
+      "최후통첩 없이 분명한 선을 말한다",
+      "그가 겪는 일을 듣는다",
+      "여사친에게 직접 말한다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_bestie_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_bestie_2_scene.jpg",
+      "5": "/presets/img/ko_bestie_5_scene.jpg",
+      "7": "/presets/img/ko_bestie_7_scene.jpg"
+    },
+    "clues": {
+      "정우": {
+        "img": "/presets/img/clue_bestie_0.jpg",
+        "name": "그가 보낸 문자"
+      },
+      "루시아": {
+        "img": "/presets/img/clue_bestie_1.jpg",
+        "name": "셋이 찍은 사진"
+      },
+      "내 친구 다은": {
+        "img": "/presets/img/clue_bestie_2.jpg",
+        "name": "친구의 오래된 일기"
+      }
+    },
+    "basis": "온라인에 실제로 올라온 사연을 각색했습니다. 이름과 세부는 바꿨습니다."
+  }
+}
