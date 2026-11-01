@@ -630,7 +630,7 @@ async function offerReplies(){
   $("choices").innerHTML = "";
   if(!CHOICES || AUTO) return;
   let r;
-  try{ r = await post("/api/replies", {id:S.id, tone:tone()}); }catch(e){ console.warn(e); return; }
+  try{ r = await post("/api/replies", {id:S.id, tone:myTone()}); }catch(e){ console.warn(e); return; }
   if(seq !== choiceSeq || state !== "listen") return;
   $("choices").classList.remove("held");
   $("choices").innerHTML = `<div class="pick">${PICK_S ? "<i></i>" : "<b></b>"}
@@ -1124,7 +1124,7 @@ function stopAuto(){ AUTO = false; $("stage").classList.remove("auto"); }
 async function autoRun(){
   $("stage").classList.add("auto");
   $("typed").disabled = false; $("doneBtn").disabled = true; $("heard").innerHTML = "";
-  const nextLine = () => post("/api/auto", {id:S.id, tone:tone()});
+  const nextLine = () => post("/api/auto", {id:S.id, tone:myTone()});
   let next = nextLine();
   while(AUTO){
     let say;
@@ -1521,7 +1521,7 @@ async function loadRecent(){
 const TONES = {en:["Casual, like with friends", "Polite and careful", "Playful and teasing", "Blunt, few words"],
   ko:["친구처럼 편한 반말", "예의 바른 존댓말", "장난기 많은 말투", "직설적이고 짧게"],
   ja:["友だちのようにカジュアル", "丁寧で落ち着いた", "冗談まじり", "率直で短く"]};
-const tone = () => store.get("standin-tone");
+const myTone = () => store.get("standin-tone");
 function renderTones(){
   $("otones").innerHTML = TONES[UI].map(x => `<button type="button">${esc(x)}</button>`).join("");
   $("otones").querySelectorAll("button").forEach(b => b.onclick = () => {
@@ -1530,7 +1530,7 @@ function renderTones(){
   });
 }
 function step(n){ [0, 1, 2].forEach(i => $("o" + i).classList.toggle("hidden", i !== n)); }
-function onboard(){ show("onboard"); step(0); $("oname").value = store.get("standin-name"); $("otone").value = tone(); renderTones(); }
+function onboard(){ show("onboard"); step(0); $("oname").value = store.get("standin-name"); $("otone").value = myTone(); renderTones(); }
 function startBuilding(){
   store.set("standin-seen", "1");
   show("build");
