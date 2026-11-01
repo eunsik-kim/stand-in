@@ -365,7 +365,7 @@ h2{margin:0;font-size:22px}
       <button class="tbtn" id="autoBtn" data-t="cAutoShort"></button>
       <button class="ibtn send" id="doneBtn" data-ic="send" data-tl="bSendTip"></button>
     </div>
-    <div class="autobar"><span data-t="aRunning"></span><span class="row"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><button class="primary" id="takeBtn" data-t="aTake"></button></span></div>
+    <div class="autobar"><span></span><span class="row"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><button class="primary" id="takeBtn" data-t="aTake"></button></span></div>
   </div></div>
   <div class="me"><video id="selfView" class="self" autoplay muted playsinline></video>
     <span class="badge cam-state"><span id="eyeDot" class="dot"></span><span id="eyeText" data-t="noCam"></span></span></div>
@@ -561,7 +561,7 @@ function stopVoice(){ speechSynthesis.cancel(); nowPlaying?.pause(); nowPlaying?
 
 async function speak(text, who, prepared){
   const estimate = Math.min(6000, 700 + text.length * 70) / SPEED;
-  if(!$("voiceOut").checked || !text){ subtitle(who, text, estimate / 1000); return sleep(estimate); }
+  if(!$("voiceOut").checked || !text){ subtitle(who, text, estimate / 1000); return sleep(estimate + HOLD / SPEED); }
   const blob = await (prepared ?? prepareVoice(text, who));
   if(!blob){ subtitle(who, text, estimate / 1000); return browserVoice(text, who); }
   const url = URL.createObjectURL(blob), audio = new Audio(url);
@@ -729,12 +729,13 @@ async function finish(typedText){
 }
 
 // ---------- a turn arrives as events; a queue keeps caption, face and voice in step ----------
-async function streamTurn(body){
+async function streamTurn(body, lead, onServerDone){
   const r = await fetch("/api/turn", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
   if(!r.ok) throw new Error(await r.text());
   const queue = [], lines = {};
   let closed = false, wake = null, done = null;
   const push = job => { queue.push(job); wake?.(); };
+  if(lead) push(() => lead);  // their reply is being written, but it waits for this line to finish
 
   const worker = (async () => {
     while(true){
@@ -778,7 +779,7 @@ async function streamTurn(body){
       setFace(i, ev.expression); addLog(ev.speaker, ev.say);
     });
     if(ev.type === "secret" && !S.assets?.scene) push(() => { S.found = (S.found || 0) + 1; showFound(); toast(`${t("cSecret")}: ${ev.speaker}`); });
-    if(ev.type === "done"){ done = ev; if(ev.cues) addLog(t("seen"), ev.cues, true); }
+    if(ev.type === "done"){ done = ev; onServerDone?.(ev); if(ev.cues) addLog(t("seen"), ev.cues, true); }
   };
 
   const reader = r.body.getReader(), dec = new TextDecoder();
@@ -872,7 +873,7 @@ function addLog(who, text, cue){
 }
 
 // subtitles: long lines are split into readable pieces, and each piece appears as it is spoken
-const SUB_LEN = 34;
+const SUB_LEN = 34, HOLD = 800;  // a beat after each line, so it can land
 function pieces(text){
   const out = []; let rest = text.trim();
   while(rest.length > SUB_LEN){
@@ -1068,21 +1069,24 @@ $("bmic").onclick = () => { talk.on = !talk.on; micButton(); if(talk.on) talkLis
 let AUTO = false;
 async function autoRun(){
   $("stage").classList.add("auto");
+  const nextLine = () => post("/api/auto", {id:S.id});
+  let next = nextLine();
   while(AUTO){
     let say;
-    try{ say = (await post("/api/auto", {id:S.id})).say; }catch(e){ break; }
+    try{ say = (await next).say; }catch(e){ break; }
     if(!AUTO) break;
     state = "wait"; addLog(t("me"), say);
     const ms = Math.min(3500, 600 + say.length * 70) / SPEED;
     subtitle(t("me"), say, ms / 1000);
-    await sleep(ms + 200);
     turn++; $("turnText").textContent = `${turn} / ${S.scenario.max_turns}`;
-    setThinking(true);
-    let done = null;
-    try{ done = await streamTurn({id:S.id, say, signals:{}}); }catch(e){ console.warn(e); }
-    setThinking(false);
-    if(!done){ break; }
+    let upcoming = null, done = null;
+    // both sides are prepared ahead, so nobody waits between lines
+    try{
+      done = await streamTurn({id:S.id, say, signals:{}}, sleep(ms + HOLD / SPEED), ev => { if(AUTO && !ev.ended) upcoming = nextLine(); });
+    }catch(e){ console.warn(e); }
+    if(!done) break;
     if(done.ended){ AUTO = false; $("stage").classList.remove("auto"); over(done.ended); return; }
+    next = upcoming || nextLine();
   }
   AUTO = false; $("stage").classList.remove("auto"); listen();
 }
