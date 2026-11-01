@@ -55,7 +55,11 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .top .acts{display:flex;align-items:center;gap:8px;flex:none}
 .top .acts button{background:#0006;color:#fff;border-radius:10px}
 #turnText{color:var(--mute);font-size:14px;margin-right:6px}
-.caption{position:absolute;z-index:4;left:50%;bottom:112px;transform:translateX(-50%);width:min(760px,calc(100% - 32px));padding:10px 20px;border-radius:14px;background:#000000b8;backdrop-filter:blur(8px);font-size:19px;line-height:1.45;text-align:center}
+.capbox{position:absolute;z-index:4;left:50%;bottom:112px;transform:translateX(-50%);width:min(760px,calc(100% - 32px))}
+.caption:empty+.smenu{display:none}
+.capbox .smenu{position:absolute;right:6px;top:6px}
+.capbox .tbtn{padding:3px 8px;font-size:12px;color:#c9cdd6}
+.caption{padding:10px 56px;border-radius:14px;background:#000000b8;backdrop-filter:blur(8px);font-size:19px;line-height:1.45;text-align:center}
 .caption:empty{display:none}
 .caption .who{display:block;font-size:13px;font-weight:700;color:var(--acc);margin-bottom:2px}
 .caption.narr{font-style:italic;color:#c9cdd6;font-size:17px}
@@ -76,7 +80,7 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .choices .pick button:hover{background:#2a2f3a}
 .pick .ic{width:13px;height:13px}
 .choices.held .pick i{visibility:hidden}.choices.held .pick .pp{display:none}
-#stage:has(.choices:not(:empty)) .caption{bottom:calc(92px + var(--choices,132px))}
+#stage:has(.choices:not(:empty)) .capbox{bottom:calc(92px + var(--choices,132px))}
 .acts button.off{opacity:.55}
 .smenu{position:relative}
 .spop{position:absolute;right:0;bottom:calc(100% + 8px);min-width:84px;padding:4px;border-radius:12px;background:#14161cf5;box-shadow:0 0 0 1px #ffffff1f,0 8px 24px #0009;display:grid;gap:2px}
@@ -129,7 +133,7 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .shot.next{opacity:0;transition:opacity .28s ease,transform 1.4s ease}
 .pov .shot{display:block}.pov .room{display:none}
 .pov #coachBtn{display:none}
-.pov .caption{background:#000000a6;bottom:104px}
+.pov .caption{background:#000000a6}.pov .capbox{bottom:104px}
 .pov .dock{background:#14161cc2}
 .pov .top{background:linear-gradient(#000000a0,transparent)}
 .tour{position:absolute;z-index:9;inset:0;display:grid;place-items:center;padding:16px;background:#08090c99}
@@ -137,7 +141,7 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .tcard ol{margin:0;padding-left:20px;display:grid;gap:8px;line-height:1.5}
 .tcard button{justify-self:end;padding:10px 22px}
 .logopen .room{padding-right:386px}
-.logopen .caption,.logopen .dock{left:calc(50% - 187px);width:min(680px,calc(100% - 412px))}
+.logopen .capbox,.logopen .dock{left:calc(50% - 187px);width:min(680px,calc(100% - 412px))}
 .coached.logopen .caption,.coached.logopen .dock{left:calc(50% - 38px);width:calc(100% - 724px)}
 .logopen .me{display:none}
 
@@ -273,7 +277,7 @@ details[open] summary{margin-bottom:8px}
 .tp .try{color:var(--good)}
 section{margin:28px 0;display:grid;gap:12px}
 h2{margin:0;font-size:22px}
-@media(max-width:700px){.logopen .room{padding-right:12px}.logopen .caption,.logopen .dock{left:50%;width:calc(100% - 32px)}.devices{grid-template-columns:1fr}.tl .l{grid-template-columns:1fr}.cast{--cols:1!important}.cast[data-n="1"]{grid-template-columns:minmax(0,1fr)}.me{width:92px;top:68px;right:18px;bottom:auto}.caption{font-size:16px;bottom:96px}.top .setting{display:none}}
+@media(max-width:700px){.logopen .room{padding-right:12px}.logopen .capbox,.logopen .dock{left:50%;width:calc(100% - 32px)}.devices{grid-template-columns:1fr}.tl .l{grid-template-columns:1fr}.cast{--cols:1!important}.cast[data-n="1"]{grid-template-columns:minmax(0,1fr)}.me{width:92px;top:68px;right:18px;bottom:auto}.caption{font-size:16px}.capbox{bottom:96px}.top .setting{display:none}}
 </style>
 
 <!-- ONBOARDING: first visit, or from the settings button -->
@@ -355,7 +359,7 @@ h2{margin:0;font-size:22px}
     <div class="ttl"><b id="title"></b><div class="setting" id="setting"></div></div>
     <div class="acts"><span id="turnText"></span><button class="ibtn" id="logBtn" data-ic="chat" data-tl="log"></button><button class="ibtn" id="endBtn" data-ic="exit" data-tl="finish"></button></div>
   </div>
-  <div class="caption" id="caption"></div>
+  <div class="capbox"><div class="caption" id="caption"></div><span class="smenu"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><span class="spop hidden" id="speedPop"></span></span></div>
   <div class="choices" id="choices"></div>
   <div class="dock"><div class="mic">
     <div class="status" id="micStatus"></div>
@@ -364,7 +368,6 @@ h2{margin:0;font-size:22px}
       <div class="field"><div class="heard" id="heard"></div><input type="text" id="typed" data-tp="typePh"></div>
       <button class="ibtn" id="choiceBtn" data-ic="list" data-tl="cShow"></button>
       <button class="ibtn" id="againLine" data-ic="undo" data-tl="bRetryTip"></button>
-      <span class="smenu"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><span class="spop hidden" id="speedPop"></span></span>
       <button class="tbtn" id="autoBtn" data-t="cAutoShort"></button>
       <button class="ibtn send" id="doneBtn" data-ic="send" data-tl="bSendTip"></button>
     </div>
