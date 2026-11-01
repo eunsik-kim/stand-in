@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "Elena",
-    "opening_line": "No — no way. Ten years and you just walk in here soaked while I'm having the worst hair day of my life?",
+    "opening_line": "No— no way. Ten years and— you just walk in, soaked like that, and I'm— ugh, my hair?",
     "phases": [
       "shocked reunion",
       "nostalgia with sharp edges",
@@ -84,23 +84,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "Priya bursts in soaked, freezes when she sees you with Elena, and announces the street outside is flooded and closed — no one can leave.",
+        "description": "Priya stumbles in dripping, stops cold at your table, gasps the street's flooded shut— nobody's leaving.",
         "enters": [
           "Priya"
         ],
-        "shot": "Door slams open, rain blows in, everyone turns to stare at your table."
+        "shot": "Priya is by the front door with rain outside, you and Elena are at a table near the window, other people turn to look."
       },
       {
         "at_turn": 4,
-        "description": "Theo's phone blasts on speaker with your old teacher inviting you and Elena to tomorrow's alumni open-mic as if you're still a couple, and the whole cafe listens.",
+        "description": "Theo's phone blares on speaker, your old teacher invites you and Elena to tomorrow's open-mic as a pair— everyone listens.",
         "enters": [],
-        "shot": "Theo holds the buzzing phone high over the counter, coffee steaming, all eyes ping-ponging between you and Elena."
+        "shot": "Theo is behind the counter with his phone held up, coffee cups steam nearby, you and Elena sit at your table as others look over."
       },
       {
         "at_turn": 6,
-        "description": "Theo and Priya start fighting each other about the past — Theo accuses Priya of always controlling Elena, Priya accuses Theo of turning everyone's pain into a joke.",
+        "description": "Theo snaps at Priya for bossing Elena around, Priya snaps back he jokes through everything— Elena sinks down looking at you.",
         "enters": [],
-        "shot": "Theo leans over the counter pointing, Priya steps up nose-to-nose, Elena sinks down between them looking at you."
+        "shot": "Theo is behind the counter, Priya is in front of the counter near him, Elena sits at the table between them looking at you."
       }
     ],
     "success_criteria": [

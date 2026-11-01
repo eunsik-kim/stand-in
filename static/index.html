@@ -915,7 +915,7 @@ function subtitle(who, text, seconds){
   const parts = pieces(text), total = text.length, t0 = performance.now(), ms = Math.max(600, seconds * 1000);
   let ticked = 0;
   const draw = () => {
-    let shown = Math.min(total, Math.ceil(total * (performance.now() - t0) / ms));
+    let shown = Math.max(1, Math.min(total, Math.ceil(total * (performance.now() - t0) / ms)));
     if(!$("voiceOut").checked && shown - ticked >= 3 && shown < total){ ticked = shown; blip(who); }
     for(const part of parts){
       if(shown <= part.length || part === parts[parts.length - 1]){ caption(who, part.slice(0, shown)); break; }
@@ -926,13 +926,18 @@ function subtitle(who, text, seconds){
   draw(); subTimer = setInterval(draw, 40);
 }
 function caption(who, text){
-  $("caption").className = "caption";
-  $("caption").innerHTML = text ? `<span class="who">${esc(who)}</span>${esc(text)}` : "";
+  const box = $("caption");
+  box.className = "caption";
+  if(!text){ box.textContent = ""; return; }
+  // change only the words: rebuilding the box many times a second makes it flicker
+  if(box.dataset.who === who && box.lastChild?.nodeType === 3){ box.lastChild.nodeValue = text; return; }
+  box.dataset.who = who;
+  box.innerHTML = `<span class="who">${esc(who)}</span>`; box.append(text);
 }
 
 async function playLine(ln){
   if(ln.speaker === "narration"){
-    $("caption").className = "caption narr"; $("caption").textContent = ln.say;
+    $("caption").className = "caption narr"; $("caption").textContent = ln.say; delete $("caption").dataset.who;
     addLog("*", ln.say);
     const leaver = S.scenario.cast.findIndex(c => ln.say.includes(c.name) && /(자리를 뜬다|leaves the|席を立つ)/.test(ln.say));
     if(leaver >= 0) $("p" + leaver).classList.add("left");

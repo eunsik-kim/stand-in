@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "Maya Chen",
-    "opening_line": "Okay, Frank's here, he's given us this one meeting — so hit him with your final number and give him a reason not to walk.",
+    "opening_line": "Okay — Frank's actually here, so — just, give him your number, yeah? Give him a reason to stay.",
     "phases": [
       "Opening numbers",
       "Backup offer pressure",
@@ -84,23 +84,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "Maya's phone buzzes with a message from the backup buyer's agent saying they want an answer tonight. She announces it to the table and Frank immediately hardens and talks about walking.",
+        "description": "Maya's phone lights up, she reads it out loud, Frank leans back and mutters he's done.",
         "enters": [],
-        "shot": "Maya flips her phone face-up glowing on the table, Frank leans back arms crossed and drags the contract toward himself."
+        "shot": "Maya sits at the table with her phone in front of her, Frank sits across with the papers near him."
       },
       {
         "at_turn": 4,
-        "description": "Sofia walks in late from packing and immediately contradicts Frank, saying she just wants this over and done, not a bidding war. Frank snaps at her in front of everyone.",
+        "description": "Sofia rushes in with her tote, says just end it already, Frank cuts her off sharp.",
         "enters": [
           "Sofia Delaney"
         ],
-        "shot": "Door swings open, Sofia drops her tote with keys clattering on the table, Frank's chair scrapes loud as he turns to stare her down."
+        "shot": "Sofia stands by the open door near the table, Frank sits in his chair turned toward her."
       },
       {
         "at_turn": 6,
-        "description": "Maya and Frank erupt at each other — Maya accuses him of moving the goalposts and risking everyone's time, Frank accuses her of siding with the buyer to close quick. Frank issues a 10-minute take-it-or-leave-it deadline.",
+        "description": "Maya half-stands, voice rising at Frank, he points at the clock, shouting ten minutes.",
         "enters": [],
-        "shot": "Maya half-stands knocking her coffee cup, Frank slaps the table and jabs at the wall clock while the room goes silent."
+        "shot": "Maya stands by her chair near the coffee cups, Frank sits at the table under the wall clock."
       }
     ],
     "success_criteria": [
@@ -120,7 +120,8 @@
     "background": "/presets/img/en_apartment_scene.jpg",
     "shots": {
       "2": "/presets/img/en_apartment_2_scene.jpg",
-      "4": "/presets/img/en_apartment_4_scene.jpg"
+      "4": "/presets/img/en_apartment_4_scene.jpg",
+      "6": "/presets/img/en_apartment_6_scene.jpg"
     }
   }
 }

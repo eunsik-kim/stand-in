@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "Inspector Kate Drummond",
-    "opening_line": "Right — quit squirming, yeah? Pockets — c'mon, let's see 'em—",
+    "opening_line": "Right — quit squirming, yeah? Pockets — c'mon, empty 'em —",
     "phases": [
       "Tense one-on-one grilling",
       "Owner bursts in demanding a search",
@@ -84,25 +84,25 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "Vivienne storms into the library demanding an immediate body search and offering a cash reward, turning a quiet grilling into public pressure.",
+        "description": "Vivienne slams in, shawl dripping, jabbing at you for a search right now, flashing cash.",
         "enters": [
           "Vivienne Hale"
         ],
-        "shot": "Library door bangs open, cold draft scatters papers off the desk as Vivienne storms in with wet shawl flying."
+        "shot": "Vivienne stands by the open door next to the desk while you sit in the chair nearby, Kate leaning on the desk."
       },
       {
         "at_turn": 4,
-        "description": "Toby stumbles in claiming staff found the back door ajar, accuses you of slipping out, and starts bickering with Vivienne about who left the cabinet unlocked.",
+        "description": "Toby stumbles in sloshing his glass, yelling you slipped out back, then bickers with Vivienne about the cabinet.",
         "enters": [
           "Toby Vance"
         ],
-        "shot": "Side door creaks open, Toby stumbles in with a half-empty glass as the wall lights flicker and rain rattles the windows."
+        "shot": "Toby stands by the side door holding a glass, Vivienne stands by the bookshelf, you sit in the middle, Kate by the desk."
       },
       {
         "at_turn": 6,
-        "description": "Inspector gets an urgent call that the search team arrives in two minutes, and Vivienne and Toby erupt into a shouting match with each other, leaving you briefly unwatched.",
+        "description": "Kate's phone blares — two minutes — Vivienne and Toby yell at each other, backs turned, you sit unwatched.",
         "enters": [],
-        "shot": "Inspector's phone blares on the desk, the lamp buzzes and dies, Vivienne and Toby square up nose-to-nose under the chandelier."
+        "shot": "Kate sits at the desk by the phone, Vivienne and Toby stand close under the ceiling light, you sit opposite."
       }
     ],
     "success_criteria": [
@@ -120,6 +120,10 @@
   ],
   "assets": {
     "background": "/presets/img/en_suspect_scene.jpg",
-    "shots": {}
+    "shots": {
+      "2": "/presets/img/en_suspect_2_scene.jpg",
+      "4": "/presets/img/en_suspect_4_scene.jpg",
+      "6": "/presets/img/en_suspect_6_scene.jpg"
+    }
   }
 }

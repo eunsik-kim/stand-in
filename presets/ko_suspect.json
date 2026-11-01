@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "강도윤",
-    "opening_line": "자, 아까는 화장실 갔다며? 근데 어... 테라스에선 뭐 한 거야, 그게?",
+    "opening_line": "자, 아까 화장실 갔다며, 어? 근데 테라스는... 거기선 뭐 한 거야, 솔직히",
     "phases": [
       "압박 심문 시작",
       "CCTV 공백으로 의심 증폭",
@@ -85,23 +85,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "형사의 무전기가 울리고 복도 CCTV가 5분간 꺼졌다는 보고가 들어온다. 서재 안 공기가 싸해지며 모두 당신을 쳐다본다.",
+        "description": "무전기에서 지지직 소리가 터지고 복도 화면이 5분 꺼졌단 말이 나온다. 셋이 널 빤히 본다.",
         "enters": [],
-        "shot": "무전기 빨간 불이 깜빡이고 서재 형광등이 지지직거리며 긴장감이 감돈다"
+        "shot": "Three people sitting around a desk under a bright ceiling light, one holding a small black box with a red light blinking"
       },
       {
         "at_turn": 4,
-        "description": "오민혁이 와인잔을 들고 서재에 들어와 당신이 테라스 쪽 복도에서 뭔가 주머니에 넣는 걸 봤다고 주장한다.",
+        "description": "문이 벌컥 열리고 민혁이 와인잔 든 채 들어선다. 테라스 복도에서 네가 주머니에 뭐 넣는 거 봤다며 몰아붙인다.",
         "enters": [
           "오민혁"
         ],
-        "shot": "문이 벌컥 열리며 와인 냄새가 확 퍼지고 세 사람의 시선이 한곳에 모인다"
+        "shot": "A man standing in the open doorway holding a glass, three people seated at a desk turning to look at him"
       },
       {
         "at_turn": 6,
-        "description": "집사가 서재 쓰레기통에서 빈 목걸이 케이스를 발견했다고 알린다. 처리 방식을 두고 주인과 형사가 크게 다툰다.",
+        "description": "집사가 쓰레기통에서 빈 케이스 꺼내 책상에 탁 놓는다. 둘은 어떻게 할지 두고 목소리 높여 맞선다.",
         "enters": [],
-        "shot": "빈 케이스가 책상 위에 탁 놓이고 두 사람이 얼굴 붉히며 맞선다"
+        "shot": "Two people standing face to face beside a wooden desk with a small empty box on it, another person sitting nearby"
       }
     ],
     "success_criteria": [
@@ -125,6 +125,10 @@
   ],
   "assets": {
     "background": "/presets/img/ko_suspect_scene.jpg",
-    "shots": {}
+    "shots": {
+      "2": "/presets/img/ko_suspect_2_scene.jpg",
+      "4": "/presets/img/ko_suspect_4_scene.jpg",
+      "6": "/presets/img/ko_suspect_6_scene.jpg"
+    }
   }
 }

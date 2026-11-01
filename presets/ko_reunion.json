@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "윤채영",
-    "opening_line": "어, 잠깐... 너 맞지? 와, 대박... 십 년 만인데, 너 여전하다, 비 오는데 그냥 막 뛰어들어오고",
+    "opening_line": "어 잠깐만, 어? 너 맞지 — 와 미쳤다, 십 년 만이잖아, 비 오는데 걍 뛰어들어오고 막...",
     "phases": [
       "어색한 첫 인사와 눈치 보기",
       "옛날 얘기와 근황 탐색",
@@ -84,23 +84,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "갑자기 천둥이 치며 카페 불이 깜빡이고 빗소리가 더 거세진다. 민규가 유리문을 잠그며 지금은 나가기 힘들다고 말한다.",
+        "description": "천둥이 꽝 울리고 불이 깜빡여, 빗소리 거세지면 네 옆으로 민규가 가서 유리문을 잠근다.",
         "enters": [],
-        "shot": "창밖 빗줄기가 유리창을 때리고 출입문에 걸린 CLOSED 팻말이 덜컹 흔들린다"
+        "shot": "rain runs down the large front window by the corner table while a man stands at the entrance door with a small hanging sign"
       },
       {
         "at_turn": 4,
-        "description": "젖은 코트 차림의 신지현이 문을 벌컥 열고 들어와 모퉁이 테이블의 두 사람을 보고 멈칫한다.",
+        "description": "젖은 코트 입은 지현이 문 벌컥 열고 들어와, 모퉁이 테이블 너희 둘 보고 우뚝 멈춘다.",
         "enters": [
           "신지현"
         ],
-        "shot": "젖은 발자국이 바닥에 찍히고 세 사람의 시선이 한 점에 모이며 공기가 멈춘다"
+        "shot": "a woman in a wet coat stands near the entrance leaving damp marks on the floor while two people sit at the corner table looking toward her"
       },
       {
         "at_turn": 6,
-        "description": "채영이 먼저 일어나려 하자 지현이 붙잡으며 좀 더 있으라고 하고, 두 친구 사이에 언성이 높아지기 시작한다.",
+        "description": "네가 먼저 일어나려는데 지현이 팔 붙잡고, 목소리 커지면서 카운터 위 컵이 덜그럭 울린다.",
         "enters": [],
-        "shot": "카운터 위 컵이 덜그럭 울리고 두 친구가 서로를 째려보며 테이블 공기가 싸해진다"
+        "shot": "two friends face each other across the corner table while cups sit on the counter nearby in the quiet cafe"
       }
     ],
     "success_criteria": [

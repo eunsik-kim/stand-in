@@ -17,6 +17,7 @@ SPOKEN = (
     "restart, interrupt, use fillers and slang that fit who they are. No tidy full sentences, no explaining, no formal connectors, "
     "no summarising what was just said. In Korean use natural 구어체: contractions like 뭐, 걍, 근데, 아니, 어?, 그니까, endings like -거든, -잖아, -는데, -지 뭐, "
     "and 반말 or 존댓말 as the relationship really would; never 문어체 such as '-습니다만', '따라서', '그러나', '말씀드립니다' unless the person is truly that formal. "
+    "Vary how people talk: never lean on the same filler or tag twice in a row, like 어? or 알지? or yeah?, and give each person their own rhythm. "
     "In English use contractions and fragments. In Japanese use casual spoken forms that fit the relationship."
 )
 

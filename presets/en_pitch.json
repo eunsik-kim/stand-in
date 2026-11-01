@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "Maya Chen",
-    "opening_line": "Okay, forget slide one — you told me on Zoom you had real traction, so why shouldn't we walk in the next ten minutes?",
+    "opening_line": "Okay, forget — forget slide one, you said on Zoom, like, real traction, so... why shouldn't we just — walk? Ten minutes, huh?",
     "phases": [
       "The Pitch",
       "The Squeeze",
@@ -84,23 +84,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "Priya rushes in late with a fresh TechCrunch alert — a direct competitor just announced a massive raise — and both partners turn to you for why you still win.",
+        "description": "Priya bursts in with a TechCrunch printout, competitor's huge raise flashing, everyone turns to you for an answer.",
         "enters": [
           "Priya Nair"
         ],
-        "shot": "Door bangs open, Priya slaps a printout on the table, both partners swivel away from the deck to stare at you."
+        "shot": "Priya stands by the door with paper in hand, Maya and David sit at the table looking toward you."
       },
       {
         "at_turn": 4,
-        "description": "Maya's phone buzzes on speaker — the fund's CFO reports another portfolio company just missed payroll — and David immediately pivots to interrogating your burn and cash discipline.",
+        "description": "Maya's phone buzzes on speaker, CFO says payroll was missed, David leans in pressing you on burn.",
         "enters": [],
-        "shot": "Maya's iPhone lights up on speaker in the middle of the table, the glass room goes dead quiet as the CFO's voice fills it."
+        "shot": "Maya sits at the middle of the table with her phone in front, David and Priya sit nearby listening."
       },
       {
         "at_turn": 6,
-        "description": "Maya and David erupt into an open fight over whether to kill the deal now or keep digging, forcing you to step in while time runs out.",
+        "description": "Maya stands, David laughs coldly, voices rise over cutting the deal, you must jump in fast.",
         "enters": [],
-        "shot": "Maya shoves her chair back and stands, David tosses his pen down with a cold laugh, Priya sinks back as the air turns hostile."
+        "shot": "Maya stands behind her chair, David sits with a pen on the table, Priya sits back in her seat."
       }
     ],
     "success_criteria": [

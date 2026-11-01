@@ -72,7 +72,7 @@
       }
     ],
     "opening_speaker": "박만수",
-    "opening_line": "아 형님, 그러니까— 이건 진짜, 남는 게 없다니까, 어?",
+    "opening_line": "아 형님, 그니까— 이건 진짜, 남는 게 없다니까, 어?",
     "phases": [
       "단독 흥정",
       "새치기 경매로 번짐",
@@ -81,25 +81,25 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "최재혁이 차 문 손잡이를 잡으며 끼어들어 나도 이 차 본다고 선언한다. 박만수가 두 사람을 번갈아 보며 누구 먼저냐는 식으로 경매 분위기를 만든다.",
+        "description": "최재혁이 문 손잡이 낚아채며 끼어들고, 박만수가 너랑 쟤 번갈아 보며 자, 누구 먼저 할래? 몰아간다.",
         "enters": [
           "최재혁"
         ],
-        "shot": "젖은 우산 접어 보닛에 탁 올리며 최재혁이 두 사람 사이로 파고드는 장면"
+        "shot": "Choi putting a folded wet umbrella on the car hood while standing between two men in the rainy lot"
       },
       {
         "at_turn": 4,
-        "description": "직원 오지훈이 서류봉투 들고 뛰어들어와 박만수와 말이 엇갈리며 티격태격한다. 가격 얘기와 서류 얘기가 꼬이며 누구 말이 맞는지 헷갈리기 시작한다.",
+        "description": "오지훈이 봉투 들고 뛰어들어오고, 박만수랑 말이 꼬이면서 서류가 펄럭이고, 너는 누구 말이 맞나 헷갈려 쳐다본다.",
         "enters": [
           "오지훈"
         ],
-        "shot": "바람에 비닐 서류봉투가 펄럭이며 세 사람이 한 장을 동시에 잡으려는 모습"
+        "shot": "three people reaching together for the same plastic paper bag in the wind beside a car"
       },
       {
         "at_turn": 6,
-        "description": "최재혁에게 걸려온 전화가 크게 울리며 분위기가 뒤집힌다. 박만수와 최재혁이 서로 목소리를 높이며 다투고 사용자는 어정쩡한 심판이 된다.",
+        "description": "전화벨 크게 울리고 셋 시선이 화면에 꽂히고, 박만수 팔짱 끼고 노려보며 목소리 커지고, 너 끼어 눈치본다.",
         "enters": [],
-        "shot": "울리는 전화벨에 셋 시선이 폰 화면으로 꽂히고 박만수가 팔짱 끼고 최재혁을 노려보는 정지 화면"
+        "shot": "three men standing around a car in light rain looking at a ringing phone, one with arms crossed"
       }
     ],
     "success_criteria": [

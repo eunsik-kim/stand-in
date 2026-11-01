@@ -73,7 +73,7 @@
       }
     ],
     "opening_speaker": "강민재",
-    "opening_line": "야, 탐정 양반 — 나 진짜 그때 잤다니까? 뭘 자꾸 새벽, 새벽 그래, 어?",
+    "opening_line": "야 탐정 양반, 나 그때 걍 잤다니까? 새벽이 뭔데, 그니까—",
     "phases": [
       "알리바이 캐묻기",
       "서로 물고뜯기",
@@ -82,23 +82,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "오병호가 눈 묻은 채 현관으로 들어와 외벽 쪽 창문 하나가 안쪽에서 열려 있었다고 소리친다. 단순 외부 도둑이 아니라는 얘기로 분위기가 뒤집힌다.",
+        "description": "눈을 털지도 않고 오병호가 들어와 외벽 창문이 안쪽에서 열려 있었다고 당신 쪽에 외친다.",
         "enters": [
           "오병호"
         ],
-        "shot": "현관문이 벌컥 열리며 눈바람이 커튼을 확 흔들고 모두 입구를 돌아본다"
+        "shot": "A man stands by the open front door with snow on his shoulders while two people near the stove turn to look at him."
       },
       {
         "at_turn": 4,
-        "description": "강민재와 유지나가 서로를 범인이라 몰며 말싸움이 붙는다. 보험 사기냐 작업 망친 거 숨기냐는 험한 말이 오가고 당신에게 당장 편 들라고 압박한다.",
+        "description": "탁자가 밀리며 강민재와 유지나가 일어나 서로 소리를 지르고 당신에게 편 들라 한다.",
         "enters": [],
-        "shot": "난로 앞 탁자가 쿵 밀리고 두 사람이 벌떡 일어나 얼굴을 붉히며 맞선다"
+        "shot": "Two people stand facing each other across a low table near the stove while you sit watching them."
       },
       {
         "at_turn": 6,
-        "description": "주인 무전으로 제설이 늦어 길이 뚫리기까지 30분뿐이라고 방송이 나온다. 동시에 복도 젖은 발자국 사진이 단체 카톡으로 돌며 마지막 추궁이 시작된다.",
+        "description": "천장 스피커에서 30분 방송이 울리고 세 휴대폰이 동시에 진동하며 화면을 본다.",
         "enters": [],
-        "shot": "천장 스피커에서 지지직 무전이 울리고 세 사람의 휴대폰이 동시에 진동하며 불빛이 켜진다"
+        "shot": "Three people sit around the living room looking down at glowing phones while snow shows outside the windows."
       }
     ],
     "success_criteria": [
@@ -116,6 +116,10 @@
   ],
   "assets": {
     "background": "/presets/img/ko_detective_scene.jpg",
-    "shots": {}
+    "shots": {
+      "2": "/presets/img/ko_detective_2_scene.jpg",
+      "4": "/presets/img/ko_detective_4_scene.jpg",
+      "6": "/presets/img/ko_detective_6_scene.jpg"
+    }
   }
 }

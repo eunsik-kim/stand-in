@@ -72,7 +72,7 @@
       }
     ],
     "opening_speaker": "박성규",
-    "opening_line": "자, 지난번에 다 말씀드렸죠? 오늘은 더 깎을 생각 없으니까, 하실 거면 하시고 아니면 여기서 접읍시다.",
+    "opening_line": "자, 지난번에 다 했잖아, 오늘은 깎고 뭐고 없어, 할 거면 해, 아님 걍 접어",
     "phases": [
       "최종가 탐색: 서로의 한계 확인",
       "합류와 균열: 아내 등장과 매도 측 갈등",
@@ -81,23 +81,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "상담실 문이 열리며 김정애가 들어와 남편 옆에 앉는다. 집 얘기는 자신도 결정권이 있다며 강경한 태도로 합류해 분위기가 매도인 우세로 기운다.",
+        "description": "유리문이 열리고 김정애가 봉투 내려놓고 남편 옆에 앉아 네 앞에서도 목소리 높인다.",
         "enters": [
           "김정애"
         ],
-        "shot": "닫혀 있던 유리문이 벌컥 열리며 김정애가 서류봉투를 탁 내려놓고 남편 옆에 앉는 장면"
+        "shot": "A woman walks through a glass door and sits next to a man at a small table with papers on it"
       },
       {
         "at_turn": 4,
-        "description": "중개수수료 문제로 박성규와 최미라가 서로 목소리를 높이며 다투기 시작한다. 매수인을 잊은 채 두 사람이 책임을 떠넘기며 테이블이 흔들린다.",
+        "description": "최미라가 펜 놓으며 따지고 박성규는 팔짱 끼고 뒤로 젖혀 맞받는다, 테이블이 덜컹거린다.",
         "enters": [],
-        "shot": "최미라가 펜을 탁 내려놓고 박성규를 째려보고 박성규가 팔짱을 낀 채 몸을 뒤로 젖히는 장면"
+        "shot": "A woman and a man sit facing each other at a small table with a pen on it, the man leaning back with arms crossed"
       },
       {
         "at_turn": 6,
-        "description": "최미라의 휴대폰이 울리고 다른 매수 희망 팀이 내일 집을 보겠다고 말한다. 최미라가 오늘 10분 안에 정하지 않으면 다음으로 넘어간다고 마감을 압박한다.",
+        "description": "휴대폰 울리고 최미라가 화면 보여주며 10분 안에 정하라고 네게 재촉한다.",
         "enters": [],
-        "shot": "테이블 위에서 휴대폰 화면이 번쩍이며 세 사람의 시선이 일제히 화면에 쏠리는 장면"
+        "shot": "Three people sit around a small table looking at a phone glowing on the table"
       }
     ],
     "success_criteria": [

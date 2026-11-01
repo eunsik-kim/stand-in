@@ -111,6 +111,7 @@ def compile_scenario(writer: LLM, checker: LLM, situation: str, material: str = 
            "- 3-4 people in total, and one or two of them are not there at first: they have enters_at set to the turn they walk in, and an event with them in `enters`.\n"
            "- Exactly 3 events, at turns 2, 4 and 6: real turning points that change what the scene is about (someone walks in with news, a phone call exposes something, "
            "two of the others start fighting each other). Each one raises the stakes or flips the situation. Each has `shot`: a short visual description of how the room changes.\n"
+           "- Each event description is one short line of what we see and hear happen, like a line in a screenplay, addressed to 'you' if needed. Never say 'the user' and never explain the drama.\n"
            "- The others have conflicts with each other too, not only with the user. They interrupt, take sides, say funny or painful things.\n"
            "- The opening line grabs immediately, mid-situation. No small talk. max_turns 8.\n" if episode else "")
         + "Design the scene. Rules:\n"

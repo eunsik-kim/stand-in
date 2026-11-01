@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "Marcus Webb",
-    "opening_line": "Oh good, you're up — tell her I didn't touch her damn painting, I was out shovelin' since like—",
+    "opening_line": "Oh good, you're up — tell her I didn't — I was out shovelin' since like—",
     "phases": [
       "Crossed accusations",
       "Timelines crack",
@@ -84,23 +84,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "Priya bursts in from the hall saying the back deck door that was bolted last night is now banging open with fresh footprints in the snow.",
+        "description": "Priya bursts in dripping wet, freezing wind howls behind her as she yells at you about the back door.",
         "enters": [
           "Priya Desai"
         ],
-        "shot": "Back hallway door slams in wind, blast of cold and snow swirls into the warm living room as Priya stumbles in dripping."
+        "shot": "Priya stands in the back hallway doorway, snow on her coat, others sit near the fire looking up."
       },
       {
         "at_turn": 4,
-        "description": "The lodge landline rings and Marcus answers on speaker - it's Eleanor's insurer confirming she called to report a theft early this morning before telling anyone in the lodge.",
+        "description": "The landline rings, Marcus hits speaker, a calm voice fills the room and Eleanor's smile fades.",
         "enters": [],
-        "shot": "Crackling speakerphone on the mantel fills the room, everyone freezes around the fire as Eleanor's smile drops."
+        "shot": "Everyone gathers around the fireplace near the mantel, looking at the small black phone on the shelf."
       },
       {
         "at_turn": 6,
-        "description": "The radio crackles that the plow is ten minutes out, Eleanor tries to slip out to the hall and Marcus physically blocks her, and they start shouting over each other.",
+        "description": "The radio crackles about the plow, Eleanor heads for the hall, Marcus steps in front, voices rise over each other.",
         "enters": [],
-        "shot": "Chairs scrape back, firelight flickers as Eleanor lunges for the hallway and Marcus steps into the doorway chest-to-chest."
+        "shot": "Eleanor stands by the hallway entrance, Marcus stands in the doorway, chairs sit around the low fire."
       }
     ],
     "success_criteria": [
@@ -119,7 +119,9 @@
   "assets": {
     "background": "/presets/img/en_detective_scene.jpg",
     "shots": {
-      "4": "/presets/img/en_detective_4_scene.jpg"
+      "4": "/presets/img/en_detective_4_scene.jpg",
+      "2": "/presets/img/en_detective_2_scene.jpg",
+      "6": "/presets/img/en_detective_6_scene.jpg"
     }
   }
 }

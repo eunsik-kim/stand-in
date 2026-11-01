@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "최서연",
-    "opening_line": "야 잠깐, 진짜... 딱 하나만 지울 수 있다며? 너... 지울 거야?",
+    "opening_line": "야 잠깐만, 그니까... 진짜 딱 하나 지울 수 있음... 너, 지울 거야?",
     "phases": [
       "농담처럼 던진 질문",
       "지훈 합류로 판 커지기",
@@ -84,23 +84,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "옥상 철문이 벌컥 열리며 지훈이 편의점 봉지를 들고 들어온다. 늦은 사과 대신 뜬금없는 소식을 꺼내 분위기가 뒤집힌다.",
+        "description": "철문이 벌컥 열리고 지훈이 편의점 봉지 들고 들어와 뜬금없는 말을 꺼낸다.",
         "enters": [
           "김지훈"
         ],
-        "shot": "녹슨 철문 삐걱 소리와 함께 형광등이 깜빡이고 빈 소주병이 바람에 데구르르 구른다"
+        "shot": "Three friends on a rooftop mat at night, one young man standing by the open door with a store bag, two sitting near bottles."
       },
       {
         "at_turn": 4,
-        "description": "민준의 가벼운 장난 한마디에 서연이 폭발한다. 옛날 일까지 꺼내며 두 사람이 서로 물고 늘어진다.",
+        "description": "서연이 캔을 탁 내려놓고 벌떡 일어나고 민준이 굳은 얼굴로 라이터만 딸깍인다.",
         "enters": [],
-        "shot": "서연이 캔을 탁 내려놓고 벌떡 일어나고 민준은 웃던 얼굴이 굳어 라이터만 딸깍거린다"
+        "shot": "A young woman standing by a mat with cans and food, two young men sitting, one holding a small lighter."
       },
       {
         "at_turn": 6,
-        "description": "아래층 베란다 불이 켜지고 계단에서 관리인 발소리가 들린다. 5분 안에 조용히 해야 한다는 압박이 생긴다.",
+        "description": "아래층 베란다에 불 켜지고 계단에서 발소리 들리며 셋이 난간 쪽을 본다.",
         "enters": [],
-        "shot": "난간 너머 아래층 불이 번쩍 켜지고 계단 센서등이 차례로 켜지며 술자리 공기가 싸해진다"
+        "shot": "Three friends sitting close together on a rooftop mat, looking toward the railing, with a flickering light above them."
       }
     ],
     "success_criteria": [
@@ -125,6 +125,10 @@
   ],
   "assets": {
     "background": "/presets/img/ko_debate_scene.jpg",
-    "shots": {}
+    "shots": {
+      "2": "/presets/img/ko_debate_2_scene.jpg",
+      "4": "/presets/img/ko_debate_4_scene.jpg",
+      "6": "/presets/img/ko_debate_6_scene.jpg"
+    }
   }
 }

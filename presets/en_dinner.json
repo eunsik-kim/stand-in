@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "Frank",
-    "opening_line": "Butt in chair, plates are hot — you said on the phone you got big news, so spit it out before your mother interrogates the hell out of you.",
+    "opening_line": "Sit, sit — food's gettin' cold. You said on the phone, uh, big news, so — c'mon, out with it 'fore your mother starts in.",
     "phases": [
       "The Announcement",
       "The Pile-On",
@@ -84,23 +84,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "Josh bursts in late with a store-bought pie, laughing that someone at church already told Mom you left your job — suddenly it's not your secret to tell anymore and everyone talks at once.",
+        "description": "Josh barges in with a pie, laughing about church gossip that you quit, and everyone starts talking over you at once.",
         "enters": [
           "Josh"
         ],
-        "shot": "Front door slams, cold air hits the dining room, Josh drops keys and pie box on the sideboard and drags a chair too close to you."
+        "shot": "Josh stands by the sideboard with keys and a pie box, then sits in a chair pulled close beside you."
       },
       {
         "at_turn": 4,
-        "description": "Frank's phone blares on speaker — it's his buddy Ray from your old workplace asking about your empty desk and if you're coming in Monday. Everyone freezes and stares at you to answer.",
+        "description": "Frank's phone rings on speaker, Ray asks about your empty desk and Monday, and everyone goes quiet staring at you.",
         "enters": [],
-        "shot": "Frank fumbles the buzzing phone onto speaker in the middle of the pot roast, gravy boat wobbling as everyone leans in to listen."
+        "shot": "Frank sits at the table with his phone by the pot roast and gravy boat while everyone leans in to listen."
       },
       {
         "at_turn": 6,
-        "description": "Diane and Frank snap at each other about meddling and telling the neighbors your business, forgetting you for a full minute while old money-and-respect resentments boil over.",
+        "description": "Diane and Frank start snapping at each other about gossip and neighbors, talking across you like you're not there.",
         "enters": [],
-        "shot": "Diane stands to snatch plates with a clatter, Frank pushes back from the table, and they argue across you while the kitchen timer dings unheard."
+        "shot": "Diane stands by the table holding plates, Frank sits back in his chair, and you sit between them while a timer rings in the kitchen."
       }
     ],
     "success_criteria": [
@@ -120,7 +120,8 @@
     "background": "/presets/img/en_dinner_scene.jpg",
     "shots": {
       "2": "/presets/img/en_dinner_2_scene.jpg",
-      "4": "/presets/img/en_dinner_4_scene.jpg"
+      "4": "/presets/img/en_dinner_4_scene.jpg",
+      "6": "/presets/img/en_dinner_6_scene.jpg"
     }
   }
 }

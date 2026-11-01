@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "김영희",
-    "opening_line": "야, 밥은 나중에 먹어. 수저 놓기 전에 말해봐, 너 회사에서 무슨 일 있는 거지? 얼굴이 왜 이렇게 탔어?",
+    "opening_line": "야야, 잠깐만, 숟가락 놔봐, 어? 너 회사에서 뭐 있지, 그치... 얼굴이 왜 그래, 왜 이렇게 탔어",
     "phases": [
       "눈치 식사 - 말 못 꺼내고 떠보기",
       "고백과 비교 - 퇴사 발표와 누나 참전",
@@ -84,23 +84,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "큰누나가 퇴근하고 갑자기 들어와 식탁에 앉으며 소개팅과 승진 얘기를 꺼내 비교 분위기를 만든다. 초점이 사용자에서 누나 자랑으로 튄다.",
+        "description": "큰누나가 갑자기 들어와 밥그릇 달라며 소개팅이니 승진이니 떠들고, 너는 숟가락 든 채 끼어들 틈을 잃는다.",
         "enters": [
           "박지연"
         ],
-        "shot": "현관 센서등이 켜지며 누나가 가방을 의자에 던지고 밥그릇을 달라고 한다. 식탁이 더 비좁아진다."
+        "shot": "Older sister by the front door putting her bag on a chair, parents and you around the small dinner table."
       },
       {
         "at_turn": 4,
-        "description": "아빠 휴대폰에 작은아빠로부터 스피커폰 전화가 와서 너희 아들 승진했다며라고 묻는다. 숨기려던 퇴사 사실이 들통날 위기가 생긴다.",
+        "description": "아빠 폰 스피커로 작은아빠 목소리 터지고 승진 얘기 나오자 다들 밥 멈추고 너만 식은땀 흘린다.",
         "enters": [],
-        "shot": "아빠 폰에서 트로트보다 큰 벨소리가 울리고 모두가 숨죽이며 스피커 소리에 집중해 공기가 얼어붙는다."
+        "shot": "Dad at the table holding his phone on speaker, mom looking at him, you sitting still with your spoon down."
       },
       {
         "at_turn": 6,
-        "description": "퇴사와 창업 얘기로 엄마와 아빠가 서로에게 폭발해 노후 준비와 자식 교육 문제로 부부싸움을 시작한다. 사용자는 뒷전이 되고 중재해야 한다.",
+        "description": "엄마가 국자 탁 놓고 아빠는 리모컨으로 TV를 끄며 노후니 교육이니 목소리 키우고 너는 눈치만 본다.",
         "enters": [],
-        "shot": "엄마가 국자를 내려놓고 아빠를 노려보고 아빠는 리모컨을 탁 내려놓는다. TV가 음소거되며 방이 조용해진다."
+        "shot": "Mom standing by the table with a ladle, dad with the remote, you between them near the television."
       }
     ],
     "success_criteria": [

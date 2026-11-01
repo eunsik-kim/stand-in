@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "박도현",
-    "opening_line": "어, 왔어? 앉아봐, 앉아봐 — 근데 그 얘기 전에, 나 먼저 하나만...",
+    "opening_line": "어, 왔어? 어 앉아, 앉아봐 — 아 그 전에, 나 그 하나만, 잠깐만",
     "phases": [
       "붙잡힘 - 말도 못 꺼내게 붙드는 팀장",
       "흔들림 - 윗선 개입으로 협상판으로 번짐",
@@ -84,23 +84,23 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "팀장 폰이 계속 울려 이야기가 끊기고, 옆에 있던 이수빈이 끼어들어 무슨 얘기냐고 캐묻기 시작한다",
+        "description": "폰이 또 울려 말이 끊기고 수빈이 노트북 덮고 의자 끌며 너 보면서 어, 뭐야 무슨 얘기야 묻는다",
         "enters": [],
-        "shot": "진동 울리는 폰을 팀장이 뒤집어놓고, 이수빈이 노트북 덮고 의자를 끌고 가까이 온다"
+        "shot": "team leader turns his buzzing phone face down on the table, coworker closes laptop and pulls a chair closer"
       },
       {
         "at_turn": 4,
-        "description": "본부장이 커피를 들고 문 열고 들어와 빈자리에 앉으며 조직이랑 인력 얘기를 꺼내 면담이 협상 자리로 바뀐다",
+        "description": "커피 든 본부장이 유리문 닫고 블라인드 반쯤 내리고 빈자리에 앉아 인력 얘기 꺼내 분위기가 바뀐다",
         "enters": [
           "한영철"
         ],
-        "shot": "열려 있던 유리문이 벌컥 열리고 본부장이 들어와 문을 닫고 블라인드를 반쯤 내린다"
+        "shot": "director holding a coffee walks in through the open glass door, closes it, lowers the blinds halfway and sits down"
       },
       {
         "at_turn": 6,
-        "description": "다음 달 일정과 사람 문제로 팀장과 본부장이 서로 핀잔을 주고, 이수빈까지 감정이 터져 세 사람이 따로 다투기 시작한다",
+        "description": "다음 달 일정 얘기에 팀장이랑 본부장이 핀잔 주고 수빈까지 목소리 높여 셋이 따로 말하고 넌 조용히 남는다",
         "enters": [],
-        "shot": "세 사람이 서로를 쳐다보며 목소리가 겹치고, 사용자의 앞자리만 비어 조용해진다"
+        "shot": "three people around the table look at each other and talk at the same time, the seat in front of you stays quiet"
       }
     ],
     "success_criteria": [

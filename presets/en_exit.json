@@ -75,7 +75,7 @@
       }
     ],
     "opening_speaker": "Marcus Hale",
-    "opening_line": "Shut the door, quick — someone said you're about to quit on me, tell me that's not true?",
+    "opening_line": "Shut the door — quick, c'mon. Someone said you're, uh, quitting on me? That's — that's not true, right?",
     "phases": [
       "Attempted private resignation",
       "Formal retention ambush",
@@ -84,25 +84,25 @@
     "events": [
       {
         "at_turn": 2,
-        "description": "Priya knocks and walks in uninvited, saying all resignations now need HR in the room. Your private chat becomes a formal recorded process and Marcus starts performing for her.",
+        "description": "Priya walks in saying HR has to sit in, flips the lights on, and Marcus starts performing for her while you sit stuck.",
         "enters": [
           "Priya Desai"
         ],
-        "shot": "Door swings open, Priya drags a chair between you and Marcus, flips on the harsh overhead lights and opens her laptop."
+        "shot": "Priya sits on a chair between you and Marcus at the table with her laptop open under bright lights."
       },
       {
         "at_turn": 4,
-        "description": "Dana barges in about an urgent client escalation that supposedly only you can fix. She and Marcus start contradicting each other about your workload and who is to blame, turning your resignation into their fight.",
+        "description": "Dana rushes in with her buzzing phone and client papers, says only you can fix it, and argues with Marcus over you.",
         "enters": [
           "Dana Whitaker"
         ],
-        "shot": "Dana pushes in with her phone buzzing, drops a stack of client printouts on the table and stands, forcing Marcus to stand too."
+        "shot": "Dana stands by the table with papers in her hands, Marcus stands across from her, you stay seated."
       },
       {
         "at_turn": 6,
-        "description": "Marcus puts a call from recruiting on speaker to prove a counter-offer is coming, but the news is bad. Marcus and Dana openly snap at each other and both turn to pressure you for an answer right now.",
+        "description": "Marcus puts recruiting on speaker about your counter-offer, the news falls flat, and he and Dana press you to answer.",
         "enters": [],
-        "shot": "Speakerphone crackles on the table, everyone leans in, Marcus goes red and Dana laughs sharply, the room feels tiny and tense."
+        "shot": "A phone sits in the middle of the table, Marcus and Dana lean in close, you sit back in your chair."
       }
     ],
     "success_criteria": [
