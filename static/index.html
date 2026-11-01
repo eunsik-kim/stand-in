@@ -56,7 +56,6 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .top .acts button{background:#0006;color:#fff;border-radius:10px}
 #turnText{color:var(--mute);font-size:14px;margin-right:6px}
 .capbox{position:absolute;z-index:4;left:50%;bottom:112px;transform:translateX(-50%);width:min(760px,calc(100% - 32px))}
-.caption:empty+.smenu{display:none}
 .capbox .smenu{position:absolute;right:6px;top:6px}
 .capbox .tbtn{padding:3px 8px;font-size:12px;color:#c9cdd6}
 .caption{padding:10px 56px;border-radius:14px;background:#000000b8;backdrop-filter:blur(8px);font-size:19px;line-height:1.45;text-align:center}
@@ -100,8 +99,12 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .me video.self{display:block;border-radius:12px;box-shadow:0 0 0 1px #ffffff26,0 8px 24px #0009}
 .me .cam-state{position:absolute;left:6px;top:6px;font-size:11px;padding:1px 8px;background:#000000a6;border:0;color:#fff}
 .log{position:absolute;left:0;right:0;bottom:calc(100% + 6px);max-height:54vh;padding:14px 18px;border-radius:14px;background:#000000c7;backdrop-filter:blur(10px);overflow:auto;font-size:15px;line-height:1.5;color:#dfe2e8;display:grid;gap:8px;align-content:start;scrollbar-width:thin;scrollbar-color:#ffffff24 transparent}
-.log div{white-space:normal}
-.log b{margin-right:6px}
+.lg{display:grid;gap:1px;justify-self:start;max-width:86%}
+.lg b{font-size:13px}
+.lg.mine{justify-self:end;padding:6px 12px;border-radius:12px;background:#f2c14e26;color:#fff}
+.lg.nar{justify-self:center;max-width:100%;color:#a9afbb;font-style:italic;font-size:14px;text-align:center}
+#logToggle{position:absolute;z-index:1;left:6px;top:6px;width:28px;height:28px;color:#c9cdd6}
+#logToggle.open .ic{transform:rotate(180deg)}
 .caption{cursor:pointer}
 .log b{color:var(--fg)}
 .coach{position:absolute;z-index:5;left:12px;top:64px;bottom:12px;width:286px;padding:14px;border-radius:16px;background:#14161cf0;box-shadow:0 0 0 1px #ffffff1f;overflow:auto;display:none;align-content:start;gap:10px}
@@ -358,7 +361,7 @@ h2{margin:0;font-size:22px}
     <div class="ttl"><b id="title"></b><div class="setting" id="setting"></div></div>
     <div class="acts"><span id="turnText"></span><button class="ibtn" id="endBtn" data-ic="exit" data-tl="finish"></button></div>
   </div>
-  <div class="capbox"><div class="log hidden" id="log"></div><div class="caption" id="caption" title=""></div><span class="smenu"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><span class="spop hidden" id="speedPop"></span></span></div>
+  <div class="capbox"><div class="log hidden" id="log"></div><button class="ibtn" id="logToggle" data-ic="chevron" data-tl="log"></button><div class="caption" id="caption" title=""></div><span class="smenu"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><span class="spop hidden" id="speedPop"></span></span></div>
   <div class="choices" id="choices"></div>
   <div class="dock"><div class="mic">
     <div class="status" id="micStatus"></div>
@@ -410,6 +413,7 @@ const ICONS = {
   mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>',
   send:'<path d="M12 19V5M6 11l6-6 6 6"/>',
   pause:'<path d="M9 5v14M15 5v14"/>',
+  chevron:'<path d="M6 15l6-6 6 6"/>',
   chat:'<path d="M4 5h16v11H9l-5 4z"/>',
   exit:'<path d="M14 4h5v16h-5M4 12h11M11 8l4 4-4 4"/>',
   list:'<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>',
@@ -870,9 +874,14 @@ function setPeople(speaker){
 }
 function setThinking(on){ document.querySelectorAll(".person").forEach(el => el.classList.toggle("thinking", on)); }
 
+const NAME_COLORS = ["#f2c14e", "#7fc8ff", "#8fe0a8", "#ff9d8a"];
+const nameColor = who => NAME_COLORS[Math.max(0, S.scenario.cast.findIndex(c => c.name === who)) % NAME_COLORS.length];
 function addLog(who, text, cue){
   const d = document.createElement("div");
-  d.innerHTML = cue ? `<span style="color:var(--think)">👁 ${esc(text)}</span>` : `<b>${esc(who)}</b> ${esc(text)}`;
+  if(cue){ d.className = "lg nar"; d.textContent = text; }
+  else if(who === "*"){ d.className = "lg nar"; d.textContent = text; }
+  else if(who === t("me")){ d.className = "lg mine"; d.textContent = text; }
+  else{ d.className = "lg"; d.innerHTML = `<b style="color:${nameColor(who)}">${esc(who)}</b>${esc(text)}`; }
   $("log").appendChild(d); $("log").scrollTop = 1e9;
 }
 
@@ -932,7 +941,7 @@ function caption(who, text){
   // change only the words: rebuilding the box many times a second makes it flicker
   if(box.dataset.who === who && box.lastChild?.nodeType === 3){ box.lastChild.nodeValue = text; return; }
   box.dataset.who = who;
-  box.innerHTML = `<span class="who">${esc(who)}</span>`; box.append(text);
+  box.innerHTML = `<span class="who" style="color:${who === t("me") ? "#fff" : nameColor(who)}">${esc(who)}</span>`; box.append(text);
 }
 
 async function playLine(ln){
@@ -1282,7 +1291,8 @@ async function enter(){
   try{ S = await post("/api/start", {scenario:D.scenario, assets:D.assets, preset:D.preset, reveal:REVEAL, ui:UI}); }
   catch(e){ if($("enterState")) $("enterState").textContent = t("cantStart") + e; else alert(t("cantStart") + e); return; }
   turn = 0; state = "idle"; show("stage"); go("#/scene");
-  $("log").innerHTML = ""; $("caption").textContent = ""; $("typed").value = "";
+  $("log").innerHTML = ""; $("log").classList.add("hidden"); $("logToggle").classList.remove("open");
+  $("caption").textContent = ""; $("typed").value = "";
   $("doneBtn").innerHTML = icon("send"); $("doneBtn").onclick = () => finish();
   S.goals = []; S.lastBetter = ""; S.found = 0; showFound();
   S.here = new Set(); S.opening = S.assets?.background;
@@ -1341,9 +1351,12 @@ $("speedBtn").onclick = e => {
 };
 document.addEventListener("click", () => $("speedPop").classList.add("hidden"));
 speedLabel();
-$("caption").onclick = () => {  // tap the line to see the whole conversation above it
-  $("log").classList.toggle("hidden"); $("log").scrollTop = 1e9;
-};
+// the whole conversation opens above the current line, and folds away again
+function toggleLog(){
+  const open = $("log").classList.toggle("hidden") === false;
+  $("logToggle").classList.toggle("open", open); $("log").scrollTop = 1e9;
+}
+$("caption").onclick = $("logToggle").onclick = toggleLog;
 $("endAgain").onclick = () => { $("endCard").classList.add("hidden"); enter(); };
 $("endNew").onclick = () => { $("endCard").classList.add("hidden"); leaveStage(); show("build"); newStory(); };
 $("endBtn").onclick = () => {  // leaving just leaves: back to the stories, nothing in between
