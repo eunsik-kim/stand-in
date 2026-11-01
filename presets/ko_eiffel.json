@@ -71,7 +71,7 @@
       }
     ],
     "opening_speaker": "앙드레 푸아송",
-    "opening_line": "칠천 톤이라고 하셨죠. 근데 차관보님, 이런 얘길 왜 호텔에서 합니까?",
+    "opening_line": "에펠탑 고철 칠천 톤이라고 하셨죠. 근데 차관보님, 이런 얘길 왜 호텔에서 합니까?",
     "phases": [
       "미끼",
       "부인",
@@ -88,13 +88,13 @@
         "shot": "A sharp-eyed woman in a cloche hat sits at the table beside the man, her handbag on the papers."
       },
       {
-        "at_turn": 4,
+        "at_turn": 3,
         "description": "부인이 당신의 해진 소맷단을 보며 그렇게 높은 분이 왜 저런 셔츠를 입느냐고 묻는다.",
         "enters": [],
         "shot": "The woman leans in, staring at you with raised eyebrows; her husband looks suddenly unsure."
       },
       {
-        "at_turn": 6,
+        "at_turn": 5,
         "description": "푸아송이 품에서 두툼한 봉투를 꺼내 탁자에 놓지만 손은 떼지 않는다.",
         "enters": [],
         "shot": "A thick envelope on the table under the man's hand; the woman beside him watches you."
@@ -104,15 +104,15 @@
       "부인의 의심을 침착하게 넘긴다",
       "푸아송이 봉투에서 손을 떼게 한다"
     ],
-    "max_turns": 10
+    "max_turns": 7
   },
   "gate1": [],
   "assets": {
     "background": "/presets/img/ko_eiffel_scene.jpg",
     "shots": {
       "2": "/presets/img/ko_eiffel_2_scene.jpg",
-      "4": "/presets/img/ko_eiffel_4_scene.jpg",
-      "6": "/presets/img/ko_eiffel_6_scene.jpg"
+      "3": "/presets/img/ko_eiffel_4_scene.jpg",
+      "5": "/presets/img/ko_eiffel_6_scene.jpg"
     },
     "clues": {
       "앙드레 푸아송": {

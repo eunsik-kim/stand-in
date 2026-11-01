@@ -142,7 +142,7 @@ recent: dict[tuple[str, str], deque] = defaultdict(deque)
 
 def over_limit(request: Request) -> bool:
     path = request.url.path
-    if request.method != "POST" or not path.startswith("/api/") or path == "/api/start":
+    if request.method != "POST" or not path.startswith("/api/") or path in ("/api/start", "/api/template", "/api/build/finish"):  # free: nothing is generated
         return False
     who = request.headers.get("fly-client-ip") or (request.client.host if request.client else "")
     limit = LIMITS.get(path, PAID_PER_HOUR)
@@ -604,6 +604,7 @@ def autopilot(req: AutoReq):
 
 
 class Replies(BaseModel):
+    thought: str = ""
     replies: list[str]
 
 
@@ -622,9 +623,11 @@ def replies(req: AutoReq):
         f"How this person talks, follow it closely: {req.tone or 'casual'}. "
         "Put the one you recommend first. Make them really different: push back, ask something, or dodge. "
         "No quotation marks. Do not repeat anything already said.\n"
-        'Return {"replies": ["...", "...", "..."]}',
+        f"thought: what is going through this person's head right now, in the first person, one short natural sentence in language '{sc.language}', "
+        "about what they just saw or heard and what they feel. It is their own inner voice, never advice.\n"
+        'Return {"thought": "...", "replies": ["...", "...", "..."]}',
     )
-    return {"replies": [r.strip().strip('"“”\'') for r in got.replies[:3]]}
+    return {"thought": got.thought.strip(), "replies": [r.strip().strip('"“”\'') for r in got.replies[:3]]}
 
 
 class EndReq(BaseModel):
@@ -640,7 +643,7 @@ def closing_page(req: EndReq):
     e, verdict = ending(quick_writer, sc, s.ui)
     found = sc.revealed | ({c.name for c in sc.scenario.cast} & set(verdict.came_out))
     return {"title": e.title, "story": e.story, "best_line": e.best_line, "found": sorted(found),
-            "missed": [c.secret for c in sc.scenario.cast if c.name not in found],
+            "missed": [x.line for x in verdict.truths if x.name not in found] or [x.line for x in verdict.truths[:1]],
             "goals": [{"text": c, "met": i < len(verdict.met) and verdict.met[i]} for i, c in enumerate(sc.scenario.success_criteria)]}
 
 

@@ -71,7 +71,7 @@
       }
     ],
     "opening_speaker": "André Poisson",
-    "opening_line": "Seven thousand tons, you said. So tell me, Monsieur, why's a man like me hearing this in a hotel?",
+    "opening_line": "Seven thousand tons of Eiffel Tower, you said. So tell me, Monsieur, why's a man like me hearing this in a hotel?",
     "phases": [
       "The pitch",
       "The wife",
@@ -88,13 +88,13 @@
         "shot": "A sharp-eyed woman in a cloche hat sits at the table beside the man, her handbag on the papers."
       },
       {
-        "at_turn": 4,
+        "at_turn": 3,
         "description": "She looks at your frayed cuff and asks why a man so high in the ministry wears a shirt like that.",
         "enters": [],
         "shot": "The woman leans in, staring at you with raised eyebrows; her husband looks suddenly unsure."
       },
       {
-        "at_turn": 6,
+        "at_turn": 5,
         "description": "Poisson slowly takes a thick envelope from his jacket, puts it on the table, and keeps his hand on it.",
         "enters": [],
         "shot": "A thick envelope on the table under the man's hand; the woman beside him watches you."
@@ -104,15 +104,15 @@
       "Answers the wife's doubts without losing composure",
       "Gets Poisson to let go of the money"
     ],
-    "max_turns": 10
+    "max_turns": 7
   },
   "gate1": [],
   "assets": {
     "background": "/presets/img/en_eiffel_scene.jpg",
     "shots": {
       "2": "/presets/img/en_eiffel_2_scene.jpg",
-      "4": "/presets/img/en_eiffel_4_scene.jpg",
-      "6": "/presets/img/en_eiffel_6_scene.jpg"
+      "3": "/presets/img/en_eiffel_4_scene.jpg",
+      "5": "/presets/img/en_eiffel_6_scene.jpg"
     },
     "clues": {
       "André Poisson": {

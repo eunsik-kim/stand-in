@@ -57,6 +57,7 @@ class Scenario(BaseModel):
     user_role: str
     user_goal: str
     user_knows: list[str] = Field(default=[], description="facts the user walks in knowing; never part of a secret")
+    address: str = Field(default="", description="who calls whom what, in the scene's language")
     cast: list[Character]
     opening_speaker: str = Field(description="name of the character who speaks first")
     opening_line: str

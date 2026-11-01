@@ -109,13 +109,15 @@ def _bible(s: Scenario) -> str:
         f"All speech is in language '{s.language}'. Reply with a single JSON object and nothing else.\n\n"
         f"Setting: {s.setting}\nThe user plays: {s.user_role}\nUser's goal: {s.user_goal}\n"
         + (f"The user already knows: {'; '.join(s.user_knows)}\n" if s.user_knows else "")
+        + (f"How people here address each other: {s.address}\n" if s.address else "")
         + f"Phases: {' -> '.join(s.phases)}\n\nPeople (each knows only their own goal and secret):\n{people}\n\n"
         "How they react: vague claims and repetition cost trust and patience; concrete evidence, good questions "
         "and respect earn trust. Low trust = guarded, skeptical; low patience = short, cutting, wants to end. "
         "Lines marked 'observed' are what they could see and hear (pauses, eye contact); react only when a real "
         "person in that role would notice and care. A secret stays hidden until its condition is clearly met, or until the "
-        "user confronts them with a specific fact that makes hiding it impossible. Nobody tells a secret in front of the person it "
-        "concerns unless forced to. Nobody tells the user what to ask or do next. "
+        "user confronts them with a specific fact that makes hiding it impossible. The first direct question gets a dodge or half an answer; "
+        "only a second push, or a matching action, brings out the real thing. People know only their own secret unless it has been said aloud. "
+        "Nobody tells a secret in front of the person it concerns unless forced to. Nobody tells the user what to ask or do next. "
         "The user is always 'you', never third person. Work out how each person really addresses each other from their relationship, "
         "never using a kinship word from someone else's point of view. A talking style is a flavour, not a tic for every line. "
         f"{SPOKEN} People move: a fair point lands, a good offer softens them, and they never repeat "
@@ -183,11 +185,11 @@ def _ending_note(scene: Scene, turn: int, earned: bool | None) -> str:
     if turn < s.max_turns - 2:
         return close
     if turn == s.max_turns - 2:
-        return close + "The biggest truth still hidden must come out now if it is going to, so the user can answer it.\n"
+        return close + "If the user has come close to the biggest truth still hidden, it comes out now, so they can answer it. If not, it stays hidden.\n"
     if turn == s.max_turns - 1:
         return close + "No new facts now. Someone makes a decision, and the user is left something to answer. The next turn is the last.\n"
     return ("This is the last turn. Answer the user's last line, then close the story; the last line is a statement, never a question. "
-            "Anything the user decided stands. "
+            "Anything the user decided stands. The person the user's goal is mainly about speaks on this turn. "
             + ("The user earned this: let it land." if earned else
                "The user has not earned a win: nobody gives in and red lines hold. End on a refusal, a walk-out or a door closing.")
             + " Set end=true, and write closing: one line of stage narration showing what physically happens last.\n")
@@ -203,10 +205,11 @@ def earned(scene: Scene, actor: LLM) -> bool:
     got = actor.ask(
         Goals, "You judge a story fairly. Reply with a single JSON object.",
         "Outcomes, in order:\n" + "\n".join(f"- {c}" for c in s.success_criteria)
-        + f"\n\nTranscript:\n{scene.public()}\n\nFor each outcome: has the user's side done this, or is one good line away from it? "
+        + f"\n\nTranscript:\n{scene.public()}\n\nFor each outcome: did the user's own words and actions really earn this? "
+        "Jokes, repeated demands, and things other people did or a planned event handed them do not count. If unsure, false. "
         'Return {"met": [true, false]}',
     )
-    return sum(got.met) * 2 >= len(s.success_criteria)
+    return len(got.met) >= len(s.success_criteria) and all(got.met)
 
 
 def _their_last_lines(scene: Scene, names: list[str]) -> str:
@@ -231,12 +234,12 @@ def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: boo
         + "Write who reacts to the user's last line, one or two people. "
         "Each spoken line is what a person says in one breath: one point or one question at a time, no stage directions. "
         "gesture is usually empty. Fill it about one line in three, and only when it adds something or goes against the words: 2-6 words "
-        "in the language of the scene, ending the same way each time (in Korean, -며). A prop changes state, it is never handled the same way twice, "
-        "and nobody sits down or puts down what they already have.\n"
+        "in the language of the scene. A prop changes state, it is never handled the same way twice, nobody sits down or puts down what they "
+        "already have, and someone on a phone or video touches nothing in the room.\n"
         "Every reply must move the story: a new fact, a decision, an action or a change of heart. Never reuse a phrase, joke or "
         "complaint already in the transcript, and do not echo the last words of the user's line back at them. "
-        "A private alliance stays private in front of others. List in reveals the names of anyone whose secret this line actually states, "
-        "whoever says it; a lie, a cover story or a hint is not a reveal.\n"
+        "A private alliance stays private in front of others. List in reveals the names of anyone whose secret this line actually states; "
+        "a lie, a cover story or a hint is not a reveal.\n"
         + _who_must_speak(scene, names, happened.enters if happened else []) + _ending_note(scene, turn, won)
         + ("You are also the director. Set advance=true only when this moment has truly peaked and something new should happen. "
            "Do not invent that something yourself.\n" if coming else "")
@@ -260,10 +263,10 @@ class _Partial:
                 continue
             head = self.buf[pos:m.start()]
             who, expr = re.search(r'"speaker"\s*:\s*"([^"]*)"', head), re.search(r'"expression"\s*:\s*"(\w+)"', head)
-            body = re.search(r'"gesture"\s*:\s*"([^"]*)"', head)
+            body = re.search(r'"gesture"\s*:\s*"((?:[^"\\]|\\.)*)"', head)
             text, end = self._string(m.end())
             out.append({"speaker": who.group(1) if who else "", "expression": expr.group(1) if expr else "neutral",
-                        "gesture": body.group(1) if body else "", "say": text, "closed": end is not None})
+                        "gesture": json.loads(f'"{body.group(1)}"') if body else "", "say": text, "closed": end is not None})
             if end is None:
                 break
             pos = end
@@ -336,7 +339,17 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
     stream = actor.stream(_bible(s), prompt)
 
     def who(i: int, raw: str) -> Character:
-        return s.character(raw if raw in names else names[min(i, len(names) - 1)])
+        close = [n for n in names if raw and (raw in n or n in raw)]
+        return s.character(raw if raw in names else close[0] if close else names[min(i, len(names) - 1)])
+
+    shown: dict[int, str] = {}  # one gesture a turn, and not the same person's twice running
+
+    def sign(i: int, c: Character, gesture: str) -> str:
+        last = next((ln.gesture for ln in reversed(scene.lines) if ln.speaker == c.name), "")
+        return "" if any(shown.values()) or last else FOREIGN.sub("", gesture).strip() if s.language == "ko" else gesture.strip()
+
+    def clean(text: str) -> str:
+        return FOREIGN.sub("", STAGE.sub("", text)).strip() if s.language == "ko" else STAGE.sub("", text).strip()
 
     for piece in stream:
         partial.buf += piece
@@ -344,13 +357,14 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
             c = who(i, ln["speaker"])
             if i == len(sent):
                 sent.append(0)
-                yield {"type": "line_start", "index": i, "speaker": c.name, "expression": ln["expression"], "gesture": ln["gesture"]}
+                shown[i] = sign(i, c, ln["gesture"])
+                yield {"type": "line_start", "index": i, "speaker": c.name, "expression": ln["expression"], "gesture": shown[i]}
             while True:
                 m = SENTENCE_END.search(ln["say"], sent[i])
                 stop = m.end() if m else len(ln["say"]) if ln["closed"] else None
                 if stop is None or stop == sent[i]:
                     break
-                sentence, sent[i] = STAGE.sub("", ln["say"][sent[i]:stop]).strip(), stop
+                sentence, sent[i] = clean(ln["say"][sent[i]:stop]), stop
                 if sentence:
                     yield {"type": "sentence", "index": i, "speaker": c.name, "text": sentence}
 
@@ -371,15 +385,14 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
         c = who(i, beat.speaker)
         if c.name in scene.left:
             continue
-        beat.say = STAGE.sub("", beat.say).strip()
+        beat.say = clean(beat.say)
         m = scene.moods[c.name]
         trust, patience = beat.mood_delta.trust, beat.mood_delta.patience
         if trust > 0:  # feeling heard calms people down: a good answer never costs patience
             patience = max(patience, trust // 2)
         m.trust = max(0, min(100, m.trust + trust))
         m.patience = max(0, min(100, m.patience + patience))
-        gesture = FOREIGN.sub("", beat.gesture).strip() if s.language == "ko" else beat.gesture.strip()
-        add(Line(turn, c.name, beat.say, beat.inner, beat.expression, m.model_dump(), gesture=gesture))
+        add(Line(turn, c.name, beat.say, beat.inner, beat.expression, m.model_dump(), gesture=shown.get(i, "")))
         yield {"type": "line_end", "index": i, "speaker": c.name, "say": beat.say, "expression": beat.expression}
         for owner in beat.reveals:
             if owner in {x.name for x in s.cast} and owner not in scene.revealed:
