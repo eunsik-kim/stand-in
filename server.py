@@ -4,6 +4,7 @@ Usage: uv run server.py   then open http://localhost:8010 in Chrome
 (speech recognition needs Chrome; camera analysis runs locally in the page).
 """
 
+import base64
 import json
 import os
 import re
@@ -23,7 +24,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from standin import voice
-from standin.art import background, background_prompt, portraits, scene, scene_edit
+from standin.art import background, background_prompt, portraits, scene, scene_edit, scene_from
 from standin.builder import Person, World, as_situation, build_turn, lock, others
 from standin.coach import coach_turn
 from standin.compiler import compile_scenario, structural_problems
@@ -375,7 +376,7 @@ def load_scene(b: Build, s: Scenario) -> None:
 class EpisodeReq(BaseModel):
     idea: str
     genre: str = ""
-    look: str = ""  # how the pictures should look
+    image: str = ""  # a picture the user attached, as a data URL
     ui: str = "en"
 
 
@@ -393,10 +394,14 @@ def episode(req: EpisodeReq, request: Request):
     here = [c for c in s.cast if not c.enters_at]
     stem = uuid.uuid4().hex[:10]
     first = ART / f"{stem}_scene.jpg"
+    people = [as_person(c) for c in here]
     try:
-        scene(painter, s.setting, [as_person(c) for c in here], first, req.look)
+        if req.image:
+            scene_from(painter, base64.b64decode(req.image.split(",", 1)[-1]), s.setting, people, first)
+        else:
+            scene(painter, s.setting, people, first)
     except Exception:  # the content filter misfires on ordinary scenes
-        scene(painter, s.setting.split(".")[0] + ".", [as_person(c) for c in here], first, req.look)
+        scene(painter, s.setting.split(".")[0] + ".", people, first)
     b.background = f"/art/{first.name}"
     b.drawn["names"] = ",".join(sorted(person.name for person in b.world.people))
 

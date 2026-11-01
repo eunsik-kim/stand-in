@@ -68,6 +68,15 @@ def scene(painter: LLM, place: str, people: list, path: Path, look: str = "") ->
     img.save(path, quality=88)
 
 
+def scene_from(painter: LLM, reference: bytes, place: str, people: list, path: Path) -> None:
+    """The user's own picture sets the look and, if it shows people or a place, the scene is built from them."""
+    data = edit_image(painter, reference, scene_prompt(place, people) + " Use the attached picture as the reference: "
+                                          "keep its style, and its people and place where they fit this scene.")
+    img = Image.open(io.BytesIO(data)).convert("RGB")
+    img.thumbnail((1792, 1792))
+    img.save(path, quality=88)
+
+
 def scene_edit(painter: LLM, source: Path, place: str, people: list, path: Path, change: str = "") -> None:
     """Change the photograph without touching anyone already in it."""
     who = "; ".join(f"{p.name}: {p.role}, {p.look}" for p in people)
