@@ -13,12 +13,13 @@ Expression = Literal["neutral", "pleased", "skeptical", "annoyed"]
 
 # every line anyone says aloud follows this
 SPOKEN = (
-    "Spoken lines sound like real speech overheard, never written text. Short, unfinished, reacting in the moment: people trail off, "
-    "restart, interrupt, use fillers and slang that fit who they are. No tidy full sentences, no explaining, no formal connectors, "
-    "no summarising what was just said. In Korean use natural 구어체: contractions like 뭐, 걍, 근데, 아니, 어?, 그니까, endings like -거든, -잖아, -는데, -지 뭐, "
-    "and 반말 or 존댓말 as the relationship really would; never 문어체 such as '-습니다만', '따라서', '그러나', '말씀드립니다' unless the person is truly that formal. "
-    "Vary how people talk: never lean on the same filler or tag twice in a row, like 어? or 알지? or yeah?, and give each person their own rhythm. "
-    "In English use contractions and fragments. In Japanese use casual spoken forms that fit the relationship."
+    "Spoken lines sound like real speech overheard, never written text. Short, unfinished, reacting in the moment: people restart, "
+    "interrupt and answer sideways. No explaining, no formal connectors, no summarising what was just said. "
+    "Each person speaks as their own age, era, class and relationship to the listener, and keeps the same level of politeness unless something changes it. "
+    "Someone from another century has no modern slang, a child speaks as a child, a formal person stays formal. Give each person their own rhythm "
+    "and use the talking style written for them. Never lean on the same filler or tag twice, and use an ellipsis rarely. "
+    "In Korean use natural 구어체 with the honorific level the relationship really has; avoid written 문어체 unless the person is truly that formal. "
+    "In English use contractions and fragments. In Japanese use spoken forms that fit the relationship."
 )
 
 

@@ -1,0 +1,136 @@
+{
+  "situation": "싸우다 이혼을 꺼냈다. 말로는 져 본 적 없는 남편이 가족을 불러 놓고 따지기 시작한다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "그러니까 네 잘못 인정하는 거지?",
+    "language": "ko",
+    "setting": "일요일 오후 정돈된 거실. 아무도 안 마시는 차, 탁자 위 엎어 둔 휴대폰.",
+    "user_role": "그의 아내",
+    "user_goal": "그의 논리에 말려들지 않고 내 진짜 말을 한다.",
+    "user_knows": [
+      "맞벌이인데 집안일은 거의 당신 몫이다",
+      "그에게도 당신의 화난 문자가, 당신에게도 그의 더 심한 문자가 있다"
+    ],
+    "cast": [
+      {
+        "name": "승현",
+        "role": "남편",
+        "appearance": "Man about 38, pressed shirt, sitting upright, hands folded, faint patient smile",
+        "voice": "정확하고 차분하다, 당신 말을 받아 '그러니까 인정한다는 거지'로 만든다",
+        "gender": "m",
+        "history": "결혼 6년.",
+        "enters_at": 0,
+        "goal": "당신 잘못이라는 말을 남기게 한다",
+        "secret": "이미 변호사를 만났고, 끝내자는 말이 당신 입에서 나와야 한다",
+        "reveal_when": "그 틀을 거부하고 왜 그 말이 필요하냐고 물을 때",
+        "red_lines": [
+          "목소리를 높이지 않는다"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 70
+        }
+      },
+      {
+        "name": "시누이",
+        "role": "그의 누나",
+        "appearance": "Woman about 43, cardigan, teacup held in both hands, watching him closely",
+        "voice": "조심스럽고 지쳤다, 이런 걸 본 적이 있다",
+        "gender": "f",
+        "history": "조용히 잘해 줬다.",
+        "enters_at": 2,
+        "goal": "끼어들지 않으려 한다",
+        "secret": "그가 어머니에게도 수년간 똑같이 했다",
+        "reveal_when": "전에도 이런 걸 봤는지 물을 때",
+        "red_lines": [
+          "대신 말해 주지 않는다"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 50
+        }
+      },
+      {
+        "name": "오빠",
+        "role": "문자 받고 온 오빠",
+        "appearance": "Man about 41, work jacket, big hands, arms crossed, jaw tight",
+        "voice": "직설적이고 욱한다, 문장이 짧다",
+        "gender": "m",
+        "history": "처음부터 이 결혼을 안 좋아했다.",
+        "enters_at": 4,
+        "goal": "당신을 데려간다",
+        "secret": "지난주 남편이 전화해 당신이 '불안정하다'고 말했다",
+        "reveal_when": "남편이 연락한 적 있냐고 물을 때",
+        "red_lines": [
+          "주먹은 쓰지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "승현",
+    "opening_line": "침착하게 하자. 이혼이라고 네가 말했지? 네 입으로. 그러니까 네 잘못 인정하는 거지?",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "누나가 주방에서 나와 그를 보지 않고 앉는다.",
+        "enters": [
+          "시누이"
+        ],
+        "shot": "A woman in a cardigan sits with a teacup near the upright man on the sofa."
+      },
+      {
+        "at_turn": 4,
+        "description": "초인종. 오빠가 작업복 차림으로 서 있다.",
+        "enters": [
+          "오빠"
+        ],
+        "shot": "A big man in a work jacket stands with arms crossed, facing the seated man."
+      },
+      {
+        "at_turn": 6,
+        "description": "남편이 휴대폰을 뒤집어 탁자 가운데로 민다.",
+        "enters": [],
+        "shot": "A phone slid to the centre of the table, screen lit; the seated man looks at you, waiting."
+      }
+    ],
+    "success_criteria": [
+      "그의 틀대로 잘못을 떠안지 않는다",
+      "그가 진짜 노리는 걸 알아낸다",
+      "내 결정을 내가 내린다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_wordtrap_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_wordtrap_2_scene.jpg",
+      "4": "/presets/img/ko_wordtrap_4_scene.jpg",
+      "6": "/presets/img/ko_wordtrap_6_scene.jpg"
+    },
+    "clues": {
+      "승현": {
+        "img": "/presets/img/clue_wordtrap_0.jpg",
+        "name": "변호사 명함"
+      },
+      "시누이": {
+        "img": "/presets/img/clue_wordtrap_1.jpg",
+        "name": "어머니의 낡은 일기장"
+      },
+      "오빠": {
+        "img": "/presets/img/clue_wordtrap_2.jpg",
+        "name": "통화 기록"
+      }
+    },
+    "basis": "온라인 커뮤니티에 올라온 이야기를 각색했습니다. 이름과 세부는 바꿨습니다."
+  }
+}

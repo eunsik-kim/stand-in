@@ -90,8 +90,8 @@ def versioned(url: str) -> str:
 
 CATEGORY = {"mystery": {"detective", "suspect", "holmes", "lupin", "celeste", "tip"}, "history": {"eiffel", "tesla", "seondal"},
             "sim": {"lawyer", "judge", "auction", "anchor", "pitch", "deal", "debate", "exit", "apartment"},
-            "family": {"toddler", "santa", "son", "husband", "daughter", "worry", "dinner", "groupchat", "zerowon"},
-            "love": {"trip", "date", "confess", "inlaws", "breakup", "reunion", "fishing", "manofhonor", "bestie"}}
+            "family": {"toddler", "santa", "son", "husband", "daughter", "worry", "dinner", "groupchat", "zerowon", "bet", "wordtrap", "table"},
+            "love": {"trip", "date", "confess", "inlaws", "breakup", "reunion", "fishing", "manofhonor", "bestie", "ring", "overheard", "list"}}
 
 
 def category(preset_id: str) -> str:
@@ -120,7 +120,7 @@ def public_line(ln: Line) -> dict:
 
 def public_scenario(s: Scenario) -> dict:
     return {"title": s.title, "language": s.language, "setting": s.setting, "user_role": s.user_role,
-            "user_goal": s.user_goal, "max_turns": s.max_turns, "success_criteria": s.success_criteria,
+            "user_goal": s.user_goal, "user_knows": s.user_knows, "max_turns": s.max_turns, "success_criteria": s.success_criteria,
             "cast": [{"name": c.name, "role": c.role, "appearance": c.appearance, "voice": c.voice, "enters_at": c.enters_at}
                      for c in s.cast]}
 
@@ -490,6 +490,7 @@ class TurnReq(BaseModel):
     id: str
     say: str
     signals: Signals = Signals()
+    auto: bool = False
 
 
 @app.post("/api/turn")
@@ -511,8 +512,8 @@ def turn(req: TurnReq):
             s.turn += 1
             cues = describe(req.signals, s.ui)
             t0, first = time.time(), True
-            for ev in stream_step(s.scene, s.turn, req.say.strip(), actor, checker, cues=cues,
-                                  signals=req.signals.model_dump()):  # raw numbers kept for the debrief
+            for ev in stream_step(s.scene, s.turn, req.say.strip(), actor, cues=cues,
+                                  signals=req.signals.model_dump(), auto=req.auto):  # raw numbers kept for the debrief
                 if first and ev["type"] == "sentence":
                     spend.seconds.setdefault("first_sentence", []).append(time.time() - t0)
                     first = False
@@ -594,8 +595,11 @@ def autopilot(req: AutoReq):
     s = sessions.get(req.id)
     if not s:
         raise HTTPException(404, "unknown session")
+    mine = [ln.say for ln in s.scene.lines if ln.speaker == "user"]
     persona = (f"Speak in very short lines of a few words, the way this person really would, working toward: {s.scene.scenario.user_goal}. "
-               f"How they talk: {req.tone or 'casual'}. Fit the time and place of the setting, and do not start the way their last line started.")
+               f"How they talk: {req.tone or 'casual'}. Fit the time and place of the setting. "
+               + (f"Their lines so far: {' / '.join(mine[-3:])}. Keep the same stance and level of politeness, and start differently from all of these. " if mine else "")
+               + "Never quit the scene, and never reveal or solve what this person has not worked out yet: ask, push or stall instead.")
     return {"say": simulated_user(actor, persona)(s.scene, s.turn + 1).strip()}
 
 

@@ -82,7 +82,7 @@ def main() -> None:
         def user_turn(scene: Scene, n: int) -> str:
             return input(f"\n[{n}/{scenario.max_turns}] YOU> ")
 
-    scene = run_scene(scenario, actor, checker, user_turn, show)
+    scene = run_scene(scenario, actor, user_turn, show)
     print(f"\n-- scene ended: {scene.ended} --\nwriting debrief...")
     d = debrief(coach, scene)
 

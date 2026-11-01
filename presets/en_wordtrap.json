@@ -1,0 +1,134 @@
+{
+  "situation": "You said the word divorce in a fight. Your husband, who never loses an argument, has gathered the family to go over it.",
+  "ui": "en",
+  "scenario": {
+    "title": "So You Admit It?",
+    "language": "en",
+    "setting": "A tidy living room on a Sunday afternoon, a pot of tea nobody is drinking, a phone face down on the table.",
+    "user_role": "His wife",
+    "user_goal": "Don't get trapped in his logic, and say what you actually mean.",
+    "user_knows": [
+      "You both work full time, and you do almost all the housework",
+      "He has angry messages from you, and you have angrier ones from him"
+    ],
+    "cast": [
+      {
+        "name": "Daniel",
+        "role": "your husband",
+        "appearance": "Man about 38, pressed shirt, sitting upright, hands folded, faint patient smile",
+        "voice": "Precise, patient, repeats your words back as admissions",
+        "gender": "m",
+        "history": "Six years of marriage.",
+        "enters_at": 0,
+        "goal": "Get you to say it was your fault, on record",
+        "secret": "He has already seen a lawyer, and needs you to be the one who ends it",
+        "reveal_when": "You refuse his framing and ask why he needs you to say it",
+        "red_lines": [
+          "Never raises his voice"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 70
+        }
+      },
+      {
+        "name": "His sister",
+        "role": "his older sister",
+        "appearance": "Woman about 43, cardigan, teacup held in both hands, watching him closely",
+        "voice": "Careful, tired, has seen this before",
+        "gender": "f",
+        "history": "She's been kind to you, quietly.",
+        "enters_at": 2,
+        "goal": "Stay out of it",
+        "secret": "He did the same to their mother for years",
+        "reveal_when": "You ask her whether she's seen him do this before",
+        "red_lines": [
+          "Won't speak for you"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Your brother",
+        "role": "your brother, who came when you texted",
+        "appearance": "Man about 41, work jacket, big hands, arms crossed, jaw tight",
+        "voice": "Blunt, hot-tempered, short sentences",
+        "gender": "m",
+        "history": "He never liked this marriage.",
+        "enters_at": 4,
+        "goal": "Take you home",
+        "secret": "Your husband called him last week to say you'd been 'unstable'",
+        "reveal_when": "You ask if your husband has spoken to him",
+        "red_lines": [
+          "Won't hit anyone"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "Daniel",
+    "opening_line": "Let's be calm. You said divorce. You said it. So you admit this is on you, yes?",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "His sister comes in from the kitchen and sits down without looking at him.",
+        "enters": [
+          "His sister"
+        ],
+        "shot": "A woman in a cardigan sits with a teacup near the upright man on the sofa."
+      },
+      {
+        "at_turn": 4,
+        "description": "The doorbell. Your brother, still in his work jacket.",
+        "enters": [
+          "Your brother"
+        ],
+        "shot": "A big man in a work jacket stands with arms crossed, facing the seated man."
+      },
+      {
+        "at_turn": 6,
+        "description": "Your husband turns his phone over and slides it to the middle of the table.",
+        "enters": [],
+        "shot": "A phone slid to the centre of the table, screen lit; the seated man looks at you, waiting."
+      }
+    ],
+    "success_criteria": [
+      "Refuses to take the blame on his terms",
+      "Finds out what he's really after",
+      "Chooses for herself"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_wordtrap_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_wordtrap_2_scene.jpg"
+    },
+    "clues": {
+      "Daniel": {
+        "img": "/presets/img/clue_wordtrap_0.jpg",
+        "name": "A lawyer's card"
+      },
+      "His sister": {
+        "img": "/presets/img/clue_wordtrap_1.jpg",
+        "name": "Her old diary"
+      },
+      "Your brother": {
+        "img": "/presets/img/clue_wordtrap_2.jpg",
+        "name": "A call log"
+      }
+    },
+    "basis": "Adapted from a story posted on an online community. Names and details are changed."
+  }
+}

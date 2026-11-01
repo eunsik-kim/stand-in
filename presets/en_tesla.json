@@ -27,7 +27,7 @@
           "Won't be bullied or tricked; he would walk out first"
         ],
         "mood": {
-          "trust": 70,
+          "trust": 60,
           "patience": 65
         }
       },
@@ -46,7 +46,7 @@
           "Won't lie to Tesla"
         ],
         "mood": {
-          "trust": 70,
+          "trust": 60,
           "patience": 60
         }
       },

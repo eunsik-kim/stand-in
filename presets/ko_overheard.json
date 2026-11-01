@@ -1,0 +1,136 @@
+{
+  "situation": "그가 무릎 꿇고 용서를 빌러 왔다. 그런데 옆방에서 전화하는 소리가 들렸다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "문 너머로 들은 전화",
+    "language": "ko",
+    "setting": "저녁, 당신 본가의 거실. 의자에 걸린 양복 재킷, 반쯤 열린 옆방 문.",
+    "user_role": "그의 예비 신부",
+    "user_goal": "어느 쪽이 진짜 그인지 알아내고 결정한다.",
+    "user_knows": [
+      "어머니를 6개월 모시자는 말을 거절했다",
+      "방금 전화로 '일단 결혼식만 넘기자'고 하는 걸 들었다"
+    ],
+    "cast": [
+      {
+        "name": "민석",
+        "role": "예비 신랑",
+        "appearance": "Man about 34, shirt untucked, eyes red, phone in hand, standing by a half-open door",
+        "voice": "진심 어린 말투인데 거짓말할 때 빨라진다",
+        "gender": "m",
+        "history": "3년 사귀었다.",
+        "enters_at": 0,
+        "goal": "결혼을 지킨다",
+        "secret": "결혼 후 당신이 일 그만두고 시댁에 들어온다고 어머니께 약속했다",
+        "reveal_when": "들은 말을 차분히 그대로 말할 때",
+        "red_lines": [
+          "처음엔 무조건 부인한다"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 50
+        }
+      },
+      {
+        "name": "전화기 너머 예비 시어머니",
+        "role": "스피커폰의 예비 시어머니",
+        "appearance": "Woman about 62, seen on a phone video call at a dressing table, annoyed, reading glasses",
+        "voice": "크게, 경멸조로, 누가 듣든 상관없다",
+        "gender": "f",
+        "history": "몇 번 뵌 적 있다.",
+        "enters_at": 3,
+        "goal": "아들과 계획을 지킨다",
+        "secret": "친척들에게 이미 함께 산다고 말해 뒀다",
+        "reveal_when": "뭐라고 들으셨냐고 직접 물을 때",
+        "red_lines": [
+          "아들 앞에서 물러서지 않는다"
+        ],
+        "mood": {
+          "trust": 15,
+          "patience": 40
+        }
+      },
+      {
+        "name": "남동생",
+        "role": "퇴근하고 온 남동생",
+        "appearance": "Man about 29, delivery uniform, tired, helmet under his arm, protective",
+        "voice": "건조하고 화났다, 예의 바르다가 끝이 온다",
+        "gender": "m",
+        "history": "엄마만큼 당신이 키웠다.",
+        "enters_at": 5,
+        "goal": "당신과 어머니를 지킨다",
+        "secret": "지난달 그가 '은행 때문에' 어머니 집 서류를 달라고 했다",
+        "reveal_when": "연락한 적 있는지 물을 때",
+        "red_lines": [
+          "손대지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "민석",
+    "opening_line": "나 왔어. 미안, 회사 전화. 내가 한 말 진심이야. 무릎 꿇은 거, 다 진심이라고.",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "그의 휴대폰이 다시 울리고 스피커로 연결된다. 어머니 목소리가 방을 채운다.",
+        "enters": [
+          "전화기 너머 예비 시어머니"
+        ],
+        "shot": "A phone held out shows an annoyed older woman on a video call; the man freezes."
+      },
+      {
+        "at_turn": 5,
+        "description": "현관문이 열리고 남동생이 헬멧을 들고 들어와 둘을 본다.",
+        "enters": [
+          "남동생"
+        ],
+        "shot": "A young man in a delivery uniform stands in the doorway with a helmet, staring at the other man."
+      },
+      {
+        "at_turn": 7,
+        "description": "그가 재킷을 집어 들고 당신의 말을 기다린다.",
+        "enters": [],
+        "shot": "The man holds his suit jacket and stands facing you in the quiet room."
+      }
+    ],
+    "success_criteria": [
+      "전화 내용을 인정하게 한다",
+      "결혼 후 계획을 알아낸다",
+      "내 결정을 내린다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_overheard_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_overheard_3_scene.jpg",
+      "5": "/presets/img/ko_overheard_5_scene.jpg",
+      "7": "/presets/img/ko_overheard_7_scene.jpg"
+    },
+    "clues": {
+      "민석": {
+        "img": "/presets/img/clue_overheard_0.jpg",
+        "name": "미리 준비된 사직 양식"
+      },
+      "전화기 너머 예비 시어머니": {
+        "img": "/presets/img/clue_overheard_1.jpg",
+        "name": "친척 모임 명단"
+      },
+      "남동생": {
+        "img": "/presets/img/clue_overheard_2.jpg",
+        "name": "집 서류"
+      }
+    },
+    "basis": "온라인 커뮤니티에 올라온 이야기를 각색했습니다. 이름과 세부는 바꿨습니다."
+  }
+}

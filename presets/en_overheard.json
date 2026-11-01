@@ -1,0 +1,136 @@
+{
+  "situation": "He came to your home to beg forgiveness on his knees. Then you overheard what he said on the phone in the next room.",
+  "ui": "en",
+  "scenario": {
+    "title": "Through the Door",
+    "language": "en",
+    "setting": "The living room of your family home, evening, a suit jacket over a chair, a half-open door to the next room.",
+    "user_role": "His fiancée",
+    "user_goal": "Find out which version of him is real, and decide.",
+    "user_knows": [
+      "He refused to let your mother stay with you for six months",
+      "You just heard him say 'let's get through the wedding first' on the phone"
+    ],
+    "cast": [
+      {
+        "name": "Paul",
+        "role": "your fiancé",
+        "appearance": "Man about 34, shirt untucked, eyes red, phone in hand, standing by a half-open door",
+        "voice": "Sincere-sounding, speaks fast when lying",
+        "gender": "m",
+        "history": "Three years together.",
+        "enters_at": 0,
+        "goal": "Keep the wedding on",
+        "secret": "He's promised his mother you'll quit your job and move in with them after the wedding",
+        "reveal_when": "You repeat exactly what you heard, calmly",
+        "red_lines": [
+          "Denies it the first time, always"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 50
+        }
+      },
+      {
+        "name": "His mother, on the phone",
+        "role": "his mother, on speaker",
+        "appearance": "Woman about 62, seen on a phone video call at a dressing table, annoyed, reading glasses",
+        "voice": "Loud, contemptuous, doesn't care who hears",
+        "gender": "f",
+        "history": "You've met a few times.",
+        "enters_at": 3,
+        "goal": "Keep her son and the plan",
+        "secret": "She has already told the relatives you'll live with them",
+        "reveal_when": "You ask her directly what she was told",
+        "red_lines": [
+          "Won't back down in front of her son"
+        ],
+        "mood": {
+          "trust": 15,
+          "patience": 40
+        }
+      },
+      {
+        "name": "Your brother",
+        "role": "your younger brother, home from work",
+        "appearance": "Man about 29, delivery uniform, tired, helmet under his arm, protective",
+        "voice": "Dry, angry, polite until he isn't",
+        "gender": "m",
+        "history": "You raised him as much as your mother did.",
+        "enters_at": 5,
+        "goal": "Protect you and your mother",
+        "secret": "Your fiancé asked him last month for your mother's house papers 'for the bank'",
+        "reveal_when": "You ask if he's been in touch",
+        "red_lines": [
+          "Won't touch him"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "Paul",
+    "opening_line": "I'm back. Sorry, that was work. Listen, I meant it, what I said. On my knees, I meant all of it.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "His phone rings again and answers itself on speaker. His mother's voice fills the room.",
+        "enters": [
+          "His mother, on the phone"
+        ],
+        "shot": "A phone held out shows an annoyed older woman on a video call; the man freezes."
+      },
+      {
+        "at_turn": 5,
+        "description": "The front door opens. Your brother comes in with his helmet and looks at the two of you.",
+        "enters": [
+          "Your brother"
+        ],
+        "shot": "A young man in a delivery uniform stands in the doorway with a helmet, staring at the other man."
+      },
+      {
+        "at_turn": 7,
+        "description": "Your fiancé picks up his jacket, and waits for you to say something.",
+        "enters": [],
+        "shot": "The man holds his suit jacket and stands facing you in the quiet room."
+      }
+    ],
+    "success_criteria": [
+      "Makes him admit what the call was",
+      "Finds out the plan for after the wedding",
+      "Decides for herself"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_overheard_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_overheard_3_scene.jpg",
+      "5": "/presets/img/en_overheard_5_scene.jpg",
+      "7": "/presets/img/en_overheard_7_scene.jpg"
+    },
+    "clues": {
+      "Paul": {
+        "img": "/presets/img/clue_overheard_0.jpg",
+        "name": "Your resignation form"
+      },
+      "His mother, on the phone": {
+        "img": "/presets/img/clue_overheard_1.jpg",
+        "name": "The seating plan"
+      },
+      "Your brother": {
+        "img": "/presets/img/clue_overheard_2.jpg",
+        "name": "The house papers"
+      }
+    },
+    "basis": "Adapted from a story posted on an online community. Names and details are changed."
+  }
+}

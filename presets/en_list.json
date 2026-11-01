@@ -1,0 +1,133 @@
+{
+  "situation": "You paid half of the house. Today his mother and aunt hand you a list of what you'll be bringing, with brands and model numbers.",
+  "ui": "en",
+  "scenario": {
+    "title": "The List",
+    "language": "en",
+    "setting": "A department store cafe on a Saturday, shopping bags around the table, a neatly printed list between the cups.",
+    "user_role": "His fiancée",
+    "user_goal": "Stand your ground on the list without blowing up the wedding.",
+    "user_knows": [
+      "You and he split the house deposit in half",
+      "He handed you the list himself yesterday"
+    ],
+    "cast": [
+      {
+        "name": "His mother",
+        "role": "his mother",
+        "appearance": "Woman about 60, department store scarf, reading glasses on a chain, pen in hand",
+        "voice": "Sweet, itemising, 'it's only what's proper'",
+        "gender": "f",
+        "history": "You've met four times.",
+        "enters_at": 0,
+        "goal": "Set the rules from the start",
+        "secret": "She's already told her friends the brands, and the fridge is for her own kitchen",
+        "reveal_when": "You ask where each thing is going to go",
+        "red_lines": [
+          "Won't discuss money directly"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 45
+        }
+      },
+      {
+        "name": "His aunt",
+        "role": "his aunt",
+        "appearance": "Woman about 63, big handbag, lipstick, leaning forward, loud laugh",
+        "voice": "Nosy, comparing, 'my daughter-in-law brought…'",
+        "gender": "f",
+        "history": "You've met once.",
+        "enters_at": 0,
+        "goal": "Win by comparison",
+        "secret": "Her own daughter-in-law stopped speaking to her over this very thing",
+        "reveal_when": "You ask how her daughter-in-law is doing",
+        "red_lines": [
+          "Won't admit that unless asked straight out"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 40
+        }
+      },
+      {
+        "name": "Leo",
+        "role": "your fiancé, arriving late",
+        "appearance": "Man about 31, car keys, gym bag, cheerful, hasn't read the room",
+        "voice": "Cheerful, 'it's just a list', slides away from conflict",
+        "gender": "m",
+        "history": "Two years together.",
+        "enters_at": 3,
+        "goal": "Not get involved",
+        "secret": "He helped them write the list, and added two items himself",
+        "reveal_when": "You ask which items were his idea",
+        "red_lines": [
+          "Won't choose in public unless pressed"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "His mother",
+    "opening_line": "It's nothing much, dear, just what's proper. The fridge, we've circled the model. You've got a pen?",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "Your fiancé strolls in with his gym bag and steals a cookie.",
+        "enters": [
+          "Leo"
+        ],
+        "shot": "A cheerful young man with a gym bag leans over the table between the two older women."
+      },
+      {
+        "at_turn": 5,
+        "description": "His aunt takes out her phone to show you what her daughter-in-law brought, then stops scrolling.",
+        "enters": [],
+        "shot": "The woman with lipstick stares at her phone, her smile gone, the others looking at her."
+      },
+      {
+        "at_turn": 7,
+        "description": "His mother slides the pen across to you and folds her hands.",
+        "enters": [],
+        "shot": "A pen lies across the printed list, pushed toward you; the older woman waits with folded hands."
+      }
+    ],
+    "success_criteria": [
+      "Says no to the list clearly and politely",
+      "Gets him to take a side"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_list_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_list_3_scene.jpg",
+      "5": "/presets/img/en_list_5_scene.jpg",
+      "7": "/presets/img/en_list_7_scene.jpg"
+    },
+    "clues": {
+      "His mother": {
+        "img": "/presets/img/clue_list_0.jpg",
+        "name": "Her friend's chat"
+      },
+      "His aunt": {
+        "img": "/presets/img/clue_list_1.jpg",
+        "name": "The empty family photo"
+      },
+      "Leo": {
+        "img": "/presets/img/clue_list_2.jpg",
+        "name": "His handwriting"
+      }
+    },
+    "basis": "Adapted from a story posted on an online community. Names and details are changed."
+  }
+}

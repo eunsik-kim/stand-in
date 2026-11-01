@@ -1,0 +1,134 @@
+{
+  "situation": "His mother gave you the family diamond. He got a new luxury watch. Then a jeweller looked at the ring.",
+  "ui": "en",
+  "scenario": {
+    "title": "The Family Diamond",
+    "language": "en",
+    "setting": "A quiet family dining room at his parents' house, fruit on a plate, a small ring box open on the table.",
+    "user_role": "His fiancée",
+    "user_goal": "Find out who knew the ring was fake, and what it means for the wedding.",
+    "user_knows": [
+      "A jeweller told you the stone is fake",
+      "He was given a new watch by his parents for the engagement"
+    ],
+    "cast": [
+      {
+        "name": "Kevin",
+        "role": "your fiancé",
+        "appearance": "Man about 33, polished, new gold watch on his wrist, laughing too quickly",
+        "voice": "Charming, smooths everything over, 'don't make it a thing'",
+        "gender": "m",
+        "history": "Two years together.",
+        "enters_at": 0,
+        "goal": "Keep the wedding on and the money quiet",
+        "secret": "He's known for a year: the real diamond was sold to cover his debts",
+        "reveal_when": "You stop asking about the ring and ask about his money",
+        "red_lines": [
+          "Won't admit debts in front of his mother unless cornered"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 50
+        }
+      },
+      {
+        "name": "His mother",
+        "role": "his mother",
+        "appearance": "Elegant woman about 62, hair set, silk blouse, hand resting near the ring box",
+        "voice": "Gracious, wounded at any question",
+        "gender": "f",
+        "history": "She has called you 'my daughter' from the start.",
+        "enters_at": 0,
+        "goal": "Keep up appearances",
+        "secret": "She had a copy made herself, and has been wearing it for years",
+        "reveal_when": "You ask gently when she last had it valued",
+        "red_lines": [
+          "Won't be called a liar at her own table"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 45
+        }
+      },
+      {
+        "name": "The jeweller",
+        "role": "the old jeweller you brought along",
+        "appearance": "Old man about 75, tweed jacket, loupe on a cord around his neck, kind eyes",
+        "voice": "Slow, exact, sorry to be here",
+        "gender": "m",
+        "history": "You met him yesterday.",
+        "enters_at": 3,
+        "goal": "Tell the truth and go home",
+        "secret": "He made the copy himself eight years ago and recognises his own work",
+        "reveal_when": "You ask if he's seen this ring before",
+        "red_lines": [
+          "Won't name a client unless pressed"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "His mother",
+    "opening_line": "You've not touched your fruit. Is something wrong with the ring, dear? It looks so lovely on you.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "The bell rings. The old jeweller is at the door, hat in his hands. You asked him to come.",
+        "enters": [
+          "The jeweller"
+        ],
+        "shot": "An old man in tweed with a loupe around his neck stands by the table with the two others."
+      },
+      {
+        "at_turn": 5,
+        "description": "He lifts the ring with tweezers, holds it to the light, then looks up at his mother for a long moment.",
+        "enters": [],
+        "shot": "The old man holds the ring up to the light with tweezers; the elegant woman stares at him."
+      },
+      {
+        "at_turn": 7,
+        "description": "Your fiancé takes off the watch and sets it next to the ring box.",
+        "enters": [],
+        "shot": "A gold watch lies beside the small ring box; the polished man's wrist is bare."
+      }
+    ],
+    "success_criteria": [
+      "Finds out the real diamond was sold",
+      "Finds out why",
+      "Decides about the wedding"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_ring_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_ring_3_scene.jpg",
+      "5": "/presets/img/en_ring_5_scene.jpg",
+      "7": "/presets/img/en_ring_7_scene.jpg"
+    },
+    "clues": {
+      "Kevin": {
+        "img": "/presets/img/clue_ring_0.jpg",
+        "name": "A loan statement"
+      },
+      "His mother": {
+        "img": "/presets/img/clue_ring_1.jpg",
+        "name": "The copy's receipt"
+      },
+      "The jeweller": {
+        "img": "/presets/img/clue_ring_2.jpg",
+        "name": "His ledger"
+      }
+    },
+    "basis": "Adapted from a story posted on an online community. Names and details are changed."
+  }
+}

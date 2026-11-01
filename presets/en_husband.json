@@ -22,7 +22,7 @@
         "enters_at": 0,
         "goal": "Buy time until the money comes back",
         "secret": "He put it all into a friend's crypto scheme, which froze withdrawals two weeks ago",
-        "reveal_when": "You stay calm and ask what he's afraid of telling you",
+        "reveal_when": "You ask directly twice where the money went, or ask calmly what he's afraid of telling you",
         "red_lines": [
           "Won't lie once directly asked twice"
         ],

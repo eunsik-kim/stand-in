@@ -1,0 +1,133 @@
+{
+  "situation": "집값을 반반 냈다. 오늘 예비 시어머니와 시이모가 브랜드, 모델명까지 적힌 혼수 리스트를 건넨다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "혼수 리스트",
+    "language": "ko",
+    "setting": "토요일 백화점 카페. 탁자 주변 쇼핑백, 찻잔 사이의 깔끔히 출력된 리스트.",
+    "user_role": "그의 예비 신부",
+    "user_goal": "결혼을 깨지 않으면서 리스트에 선을 긋는다.",
+    "user_knows": [
+      "집 보증금을 반반 냈다",
+      "어제 그가 직접 리스트를 건넸다"
+    ],
+    "cast": [
+      {
+        "name": "예비 시어머니",
+        "role": "예비 시어머니",
+        "appearance": "Woman about 60, department store scarf, reading glasses on a chain, pen in hand",
+        "voice": "상냥하게 하나하나 짚는다, '이게 도리지'",
+        "gender": "f",
+        "history": "네 번 뵈었다.",
+        "enters_at": 0,
+        "goal": "처음부터 규칙을 잡는다",
+        "secret": "친구들에게 브랜드를 자랑해 뒀고 냉장고는 자기 집에 둘 생각이다",
+        "reveal_when": "각각 어디에 놓을 건지 물을 때",
+        "red_lines": [
+          "돈 얘기는 직접 안 한다"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 45
+        }
+      },
+      {
+        "name": "시이모",
+        "role": "시이모",
+        "appearance": "Woman about 63, big handbag, lipstick, leaning forward, loud laugh",
+        "voice": "캐묻고 비교한다, '우리 며느리는 말이야'",
+        "gender": "f",
+        "history": "한 번 봤다.",
+        "enters_at": 0,
+        "goal": "자기 며느리와 비교해 이긴다",
+        "secret": "자기 며느리와 바로 이 문제로 절연 상태다",
+        "reveal_when": "며느리는 잘 지내시냐고 물을 때",
+        "red_lines": [
+          "대놓고 묻기 전엔 인정 안 한다"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 40
+        }
+      },
+      {
+        "name": "태준",
+        "role": "늦게 도착한 예비 신랑",
+        "appearance": "Man about 31, car keys, gym bag, cheerful, hasn't read the room",
+        "voice": "밝게 '그냥 리스트잖아', 슬쩍 빠진다",
+        "gender": "m",
+        "history": "2년 사귀었다.",
+        "enters_at": 3,
+        "goal": "끼지 않는다",
+        "secret": "리스트 작성을 도왔고 자기가 두 개를 추가했다",
+        "reveal_when": "어느 항목이 그의 생각인지 물을 때",
+        "red_lines": [
+          "몰리기 전엔 공개적으로 편들지 않는다"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "예비 시어머니",
+    "opening_line": "별거 아니야, 도리만 하자는 거지. 냉장고는 모델 표시해 놨어. 펜 있니?",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "예비 신랑이 운동 가방을 메고 들어와 쿠키를 집어 먹는다.",
+        "enters": [
+          "태준"
+        ],
+        "shot": "A cheerful young man with a gym bag leans over the table between the two older women."
+      },
+      {
+        "at_turn": 5,
+        "description": "시이모가 며느리 혼수 사진을 보여 주려다 스크롤을 멈춘다.",
+        "enters": [],
+        "shot": "The woman with lipstick stares at her phone, her smile gone, the others looking at her."
+      },
+      {
+        "at_turn": 7,
+        "description": "예비 시어머니가 펜을 당신 쪽으로 밀고 손을 모은다.",
+        "enters": [],
+        "shot": "A pen lies across the printed list, pushed toward you; the older woman waits with folded hands."
+      }
+    ],
+    "success_criteria": [
+      "공손하고 분명하게 선을 긋는다",
+      "그가 입장을 밝히게 한다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_list_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_list_3_scene.jpg",
+      "5": "/presets/img/ko_list_5_scene.jpg",
+      "7": "/presets/img/ko_list_7_scene.jpg"
+    },
+    "clues": {
+      "예비 시어머니": {
+        "img": "/presets/img/clue_list_0.jpg",
+        "name": "시어머니의 자랑"
+      },
+      "시이모": {
+        "img": "/presets/img/clue_list_1.jpg",
+        "name": "빈자리 있는 가족사진"
+      },
+      "태준": {
+        "img": "/presets/img/clue_list_2.jpg",
+        "name": "그의 글씨"
+      }
+    },
+    "basis": "온라인 커뮤니티에 올라온 이야기를 각색했습니다. 이름과 세부는 바꿨습니다."
+  }
+}

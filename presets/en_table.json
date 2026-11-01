@@ -1,0 +1,131 @@
+{
+  "situation": "Three years of remarks at this table. Today your father-in-law says one thing too many. This time you put down your spoon.",
+  "ui": "en",
+  "scenario": {
+    "title": "Not Today",
+    "language": "en",
+    "setting": "A family dining table at the in-laws' on a holiday, too many side dishes, a TV on low, a child's booster seat.",
+    "user_role": "His daughter-in-law, three years married",
+    "user_goal": "Say it, once, in your own words, and get through this without leaving in tears.",
+    "user_knows": [
+      "He has been making remarks since the day you met",
+      "Your husband always says 'that's just how he is'"
+    ],
+    "cast": [
+      {
+        "name": "Your father-in-law",
+        "role": "your father-in-law",
+        "appearance": "Man about 68, cardigan, chewing slowly, chopsticks pointing as he talks",
+        "voice": "Loud, joking, each joke with a sting",
+        "gender": "m",
+        "history": "Three years of this.",
+        "enters_at": 0,
+        "goal": "Be the head of the table",
+        "secret": "His business closed last year and nobody outside the family knows; he's ashamed",
+        "reveal_when": "You answer him steadily without insulting him",
+        "red_lines": [
+          "Won't apologise at his own table in front of everyone"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 40
+        }
+      },
+      {
+        "name": "Your mother-in-law",
+        "role": "your mother-in-law",
+        "appearance": "Woman about 65, apron over her blouse, bringing another dish, not sitting down",
+        "voice": "Soothing, deflects, 'eat, eat'",
+        "gender": "f",
+        "history": "She has told you to just let it go.",
+        "enters_at": 0,
+        "goal": "Keep the meal going",
+        "secret": "She's had forty years of this and has a bank account he doesn't know about",
+        "reveal_when": "You ask her how she's stood it",
+        "red_lines": [
+          "Won't take a side out loud"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Ben",
+        "role": "your husband",
+        "appearance": "Man about 35, eyes on his bowl, shoulders up, phone on the table",
+        "voice": "Mutters, 'let's just eat', sentences that fade out",
+        "gender": "m",
+        "history": "Three years married.",
+        "enters_at": 0,
+        "goal": "Avoid this moment, as he has his whole life",
+        "secret": "He promised himself at twelve he'd never let this happen to his wife",
+        "reveal_when": "You turn and ask him, here, to say one thing",
+        "red_lines": [
+          "Won't shout at his father"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "Your father-in-law",
+    "opening_line": "Still just the one kid? What're you waiting for, eh? At your age my wife had three. Ha! Eat, eat.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "Your mother-in-law puts another dish in front of you and squeezes your shoulder. Don't.",
+        "enters": [],
+        "shot": "An older woman in an apron leans in beside you, setting down a dish, looking at you pleadingly."
+      },
+      {
+        "at_turn": 4,
+        "description": "The TV goes off. Your father-in-law has turned it off himself, and everyone stops chewing.",
+        "enters": [],
+        "shot": "The older man holds a remote toward a dark TV; everyone at the table has stopped eating."
+      },
+      {
+        "at_turn": 6,
+        "description": "Your husband puts his spoon down, for the first time you can remember.",
+        "enters": [],
+        "shot": "The younger man has put down his spoon and looks up at last from his bowl."
+      }
+    ],
+    "success_criteria": [
+      "Says it without insulting anyone",
+      "Gets her husband to speak up"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_table_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_table_2_scene.jpg",
+      "4": "/presets/img/en_table_4_scene.jpg",
+      "6": "/presets/img/en_table_6_scene.jpg"
+    },
+    "clues": {
+      "Your father-in-law": {
+        "img": "/presets/img/clue_table_0.jpg",
+        "name": "The closing notice"
+      },
+      "Your mother-in-law": {
+        "img": "/presets/img/clue_table_1.jpg",
+        "name": "Her bankbook"
+      },
+      "Ben": {
+        "img": "/presets/img/clue_table_2.jpg",
+        "name": "A boy's note"
+      }
+    },
+    "basis": "Adapted from a story posted on an online community. Names and details are changed."
+  }
+}

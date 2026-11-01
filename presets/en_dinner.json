@@ -69,7 +69,7 @@
           "never reveals a private conversation you had with him in confidence"
         ],
         "mood": {
-          "trust": 70,
+          "trust": 60,
           "patience": 65
         }
       }

@@ -45,7 +45,7 @@
           "Won't tell if you tease"
         ],
         "mood": {
-          "trust": 80,
+          "trust": 60,
           "patience": 60
         }
       },
@@ -64,7 +64,7 @@
           "Won't answer for you"
         ],
         "mood": {
-          "trust": 70,
+          "trust": 60,
           "patience": 80
         }
       }

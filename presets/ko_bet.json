@@ -1,0 +1,136 @@
+{
+  "situation": "이혼 서류를 낸 날, 남편 친구가 주차장에서 당신을 붙잡는다. 이 모든 게 내기였다고.",
+  "ui": "ko",
+  "scenario": {
+    "title": "9개월짜리 내기",
+    "language": "ko",
+    "setting": "지하주차장 옆 평범한 커피숍, 늦은 오후. 식어 가는 커피, 가방 속 이혼 서류 봉투.",
+    "user_role": "막 이혼 서류를 낸 결혼 9년 차 아내",
+    "user_goal": "결혼 생활에 진짜 무슨 일이 있었는지 알아내고 진실을 들고 나간다.",
+    "user_knows": [
+      "이름 붙이기 어려운 작은 상처들이 쌓여 이혼을 냈다",
+      "일주일 혼자 여행을 갔다가 돌아오니 가족이 난리였다"
+    ],
+    "cast": [
+      {
+        "name": "남편 친구 기태",
+        "role": "남편의 오랜 친구",
+        "appearance": "Man about 40, wrinkled shirt, wedding ring he keeps turning, can't meet your eyes",
+        "voice": "횡설수설하고 부끄러워서 말을 몇 번이고 다시 시작한다",
+        "gender": "m",
+        "history": "그에게 밥을 여러 번 해 줬다.",
+        "enters_at": 0,
+        "goal": "양심의 짐을 덜고 싶다",
+        "secret": "친구 넷이 당신이 언제 폭발할지 낚시 장비를 걸고 내기했고 남편이 이겼다",
+        "reveal_when": "침착하게 정확히 뭘 걸었는지 물을 때",
+        "red_lines": [
+          "말을 꺼낸 이상 거짓말은 안 한다"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 45
+        }
+      },
+      {
+        "name": "남편 재현",
+        "role": "뒤따라온 남편",
+        "appearance": "Man about 42, neat coat, calm cold face, phone in hand",
+        "voice": "조용하고 합리적인데 문장마다 살짝 잔인하다",
+        "gender": "m",
+        "history": "결혼 9년.",
+        "enters_at": 3,
+        "goal": "끝나는 방식까지 쥐고 싶다",
+        "secret": "내기는 농담이었다지만 당신이 참은 날을 다 적어 뒀고, 이혼 통보를 받은 밤 숨을 못 쉬었다",
+        "reveal_when": "설명을 그만 요구하고 그날 밤 기분을 물을 때",
+        "red_lines": [
+          "친구 앞에서 사과하지 않는다"
+        ],
+        "mood": {
+          "trust": 20,
+          "patience": 50
+        }
+      },
+      {
+        "name": "시어머니",
+        "role": "남편이 부른 시어머니",
+        "appearance": "Woman about 67, good coat, handbag on her knees, red-rimmed eyes",
+        "voice": "애원하다 날카로워진다, '우리가 얼마나 잘해 줬는데'",
+        "gender": "f",
+        "history": "지난달 실종 신고를 했던 사람이다.",
+        "enters_at": 5,
+        "goal": "이혼을 막는다",
+        "secret": "가족 식사 때 내기 이야기를 듣고 같이 웃었다",
+        "reveal_when": "언제 뭘 알았는지 물을 때",
+        "red_lines": [
+          "아들을 탓하지 않는다"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "남편 친구 기태",
+    "opening_line": "앉아 줘서 고마워요. 그냥 말할게요. 아니, 그게… 진짜 멍청한 건데, 멍청한 걸로 시작했어요.",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "문이 열리고 남편이 들어와 누구랑 있는지 보더니 묻지도 않고 앉는다.",
+        "enters": [
+          "남편 재현"
+        ],
+        "shot": "A calm man in a neat coat sits down at the table beside the ashamed man."
+      },
+      {
+        "at_turn": 5,
+        "description": "시어머니가 숨을 몰아쉬며 들어와 당신 손부터 잡는다.",
+        "enters": [
+          "시어머니"
+        ],
+        "shot": "An older woman in a good coat reaches across the table toward you, the two men silent."
+      },
+      {
+        "at_turn": 7,
+        "description": "남편이 작은 수첩을 탁자에 올려놓고 펼치지는 않는다.",
+        "enters": [],
+        "shot": "A small black notebook lies on the table under the calm man's hand."
+      }
+    ],
+    "success_criteria": [
+      "내기의 내용을 알아낸다",
+      "다시 끌려 들어가지 않는다",
+      "내 마지막 말을 한다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_bet_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_bet_3_scene.jpg",
+      "5": "/presets/img/ko_bet_5_scene.jpg",
+      "7": "/presets/img/ko_bet_7_scene.jpg"
+    },
+    "clues": {
+      "남편 친구 기태": {
+        "img": "/presets/img/clue_bet_0.jpg",
+        "name": "내기 상품"
+      },
+      "남편 재현": {
+        "img": "/presets/img/clue_bet_1.jpg",
+        "name": "그의 수첩"
+      },
+      "시어머니": {
+        "img": "/presets/img/clue_bet_2.jpg",
+        "name": "가족 식사 사진"
+      }
+    },
+    "basis": "온라인 커뮤니티에 올라온 이야기를 각색했습니다. 이름과 세부는 바꿨습니다."
+  }
+}

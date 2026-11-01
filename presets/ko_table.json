@@ -1,0 +1,131 @@
+{
+  "situation": "3년간 이 밥상에서 들은 말들. 오늘 시아버지가 한마디를 더 했다. 이번엔 숟가락을 내려놓는다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "오늘은 안 참습니다",
+    "language": "ko",
+    "setting": "명절의 시댁 식탁. 반찬이 가득하고 TV가 낮게 켜져 있으며 아이 의자가 놓여 있다.",
+    "user_role": "결혼 3년 차 며느리",
+    "user_goal": "내 말로 한 번은 제대로 말하고, 울며 나가지 않는다.",
+    "user_knows": [
+      "처음 만난 날부터 막말을 해 왔다",
+      "남편은 늘 '아버지 원래 그래'라고 한다"
+    ],
+    "cast": [
+      {
+        "name": "시아버지",
+        "role": "시아버지",
+        "appearance": "Man about 68, cardigan, chewing slowly, chopsticks pointing as he talks",
+        "voice": "크게 농담하듯 말하는데 말마다 침이 있다",
+        "gender": "m",
+        "history": "3년째 이렇다.",
+        "enters_at": 0,
+        "goal": "밥상의 주인으로 남는다",
+        "secret": "작년에 사업을 접었고 집 밖에선 아무도 모른다. 부끄럽다",
+        "reveal_when": "모욕하지 않고 흔들림 없이 맞설 때",
+        "red_lines": [
+          "모두 앞에서 사과는 못 한다"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 40
+        }
+      },
+      {
+        "name": "시어머니",
+        "role": "시어머니",
+        "appearance": "Woman about 65, apron over her blouse, bringing another dish, not sitting down",
+        "voice": "달래고 넘긴다, '먹어, 먹어'",
+        "gender": "f",
+        "history": "그냥 넘기라고 해 왔다.",
+        "enters_at": 0,
+        "goal": "식사가 이어지게 한다",
+        "secret": "40년을 견뎠고 그가 모르는 통장이 있다",
+        "reveal_when": "어떻게 견디셨는지 물을 때",
+        "red_lines": [
+          "대놓고 편들지 않는다"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 50
+        }
+      },
+      {
+        "name": "남편 동현",
+        "role": "남편",
+        "appearance": "Man about 35, eyes on his bowl, shoulders up, phone on the table",
+        "voice": "웅얼거리고 '그냥 먹자', 말끝이 사라진다",
+        "gender": "m",
+        "history": "결혼 3년.",
+        "enters_at": 0,
+        "goal": "평생 그랬듯 이 순간을 피한다",
+        "secret": "열두 살 때 아내는 이렇게 안 두겠다고 다짐했었다",
+        "reveal_when": "여기서 딱 한마디만 해 달라고 할 때",
+        "red_lines": [
+          "아버지에게 소리치지 않는다"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "시아버지",
+    "opening_line": "아직도 하나야? 뭘 기다려, 어? 네 나이에 우리 집사람은 셋이었어. 허허. 먹어, 먹어.",
+    "phases": [
+      "시작",
+      "꼬임",
+      "진짜 이유",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "시어머니가 반찬을 또 놓으며 어깨를 꽉 쥔다. 하지 말라는 뜻이다.",
+        "enters": [],
+        "shot": "An older woman in an apron leans in beside you, setting down a dish, looking at you pleadingly."
+      },
+      {
+        "at_turn": 4,
+        "description": "TV가 꺼진다. 시아버지가 직접 껐고, 다들 씹던 걸 멈춘다.",
+        "enters": [],
+        "shot": "The older man holds a remote toward a dark TV; everyone at the table has stopped eating."
+      },
+      {
+        "at_turn": 6,
+        "description": "남편이 숟가락을 내려놓는다. 기억하는 한 처음이다.",
+        "enters": [],
+        "shot": "The younger man has put down his spoon and looks up at last from his bowl."
+      }
+    ],
+    "success_criteria": [
+      "모욕 없이 말한다",
+      "남편이 입을 열게 한다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_table_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_table_2_scene.jpg",
+      "4": "/presets/img/ko_table_4_scene.jpg",
+      "6": "/presets/img/ko_table_6_scene.jpg"
+    },
+    "clues": {
+      "시아버지": {
+        "img": "/presets/img/clue_table_0.jpg",
+        "name": "폐업 안내문"
+      },
+      "시어머니": {
+        "img": "/presets/img/clue_table_1.jpg",
+        "name": "시어머니의 통장"
+      },
+      "남편 동현": {
+        "img": "/presets/img/clue_table_2.jpg",
+        "name": "열두 살의 메모"
+      }
+    },
+    "basis": "온라인 커뮤니티에 올라온 이야기를 각색했습니다. 이름과 세부는 바꿨습니다."
+  }
+}

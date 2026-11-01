@@ -75,7 +75,7 @@ def play(scenario, persona: str, actor: LLM, checker: LLM, player: LLM, coach: L
     for n in range(1, turns + 1):
         said = user(scene, n).strip()
         t0, first = time.time(), None
-        for ev in stream_step(scene, n, said, actor, checker):
+        for ev in stream_step(scene, n, said, actor):
             if ev["type"] == "sentence" and first is None:
                 first = time.time() - t0
         if first is not None:

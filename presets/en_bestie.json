@@ -65,7 +65,7 @@
           "Won't tell you what to do"
         ],
         "mood": {
-          "trust": 80,
+          "trust": 60,
           "patience": 50
         }
       }

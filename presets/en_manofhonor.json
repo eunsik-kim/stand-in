@@ -21,7 +21,7 @@
         "history": "Three years together.",
         "enters_at": 0,
         "goal": "Go, and not be the bad guy",
-        "secret": "She asked him to come so he could talk her out of her doubts about the wedding",
+        "secret": "Nora told Will she has doubts about her own wedding and asked him to come and talk her out of it",
         "reveal_when": "You ask what she actually said to him",
         "red_lines": [
           "Won't cancel if ordered to"
@@ -65,7 +65,7 @@
           "Won't stay polite for long"
         ],
         "mood": {
-          "trust": 80,
+          "trust": 60,
           "patience": 50
         }
       }

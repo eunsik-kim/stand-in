@@ -65,7 +65,7 @@
           "Won't lie to you"
         ],
         "mood": {
-          "trust": 80,
+          "trust": 60,
           "patience": 60
         }
       }

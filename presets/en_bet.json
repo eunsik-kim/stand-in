@@ -1,0 +1,136 @@
+{
+  "situation": "The divorce papers are filed. Then your husband's friend stops you in a car park: it started as a bet about you.",
+  "ui": "en",
+  "scenario": {
+    "title": "The Nine-Month Bet",
+    "language": "en",
+    "setting": "A plain coffee shop beside an underground car park, late afternoon. Three cups going cold, a folder of divorce papers in your bag.",
+    "user_role": "A wife of nine years, who has just filed for divorce",
+    "user_goal": "Find out what really went on in your marriage, and leave with the truth.",
+    "user_knows": [
+      "You filed after years of small cruelties you couldn't name",
+      "You went away alone for a week and came back to a family in panic"
+    ],
+    "cast": [
+      {
+        "name": "Dave",
+        "role": "your husband's old friend",
+        "appearance": "Man about 40, wrinkled shirt, wedding ring he keeps turning, can't meet your eyes",
+        "voice": "Rambling, ashamed, starts again and again",
+        "gender": "m",
+        "history": "You've cooked for him many times.",
+        "enters_at": 0,
+        "goal": "Clear his conscience",
+        "secret": "Four friends bet fishing gear on how long you'd last before you snapped, and your husband won",
+        "reveal_when": "You stay calm and ask him exactly what they bet on",
+        "red_lines": [
+          "Won't lie now he's started"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 45
+        }
+      },
+      {
+        "name": "Alex",
+        "role": "your husband, who followed",
+        "appearance": "Man about 42, neat coat, calm cold face, phone in hand",
+        "voice": "Quiet, reasonable, every sentence slightly cruel",
+        "gender": "m",
+        "history": "Nine years of marriage.",
+        "enters_at": 3,
+        "goal": "Keep control of how this ends",
+        "secret": "He says the bet was a joke, but he kept a note of every time you held your tongue, and the night you told him it was over he couldn't breathe",
+        "reveal_when": "You stop asking him to explain and ask what he felt that night",
+        "red_lines": [
+          "Won't apologise in front of his friend"
+        ],
+        "mood": {
+          "trust": 20,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Your mother-in-law",
+        "role": "your mother-in-law, called by your husband",
+        "appearance": "Woman about 67, good coat, handbag on her knees, red-rimmed eyes",
+        "voice": "Pleading, then sharp, 'after all we did'",
+        "gender": "f",
+        "history": "She reported you missing last month.",
+        "enters_at": 5,
+        "goal": "Stop the divorce",
+        "secret": "She heard about the bet at a family dinner and laughed along",
+        "reveal_when": "You ask her what she knew and when",
+        "red_lines": [
+          "Won't blame her son"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "Dave",
+    "opening_line": "I—thanks for sitting. I'll just say it. No. Okay. It's about the—it's stupid. It started as a stupid thing.",
+    "phases": [
+      "Opening",
+      "It gets worse",
+      "The real reason",
+      "How it ends"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "The door opens. Your husband comes in, sees who you're with and sits down without being asked.",
+        "enters": [
+          "Alex"
+        ],
+        "shot": "A calm man in a neat coat sits down at the table beside the ashamed man."
+      },
+      {
+        "at_turn": 5,
+        "description": "His mother arrives, out of breath, and takes your hand before you can move it.",
+        "enters": [
+          "Your mother-in-law"
+        ],
+        "shot": "An older woman in a good coat reaches across the table toward you, the two men silent."
+      },
+      {
+        "at_turn": 7,
+        "description": "Your husband puts a small notebook on the table and doesn't open it.",
+        "enters": [],
+        "shot": "A small black notebook lies on the table under the calm man's hand."
+      }
+    ],
+    "success_criteria": [
+      "Learns what the bet was",
+      "Doesn't get pulled back in",
+      "Says her last word"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_bet_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_bet_3_scene.jpg",
+      "5": "/presets/img/en_bet_5_scene.jpg",
+      "7": "/presets/img/en_bet_7_scene.jpg"
+    },
+    "clues": {
+      "Dave": {
+        "img": "/presets/img/clue_bet_0.jpg",
+        "name": "The prize"
+      },
+      "Alex": {
+        "img": "/presets/img/clue_bet_1.jpg",
+        "name": "His notebook"
+      },
+      "Your mother-in-law": {
+        "img": "/presets/img/clue_bet_2.jpg",
+        "name": "A family dinner photo"
+      }
+    },
+    "basis": "Adapted from a story posted on an online community. Names and details are changed."
+  }
+}

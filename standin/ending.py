@@ -2,7 +2,6 @@
 
 from pydantic import BaseModel
 
-from .debrief import full_record
 from .engine import Scene
 from .llm import LLM
 
@@ -20,12 +19,13 @@ def ending(writer: LLM, scene: Scene, ui: str) -> Ending:
         Ending, "You write the closing page of an interactive story. Reply with a single JSON object.",
         f"Setting: {s.setting}\nThe player was: {s.user_role}\nTheir goal: {s.user_goal}\n"
         "Outcomes to judge, in order:\n" + "\n".join(f"- {c}" for c in s.success_criteria)
-        + f"\n\n{full_record(scene)}\n\nThe scene ended: {scene.ended}\n\n"
+        + f"\n\nEverything that was said and happened:\n{scene.public(viewer='record')}\n\n"
         f"Write in language '{ui or s.language}'.\n"
-        "title: the name of the ending this player reached, 2-5 words, specific to what happened, like a game ending.\n"
+        "title: the name of this ending, 2-5 words, like an ending in a game, not a headline.\n"
         "story: 2-3 short sentences saying what became of everyone after the scene, addressed to the player as 'you'. "
-        "Follow from what was actually said; if things were left open, close them the way this conversation pointed. No advice.\n"
-        "met: true or false for each outcome, judged only from the transcript.\n"
-        "best_line: the player's own line that changed things most, copied exactly, or empty if none did.\n"
+        "Use only what is above: invent no facts, names or objects, and no advice.\n"
+        "met: true or false for each outcome. It is true only if it happened in the transcript through the player's own side; "
+        "if someone else did it, or you are unsure, it is false.\n"
+        "best_line: the player's own line that changed things most, copied exactly, never one marked (auto); empty if none did.\n"
         'Return {"title": "...", "story": "...", "met": [true, false], "best_line": "..."}',
     )
