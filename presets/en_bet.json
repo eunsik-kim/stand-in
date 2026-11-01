@@ -1,5 +1,5 @@
 {
-  "situation": "The divorce papers are filed. Then your husband's friend stops you in a car park: it started as a bet about you.",
+  "situation": "The divorce papers are filed. Then your husband's friend asks you to a coffee shop: it started as a bet about you.",
   "ui": "en",
   "scenario": {
     "title": "The Nine-Month Bet",
@@ -107,7 +107,7 @@
       "Doesn't get pulled back in",
       "Says her last word"
     ],
-    "max_turns": 9
+    "max_turns": 11
   },
   "gate1": [],
   "assets": {

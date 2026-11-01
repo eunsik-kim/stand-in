@@ -9,7 +9,8 @@
     "user_goal": "Find out where the money went and what you do now.",
     "user_knows": [
       "The savings were for your child's school",
-      "He has been on edge for weeks"
+      "He has been on edge for weeks",
+      "Thirty thousand dollars is missing"
     ],
     "cast": [
       {
@@ -107,7 +108,7 @@
       "Finds the Friday deadline",
       "Decides together what to do"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [],
   "assets": {

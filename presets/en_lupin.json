@@ -105,7 +105,7 @@
       "Catches a contradiction in someone's story",
       "Names the doctor as Lupin with a reason"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [],
   "assets": {

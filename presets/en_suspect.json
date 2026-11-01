@@ -110,7 +110,7 @@
       "Refuse or delay any search of pockets, bag or coat without getting aggressive or confessing",
       "End the scene without being detained or exposed as the thief"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [
     {

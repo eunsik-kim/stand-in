@@ -637,10 +637,11 @@ def closing_page(req: EndReq):
     if not s:
         raise HTTPException(404, "unknown session")
     sc = s.scene
-    e = ending(quick_writer, sc, s.ui)
-    criteria = sc.scenario.success_criteria
-    return {"title": e.title, "story": e.story, "best_line": e.best_line, "found": sorted(sc.revealed),
-            "goals": [{"text": c, "met": i < len(e.met) and e.met[i]} for i, c in enumerate(criteria)]}
+    e, verdict = ending(quick_writer, sc, s.ui)
+    found = sc.revealed | ({c.name for c in sc.scenario.cast} & set(verdict.came_out))
+    return {"title": e.title, "story": e.story, "best_line": e.best_line, "found": sorted(found),
+            "missed": [c.secret for c in sc.scenario.cast if c.name not in found],
+            "goals": [{"text": c, "met": i < len(verdict.met) and verdict.met[i]} for i, c in enumerate(sc.scenario.success_criteria)]}
 
 
 @app.post("/api/end")

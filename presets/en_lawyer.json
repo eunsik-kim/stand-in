@@ -105,7 +105,7 @@
       "Exposes the streetlight record",
       "Avoids badgering"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [],
   "assets": {

@@ -105,7 +105,7 @@
       "Finds out why",
       "Decides about the wedding"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [],
   "assets": {

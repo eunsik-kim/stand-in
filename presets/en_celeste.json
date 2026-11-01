@@ -105,7 +105,7 @@
       "Finds both the pump and the alcohol clues",
       "Gives a reasoned account of why they left"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [],
   "assets": {

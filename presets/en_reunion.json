@@ -108,7 +108,7 @@
       "Ask Elena at least one direct, caring question about her life now and really listen",
       "Handle interruptions from Theo and Priya without shutting down or lashing out to keep the reunion kind"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [
     {

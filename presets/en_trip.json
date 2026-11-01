@@ -107,7 +107,7 @@
       "Says how she feels without yelling",
       "Reaches a decision about the trip"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [],
   "assets": {

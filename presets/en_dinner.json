@@ -108,7 +108,7 @@
       "Stay in the conversation and respond calmly when interrupted or criticized instead of yelling, walking out, or shutting down",
       "Get at least one family member to acknowledge a concrete next step or offer of support by the end"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [
     {

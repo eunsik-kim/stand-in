@@ -107,7 +107,7 @@
       "Names being left out, not just the trip",
       "Reaches a decision about the relationship"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [],
   "assets": {

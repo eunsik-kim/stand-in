@@ -111,7 +111,7 @@
       "Avoid revealing your new employer name or offer details under pressure",
       "Get explicit agreement on last day and handover next steps before the scene ends"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [
     {

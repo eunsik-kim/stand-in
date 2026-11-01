@@ -108,7 +108,7 @@
       "Ask at least one question that probes the seller's timeline or motivation instead of only arguing price",
       "Keep negotiating calmly and make a closing attempt after the interruptions without caving instantly or walking out"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [
     {

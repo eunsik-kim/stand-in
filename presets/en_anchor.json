@@ -9,7 +9,8 @@
     "user_goal": "Get a straight answer on air before the break.",
     "user_knows": [
       "Fizzly, a fictional soda brand, has had a run of bottles bursting in stores",
-      "The company says it was a shipping problem"
+      "The company says it was a shipping problem",
+      "Rumour says the new bottles are thinner than the old ones"
     ],
     "cast": [
       {
@@ -106,7 +107,7 @@
       "Doesn't let the CEO change the subject",
       "Gets the bottle decision on the record"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [],
   "assets": {

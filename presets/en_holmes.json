@@ -107,7 +107,7 @@
       "Connects the empty shop to what lies behind it",
       "Names what the plan really was"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [],
   "assets": {

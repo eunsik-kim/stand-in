@@ -107,7 +107,7 @@
       "Keeps the water carrier from blowing it",
       "Closes at a price higher than Heo's first offer"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [],
   "assets": {

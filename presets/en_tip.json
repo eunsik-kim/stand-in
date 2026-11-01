@@ -106,7 +106,7 @@
       "Finds out about the old lock and the unreturned keys",
       "Gets the upstairs neighbour to say why she does it"
     ],
-    "max_turns": 8
+    "max_turns": 10
   },
   "gate1": [],
   "assets": {

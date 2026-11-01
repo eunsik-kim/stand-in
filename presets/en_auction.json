@@ -105,7 +105,7 @@
       "Finds what drives at least one bidder",
       "Closes the sale"
     ],
-    "max_turns": 9
+    "max_turns": 11
   },
   "gate1": [],
   "assets": {

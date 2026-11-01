@@ -104,7 +104,7 @@
       "Uncovers at least two of the three hidden causes",
       "Gives a ruling with reasons"
     ],
-    "max_turns": 9
+    "max_turns": 11
   },
   "gate1": [],
   "assets": {

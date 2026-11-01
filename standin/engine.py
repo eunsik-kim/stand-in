@@ -14,7 +14,7 @@ import re
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, ValidationError, field_validator
 
 from .llm import LLM, _extract_json
 from .spec import SPOKEN, Character, Event, Expression, Mood, Scenario
@@ -31,8 +31,15 @@ class Beat(BaseModel):
     inner: str = Field(default="", description="private thought before speaking, one sentence")
     gesture: str = ""  # what the listener can see them do as they speak
     say: str
-    reveals: str = ""  # whose secret this line just gave up, if anyone's
+    reveals: list[str] = []  # whose secrets this line just stated outright
+    leaves: bool = False  # they walk out, in their own words
     mood_delta: MoodDelta = MoodDelta(trust=0, patience=0)
+
+
+    @field_validator("reveals", mode="before")
+    @classmethod
+    def _one_or_many(cls, v):
+        return [v] if isinstance(v, str) and v else v or []
 
 
 class Take(BaseModel):
@@ -40,7 +47,7 @@ class Take(BaseModel):
     advance: bool = False  # this moment has peaked: bring on the next turning point
     end: bool = False
     end_reason: str = ""
-    closing: str = ""  # on the last turn: one line of narration showing how it ends
+    closing: str = ""  # when the scene ends: one line of narration showing how
 
 
 @dataclass
@@ -55,6 +62,7 @@ class Line:
     cues: str = ""  # what others could see/hear while the user said this (camera, voice)
     signals: dict | None = None  # raw camera/voice numbers behind `cues`
     auto: bool = False  # the stand-in said this, not the player
+    gesture: str = ""  # what could be seen as they said it
 
 
 @dataclass
@@ -68,6 +76,7 @@ class Scene:
     beat: int = 0  # how many planned turning points have happened
     advance: bool = False  # the scene judged that the next one should land now
     hinted: set[str] = field(default_factory=set)  # who has let their one unprompted clue slip
+    early: bool = False  # the one turning point allowed to land ahead of time has
     ended: str = ""
 
     def __post_init__(self):
@@ -80,7 +89,7 @@ class Scene:
             who = {"user": f"{self.scenario.user_role} (USER)", "narration": "*"}.get(ln.speaker, ln.speaker)
             if viewer == "record" and ln.auto:
                 who += " (auto)"
-            out.append(f"[{ln.turn}] {who}: {ln.say}")
+            out.append(f"[{ln.turn}] {who}: {ln.say}" + (f" ({ln.gesture})" if ln.gesture else ""))
             if ln.cues:
                 out.append(f"    (observed: {ln.cues})")
             if ln.inner and viewer in (ln.speaker, "*"):
@@ -107,6 +116,8 @@ def _bible(s: Scenario) -> str:
         "person in that role would notice and care. A secret stays hidden until its condition is clearly met, or until the "
         "user confronts them with a specific fact that makes hiding it impossible. Nobody tells a secret in front of the person it "
         "concerns unless forced to. Nobody tells the user what to ask or do next. "
+        "The user is always 'you', never third person. Work out how each person really addresses each other from their relationship, "
+        "never using a kinship word from someone else's point of view. A talking style is a flavour, not a tic for every line. "
         f"{SPOKEN} People move: a fair point lands, a good offer softens them, and they never repeat "
         "a point they already made. Someone who has been heard can reach an agreement."
     )
@@ -115,12 +126,12 @@ def _bible(s: Scenario) -> str:
 CLUE_TRUST, OPEN_TRUST = 50, 70
 
 
-def _openness(scene: Scene, name: str) -> str:
+def _openness(scene: Scene, name: str, turn: int) -> str:
     """Code decides when someone starts to open up, so a good conversation always leads somewhere."""
     trust = scene.moods[name].trust
     if trust >= OPEN_TRUST:
         return " (trusts the user now: if the user asks anything near their secret, they tell it plainly)"
-    if trust >= CLUE_TRUST and name not in scene.hinted:
+    if trust >= CLUE_TRUST and turn >= 3 and name not in scene.hinted:
         scene.hinted.add(name)  # once: the second tease of the same thing shows the machinery
         return (" (warming up: this once, let a small clue slip that something is behind their position, "
                 "without stating the secret itself)")
@@ -137,64 +148,101 @@ def next_beat(scene: Scene) -> Event | None:
     return beats[scene.beat] if scene.beat < len(beats) else None
 
 
+KIN = {"남편": ["여보", "자기"], "아내": ["여보", "자기"], "시어머니": ["어머니", "어머님"], "시아버지": ["아버지", "아버님"], "어머니": ["어머니", "어머님", "엄마"],
+       "아버지": ["아버지", "아버님", "아빠"], "할머니": ["할머니"], "남자친구": ["오빠", "자기"], "여자친구": ["자기"], "누나": ["누나", "언니", "형님"], "언니": ["언니"]}
+
+
+def _called(c: Character) -> list[str]:
+    """Every way the user might address this person."""
+    words = [c.name, *c.name.split(), c.name[1:] if len(c.name) == 3 else c.name]
+    for word, also in KIN.items():
+        if word in c.role:
+            words += also
+    return [w for w in words if len(w) > 1]
+
+
 def _who_must_speak(scene: Scene, names: list[str], fresh: list[str]) -> str:
     said = next((ln.say for ln in reversed(scene.lines) if ln.speaker == "user"), "")
-    called = [n for n in names if n in said or n.split()[-1] in said]
+    called = [n for n in names if any(w in said for w in _called(scene.scenario.character(n)))]
     last = {n: max([ln.turn for ln in scene.lines if ln.speaker == n], default=-1) for n in names}
     turn = max((ln.turn for ln in scene.lines), default=0)
     quiet = [n for n in names if n not in called and n not in fresh and turn - last[n] >= 2]
+    worn = [n for n in names if scene.moods[n].patience == 0]
     return "".join([
+        "If the user asked a question or did something, it gets an answer or a visible dodge this turn, whatever else is happening.\n",
         f"The user spoke to {', '.join(called)}: they answer, nobody answers for them.\n" if called else "",
         f"{', '.join(fresh)} just came in and must speak now.\n" if fresh else "",
-        f"{', '.join(quiet)} have been quiet: bring one in if they would really have something to say.\n" if quiet else ""])
+        f"{', '.join(quiet)} have been quiet: bring one in if they would really have something to say.\n" if quiet else "",
+        f"{', '.join(worn)} have run out of patience: they may walk out in their own words (leaves=true), unless a red line or the place stops them.\n" if worn else ""])
 
 
-def _ending_note(scene: Scene, turn: int) -> str:
+def _ending_note(scene: Scene, turn: int, earned: bool | None) -> str:
     s = scene.scenario
+    close = ("If the user has just given a ruling, closed a deal, or someone leaves for good, that stands: set end=true now and write "
+             "closing, one line of stage narration showing what physically happens last.\n")
+    if turn < s.max_turns - 2:
+        return close
+    if turn == s.max_turns - 2:
+        return close + "The biggest truth still hidden must come out now if it is going to, so the user can answer it.\n"
     if turn == s.max_turns - 1:
-        return "The next turn is the last. Bring the story to its peak now, and leave the user something to answer.\n"
-    if turn < s.max_turns:
-        return "End the scene early (end=true) as soon as a verdict is given, a deal is signed, someone leaves for good, or the user closes it.\n"
-    earned = bool(scene.revealed) or max((m.trust for m in scene.moods.values()), default=0) >= OPEN_TRUST
+        return close + "No new facts now. Someone makes a decision, and the user is left something to answer. The next turn is the last.\n"
     return ("This is the last turn. Answer the user's last line, then close the story; the last line is a statement, never a question. "
+            "Anything the user decided stands. "
             + ("The user earned this: let it land." if earned else
                "The user has not earned a win: nobody gives in and red lines hold. End on a refusal, a walk-out or a door closing.")
-            + " Set end=true, and in closing write one line of stage narration showing what physically happens last.\n")
+            + " Set end=true, and write closing: one line of stage narration showing what physically happens last.\n")
+
+
+class Goals(BaseModel):
+    met: list[bool]
+
+
+def earned(scene: Scene, actor: LLM) -> bool:
+    """Whether the player got there, judged from what was said rather than from any one flag."""
+    s = scene.scenario
+    got = actor.ask(
+        Goals, "You judge a story fairly. Reply with a single JSON object.",
+        "Outcomes, in order:\n" + "\n".join(f"- {c}" for c in s.success_criteria)
+        + f"\n\nTranscript:\n{scene.public()}\n\nFor each outcome: has the user's side done this, or is one good line away from it? "
+        'Return {"met": [true, false]}',
+    )
+    return sum(got.met) * 2 >= len(s.success_criteria)
 
 
 def _their_last_lines(scene: Scene, names: list[str]) -> str:
-    lines = [f"{n}: " + " / ".join(ln.say for ln in [x for x in scene.lines if x.speaker == n][-2:])
+    lines = [f"{n}: " + " / ".join(ln.say + (f" ({ln.gesture})" if ln.gesture else "") for ln in [x for x in scene.lines if x.speaker == n][-3:])
              for n in names if any(x.speaker == n for x in scene.lines)]
     return "Each person's last lines; do not repeat their structure, opening or complaint:\n" + "\n".join(lines) + "\n\n" if lines else ""
 
 
-def take_prompt(scene: Scene, turn: int, happened: Event | None = None) -> str:
+def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: bool | None = None) -> str:
     s = scene.scenario
     names = present(scene, turn)
     moods = "\n".join(
         f"- {n}: trust {scene.moods[n].trust}, patience {scene.moods[n].patience}"
-        + (" (secret already out, may refer to it)" if n in scene.revealed else _openness(scene, n)) for n in names)
+        + (" (secret already out, may refer to it)" if n in scene.revealed else _openness(scene, n, turn)) for n in names)
     absent = [c.name for c in s.cast if c.name not in names and c.name not in scene.left]
     coming = next_beat(scene)
     return (
-        (f"This just happened: {happened.description} The next line reacts to it, and anyone it names acts it out.\n\n" if happened else "")
+        (f"This just happened: {happened.description} People react to it, and it does not happen again.\n\n" if happened else "")
         + f"Turn {turn} of at most {s.max_turns}. Mood now:\n{moods}\n\n"
         + (f"Not in the room yet, so they cannot speak and nobody mentions them: {', '.join(absent)}.\n\n" if absent else "")
         + f"Transcript:\n{scene.public(viewer='*')}\n\n" + _their_last_lines(scene, names)
         + "Write who reacts to the user's last line, one or two people. "
         "Each spoken line is what a person says in one breath: one point or one question at a time, no stage directions. "
-        "gesture is what the user can see them do while saying it, 2-6 words in the language of the scene: a hand stops, eyes drop, a chair "
-        "pushed back. It shows how they really feel, sometimes against their words, and never repeats. Leave it empty when nothing shows.\n"
+        "gesture is usually empty. Fill it about one line in three, and only when it adds something or goes against the words: 2-6 words "
+        "in the language of the scene, ending the same way each time (in Korean, -며). A prop changes state, it is never handled the same way twice, "
+        "and nobody sits down or puts down what they already have.\n"
         "Every reply must move the story: a new fact, a decision, an action or a change of heart. Never reuse a phrase, joke or "
         "complaint already in the transcript, and do not echo the last words of the user's line back at them. "
-        "A private alliance stays private in front of others. Set reveals to a person's name on the line where their secret "
-        "actually comes out, whoever says it; otherwise leave it empty.\n"
-        + _who_must_speak(scene, names, happened.enters if happened else []) + _ending_note(scene, turn)
-        + (f"You are also the director. The next planned turning point is: {coming.description} Set advance=true at the moment "
-           "this would hit hardest, which may be now; never let the scene drag.\n" if coming else "")
+        "A private alliance stays private in front of others. List in reveals the names of anyone whose secret this line actually states, "
+        "whoever says it; a lie, a cover story or a hint is not a reveal.\n"
+        + _who_must_speak(scene, names, happened.enters if happened else []) + _ending_note(scene, turn, won)
+        + ("You are also the director. Set advance=true only when this moment has truly peaked and something new should happen. "
+           "Do not invent that something yourself.\n" if coming else "")
         + f"speaker must be one of {names}. Keep exactly this key order:\n"
         '{"lines": [{"speaker": "...", "expression": "neutral|pleased|skeptical|annoyed", '
-        '"inner": "one private thought", "gesture": "...", "say": "...", "reveals": "", "mood_delta": {"trust": -25..25, "patience": -25..25}}], '
+        '"inner": "one private thought", "gesture": "", "say": "...", "reveals": [], "leaves": false, "mood_delta": {"trust": -25..25, "patience": -25..25}}], '
         '"advance": false, "end": false, "end_reason": "", "closing": ""}'
     )
 
@@ -240,16 +288,9 @@ class _Partial:
 
 
 MOST_LINES = 3
+FOREIGN = re.compile(r"[\u3040-\u30ff\u4e00-\u9fff]")  # the odd stray kanji in a Korean gesture
 STAGE = re.compile(r"\*[^*]*\*")  # the odd *sigh* written as stage direction
-SENTENCE_END = re.compile(r"[.!?。！？…]+[\"'”’)]*\s+")
-
-
-LEAVES = {"ko": "{name}{ga} 더 듣지 않고 자리를 뜬다.", "ja": "{name}は話を切り上げて席を立つ。"}
-
-
-def _ga(name: str) -> str:
-    last = ord(name[-1]) - 0xAC00
-    return "이" if 0 <= last < 11172 and last % 28 else "가"
+SENTENCE_END = re.compile(r"(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)[.!?。！？…]+[\"'”’)]*\s+")
 
 
 def open_scene(scenario: Scenario) -> Scene:
@@ -272,10 +313,12 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
 
     add(Line(turn, "user", said, cues=cues, signals=signals, auto=auto))
     e, happened = next_beat(scene), None
-    # it lands when the moment calls for it, and may wait one turn for that moment
-    if e and ((scene.advance and turn >= e.at_turn - 1) or turn >= min(e.at_turn + 1, s.max_turns - 1)):
+    # on time as a rule; the one moment that truly calls for it may come a turn early
+    ahead = scene.advance and not scene.early and turn == e.at_turn - 1 if e else False
+    if e and (ahead or turn >= e.at_turn):
         scene.beat += 1
         scene.advance = False
+        scene.early = scene.early or ahead
         scene.arrived |= set(e.enters)
         add(Line(turn, "narration", e.description))
         yield {"type": "narration", "text": e.description, "shot": e.at_turn, "enters": e.enters}
@@ -283,7 +326,13 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
 
     names = present(scene, turn)
     partial, sent = _Partial(), []
-    prompt = take_prompt(scene, turn, happened)
+    won = None
+    if turn >= s.max_turns:
+        try:
+            won = earned(scene, actor)
+        except Exception:
+            won = bool(scene.revealed)
+    prompt = take_prompt(scene, turn, happened, won)
     stream = actor.stream(_bible(s), prompt)
 
     def who(i: int, raw: str) -> Character:
@@ -329,17 +378,15 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
             patience = max(patience, trust // 2)
         m.trust = max(0, min(100, m.trust + trust))
         m.patience = max(0, min(100, m.patience + patience))
-        add(Line(turn, c.name, beat.say, beat.inner, beat.expression, m.model_dump()))
+        gesture = FOREIGN.sub("", beat.gesture).strip() if s.language == "ko" else beat.gesture.strip()
+        add(Line(turn, c.name, beat.say, beat.inner, beat.expression, m.model_dump(), gesture=gesture))
         yield {"type": "line_end", "index": i, "speaker": c.name, "say": beat.say, "expression": beat.expression}
-        owner = beat.reveals.strip()
-        if owner in {x.name for x in s.cast} and owner not in scene.revealed:
-            scene.revealed.add(owner)
-            yield {"type": "secret", "speaker": owner}
-        if m.patience == 0:  # out of patience: that was their last word
+        for owner in beat.reveals:
+            if owner in {x.name for x in s.cast} and owner not in scene.revealed:
+                scene.revealed.add(owner)
+                yield {"type": "secret", "speaker": owner}
+        if beat.leaves and (c.name != s.opening_speaker or turn >= s.max_turns - 1):
             scene.left.add(c.name)
-            leave = LEAVES.get(s.language, "{name} has had enough and leaves the conversation.").format(name=c.name, ga=_ga(c.name))
-            add(Line(turn, "narration", leave))
-            yield {"type": "narration", "text": leave}
 
     if take.closing.strip():
         add(Line(turn, "narration", take.closing.strip()))
