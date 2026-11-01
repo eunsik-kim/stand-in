@@ -268,7 +268,7 @@ def draw_changes(b: Build, w: World, redraw: bool = False) -> None:
 
 
 def build_state(b: Build) -> dict:
-    return {"id": b.id, "world": b.world.model_dump(), "background": b.background, "faces": b.faces, "talk": b.talk, "ready": b.ready}
+    return {"id": b.id, "world": b.world.model_dump(), "background": b.background, "faces": b.faces, "talk": b.talk, "ready": b.ready, "shots": b.shots}
 
 
 START_OVER = re.compile(r"^\s*(다시 만들|처음부터|새로 만들|다시 할래|다시 시작|start over|restart|やり直)", re.I)
@@ -362,6 +362,60 @@ def build_finish(req: FinishReq, request: Request):
     return draft(scenario, {"background": b.background, "scene": {}, "shots": {} if key_was_edited else b.shots}, None)
 
 
+def load_scene(b: Build, s: Scenario) -> None:
+    """A finished scene as a world: who is there at the start, anyone else is a surprise."""
+    b.world = World(title=s.title, place=s.setting, language=s.language, me=s.user_role, goal=s.user_goal,
+                    people=[Person(name=c.name, role=c.role, gender=c.gender, look=c.appearance, manner=c.voice, history=c.history)
+                            for c in s.cast if not c.enters_at])
+    done: Future = Future()
+    done.set_result(s)
+    b.prepared[b.world.model_dump_json()] = done
+
+
+class EpisodeReq(BaseModel):
+    idea: str
+    genre: str = ""
+    ui: str = "en"
+
+
+@app.post("/api/episode")
+def episode(req: EpisodeReq, request: Request):
+    """One idea becomes a full episode, as good as a template: people arrive, things turn, photos made ahead."""
+    if not req.idea.strip():
+        raise HTTPException(400, "empty idea")
+    idea = f"{req.genre}: {req.idea.strip()}" if req.genre else req.idea.strip()
+    s = compile_scenario(quick_writer, checker, idea, ui=req.ui, episode=True, repairs=1, log=lambda _: None)[0]
+    b = Build()
+    b.owner, b.ui = visitor(request), req.ui
+    load_scene(b, s)
+    as_person = lambda c: Person(name=c.name, role=c.role, gender=c.gender, look=c.appearance)
+    here = [c for c in s.cast if not c.enters_at]
+    stem = uuid.uuid4().hex[:10]
+    first = ART / f"{stem}_scene.jpg"
+    try:
+        scene(painter, s.setting, [as_person(c) for c in here], first)
+    except Exception:  # the content filter misfires on ordinary scenes
+        scene(painter, s.setting.split(".")[0] + ".", [as_person(c) for c in here], first)
+    b.background = f"/art/{first.name}"
+    b.drawn["names"] = ",".join(sorted(person.name for person in b.world.people))
+
+    def turning_points() -> None:  # keeps going while the user talks, so nobody waits for it
+        current, present = first, list(here)
+        for e in sorted(s.events, key=lambda x: x.at_turn):
+            present += [c for c in s.cast if c.name in e.enters]
+            path = ART / f"{stem}_{e.at_turn}_scene.jpg"
+            try:
+                scene_edit(painter, current, "the same room", [as_person(c) for c in present], path, e.shot)
+                b.shots[str(e.at_turn)] = f"/art/{path.name}"
+                current = path
+            except Exception as err:
+                print(f"shot failed: {err!r:.160}", flush=True)
+    easel.submit(turning_points)
+    builds[b.id] = b
+    b.save()
+    return build_state(b)
+
+
 class TemplateReq(BaseModel):
     id: str
     ui: str = "en"
@@ -376,13 +430,7 @@ def template(req: TemplateReq, request: Request):
     s = Scenario.model_validate(p["scenario"])
     b = Build()
     b.owner, b.ui = visitor(request), req.ui
-    # who is there at the start; anyone else is a surprise
-    b.world = World(title=s.title, place=s.setting, language=s.language, me=s.user_role, goal=s.user_goal,
-                    people=[Person(name=c.name, role=c.role, gender=c.gender, look=c.appearance, manner=c.voice, history=c.history)
-                            for c in s.cast if not c.enters_at])
-    done: Future = Future()
-    done.set_result(s)
-    b.prepared[b.world.model_dump_json()] = done
+    load_scene(b, s)
     assets = p.get("assets", {})
     b.background, b.shots = assets.get("background", ""), assets.get("shots", {})
     b.drawn["names"] = ",".join(sorted(person.name for person in b.world.people))
