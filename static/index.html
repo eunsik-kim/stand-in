@@ -99,7 +99,10 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .me{position:absolute;z-index:6;right:14px;bottom:14px;width:176px}
 .me video.self{display:block;border-radius:12px;box-shadow:0 0 0 1px #ffffff26,0 8px 24px #0009}
 .me .cam-state{position:absolute;left:6px;top:6px;font-size:11px;padding:1px 8px;background:#000000a6;border:0;color:#fff}
-.log{position:absolute;z-index:7;top:60px;right:12px;bottom:12px;width:min(360px,calc(100% - 24px));padding:14px;border-radius:16px;background:#14161cf5;box-shadow:0 0 0 1px #ffffff1f;overflow:auto;font-size:14px;color:#c9cdd6;display:grid;gap:8px;align-content:start}
+.log{position:absolute;left:0;right:0;bottom:calc(100% + 6px);max-height:54vh;padding:14px 18px;border-radius:14px;background:#000000c7;backdrop-filter:blur(10px);overflow:auto;font-size:15px;line-height:1.5;color:#dfe2e8;display:grid;gap:8px;align-content:start;scrollbar-width:thin;scrollbar-color:#ffffff24 transparent}
+.log div{white-space:normal}
+.log b{margin-right:6px}
+.caption{cursor:pointer}
 .log b{color:var(--fg)}
 .coach{position:absolute;z-index:5;left:12px;top:64px;bottom:12px;width:286px;padding:14px;border-radius:16px;background:#14161cf0;box-shadow:0 0 0 1px #ffffff1f;overflow:auto;display:none;align-content:start;gap:10px}
 .coached .coach{display:grid}
@@ -140,11 +143,7 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .tcard{width:min(460px,100%);padding:22px 24px;border-radius:18px;background:#14161cf5;box-shadow:0 0 0 1px #ffffff1f,0 16px 40px #000a;display:grid;gap:14px}
 .tcard ol{margin:0;padding-left:20px;display:grid;gap:8px;line-height:1.5}
 .tcard button{justify-self:end;padding:10px 22px}
-.logopen .room{padding-right:386px}
-.logopen .capbox,.logopen .dock{left:calc(50% - 187px);width:min(680px,calc(100% - 412px))}
-.coached.logopen .caption,.coached.logopen .dock{left:calc(50% - 38px);width:calc(100% - 724px)}
-.logopen .me{display:none}
-
+.coached
 /* debrief */
 /* onboarding */
 .logo{font-size:20px;letter-spacing:-.01em}
@@ -277,7 +276,7 @@ details[open] summary{margin-bottom:8px}
 .tp .try{color:var(--good)}
 section{margin:28px 0;display:grid;gap:12px}
 h2{margin:0;font-size:22px}
-@media(max-width:700px){.logopen .room{padding-right:12px}.logopen .capbox,.logopen .dock{left:50%;width:calc(100% - 32px)}.devices{grid-template-columns:1fr}.tl .l{grid-template-columns:1fr}.cast{--cols:1!important}.cast[data-n="1"]{grid-template-columns:minmax(0,1fr)}.me{width:92px;top:68px;right:18px;bottom:auto}.caption{font-size:16px}.capbox{bottom:96px}.top .setting{display:none}}
+@media(max-width:700px){.devices{grid-template-columns:1fr}.tl .l{grid-template-columns:1fr}.cast{--cols:1!important}.cast[data-n="1"]{grid-template-columns:minmax(0,1fr)}.me{width:92px;top:68px;right:18px;bottom:auto}.caption{font-size:16px}.capbox{bottom:96px}.top .setting{display:none}}
 </style>
 
 <!-- ONBOARDING: first visit, or from the settings button -->
@@ -357,9 +356,9 @@ h2{margin:0;font-size:22px}
   <div class="room" id="room"><div class="cast" id="cast"></div></div>
   <div class="top">
     <div class="ttl"><b id="title"></b><div class="setting" id="setting"></div></div>
-    <div class="acts"><span id="turnText"></span><button class="ibtn" id="logBtn" data-ic="chat" data-tl="log"></button><button class="ibtn" id="endBtn" data-ic="exit" data-tl="finish"></button></div>
+    <div class="acts"><span id="turnText"></span><button class="ibtn" id="endBtn" data-ic="exit" data-tl="finish"></button></div>
   </div>
-  <div class="capbox"><div class="caption" id="caption"></div><span class="smenu"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><span class="spop hidden" id="speedPop"></span></span></div>
+  <div class="capbox"><div class="log hidden" id="log"></div><div class="caption" id="caption" title=""></div><span class="smenu"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><span class="spop hidden" id="speedPop"></span></span></div>
   <div class="choices" id="choices"></div>
   <div class="dock"><div class="mic">
     <div class="status" id="micStatus"></div>
@@ -392,7 +391,6 @@ h2{margin:0;font-size:22px}
     <div id="coachBody"></div>
   </aside>
   <div id="goalToast"></div>
-  <aside class="log hidden" id="log"></aside>
 </div>
 
 <!-- DEBRIEF -->
@@ -1338,7 +1336,9 @@ $("speedBtn").onclick = e => {
 };
 document.addEventListener("click", () => $("speedPop").classList.add("hidden"));
 speedLabel();
-$("logBtn").onclick = () => { $("log").classList.toggle("hidden"); $("stage").classList.toggle("logopen"); };
+$("caption").onclick = () => {  // tap the line to see the whole conversation above it
+  $("log").classList.toggle("hidden"); $("log").scrollTop = 1e9;
+};
 $("endAgain").onclick = () => { $("endCard").classList.add("hidden"); enter(); };
 $("endNew").onclick = () => { $("endCard").classList.add("hidden"); leaveStage(); show("build"); newStory(); };
 $("endBtn").onclick = () => {  // leaving just leaves: back to the stories, nothing in between
