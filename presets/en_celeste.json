@@ -1,0 +1,133 @@
+{
+  "situation": "December 1872. A ship drifts in the Atlantic with nobody on board. A real mystery that was never solved; you step aboard first.",
+  "ui": "en",
+  "scenario": {
+    "title": "The Mary Celeste",
+    "language": "en",
+    "setting": "The deck of the brigantine Mary Celeste, mid-Atlantic, December 1872. Grey swell, torn sails, ropes trailing, no one aboard, the wind the only sound.",
+    "user_role": "Oliver Deveau, first mate of the Dei Gratia, leading the boarding party",
+    "user_goal": "Decide what made ten people leave a sound ship.",
+    "user_knows": [
+      "The ship is seaworthy and the cargo looks intact",
+      "The only lifeboat is gone",
+      "Captain Briggs had his wife and small daughter aboard"
+    ],
+    "cast": [
+      {
+        "name": "John Wright",
+        "role": "second mate of the Dei Gratia",
+        "appearance": "Weathered man about 40, dark wool pea coat, salt-stained beard, oilskin hat",
+        "voice": "Clipped and practical, hates guessing",
+        "gender": "m",
+        "history": "You have sailed together for two years.",
+        "enters_at": 0,
+        "goal": "Get the facts straight and get off this ship",
+        "secret": "One pump is taken apart and the sounding rod lies on deck, as if someone feared she was filling with water",
+        "reveal_when": "You ask about the pumps or whether anyone checked the water in the hold",
+        "red_lines": [
+          "Will not swear to anything he has not seen"
+        ],
+        "mood": {
+          "trust": 65,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Johnson",
+        "role": "a young sailor sent below",
+        "appearance": "Young man about 22, knitted cap, pale and uneasy, lantern in hand",
+        "voice": "Jumpy, whispers, talks about omens",
+        "gender": "m",
+        "history": "It is his first long voyage under you.",
+        "enters_at": 0,
+        "goal": "Persuade everyone the ship is cursed so they leave",
+        "secret": "Below, nine barrels of the alcohol cargo are empty and the hold reeks of fumes",
+        "reveal_when": "You stop dismissing him and ask exactly what he smelled or saw below",
+        "red_lines": [
+          "Won't go below again alone"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 45
+        }
+      },
+      {
+        "name": "Captain Morehouse",
+        "role": "captain of the Dei Gratia",
+        "appearance": "Broad man about 45, grey side-whiskers, dark captain's coat with brass buttons",
+        "voice": "Slow, heavy, weighs each word, never raises his voice",
+        "gender": "m",
+        "history": "He gave you this command and rowed over himself once your signal went up.",
+        "enters_at": 4,
+        "goal": "Find out what happened, and keep the salvage claim clean",
+        "secret": "He dined with Briggs the night before they sailed; Briggs was worried about the alcohol, and the two are old friends",
+        "reveal_when": "You ask what he knew about Briggs or the cargo",
+        "red_lines": [
+          "Will not accuse Briggs of anything shameful"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 70
+        }
+      }
+    ],
+    "opening_speaker": "John Wright",
+    "opening_line": "Nobody. Stem to stern, nobody. Table's still—look, you'd better come see this yourself.",
+    "phases": [
+      "Searching",
+      "The cabin",
+      "The captain",
+      "Conclusion"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "From the captain's cabin comes a shout. On the bunk: a child's toys, the shape of a small body still pressed in the mattress.",
+        "enters": [],
+        "shot": "The two sailors stand in a narrow wooden cabin looking down at a small bunk with a child's toy on it."
+      },
+      {
+        "at_turn": 4,
+        "description": "A boat bumps the hull. Captain Morehouse climbs over the rail and looks slowly around the empty deck.",
+        "enters": [
+          "Captain Morehouse"
+        ],
+        "shot": "A broad captain in a brass-buttoned coat stands on deck with the two sailors, the grey sea behind."
+      },
+      {
+        "at_turn": 6,
+        "description": "The wind rises and the torn sail cracks overhead. Morehouse says he wants your answer before dark.",
+        "enters": [],
+        "shot": "Dark clouds over the sea; the three men look up at a torn sail cracking in the wind."
+      }
+    ],
+    "success_criteria": [
+      "Finds both the pump and the alcohol clues",
+      "Gives a reasoned account of why they left"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_celeste_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_celeste_2_scene.jpg",
+      "4": "/presets/img/en_celeste_4_scene.jpg",
+      "6": "/presets/img/en_celeste_6_scene.jpg"
+    },
+    "clues": {
+      "John Wright": {
+        "img": "/presets/img/clue_celeste_0.jpg",
+        "name": "The dismantled pump"
+      },
+      "Johnson": {
+        "img": "/presets/img/clue_celeste_1.jpg",
+        "name": "Nine empty barrels"
+      },
+      "Captain Morehouse": {
+        "img": "/presets/img/clue_celeste_2.jpg",
+        "name": "Briggs's letter"
+      }
+    }
+  }
+}

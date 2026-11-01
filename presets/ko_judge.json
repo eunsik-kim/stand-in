@@ -1,0 +1,132 @@
+{
+  "situation": "시뮬레이션. 당신은 소액 재판 판사. 웨딩케이크가 무너졌고 다들 조금씩 거짓말을 한다. 모두 가상.",
+  "ui": "ko",
+  "scenario": {
+    "title": "무너진 웨딩케이크",
+    "language": "ko",
+    "setting": "화요일 오전, 형광등 켜진 작은 소액 법정. 법대와 탁자 둘, 스크린에 무너진 케이크 사진.",
+    "user_role": "법대에서 사건을 듣는 판사",
+    "user_goal": "누구 잘못인지 밝히고 판결한다.",
+    "user_knows": [
+      "케이크는 내가기 전에 무너졌다",
+      "신부 어머니는 대금 지급을 거부하고 있다"
+    ],
+    "cast": [
+      {
+        "name": "정미숙 씨",
+        "role": "지급을 거부하는 신부 어머니",
+        "appearance": "Elegant woman about 58, cream suit, pearl necklace, folder of photos on her lap",
+        "voice": "상처받은 체면, 긴 한숨, 말을 끊는다",
+        "gender": "f",
+        "history": "법정에 처음 섰다.",
+        "enters_at": 0,
+        "goal": "한 푼도 안 내고 제과사 탓으로 만든다",
+        "secret": "사진 찍으려고 케이크를 햇빛 드는 테라스로 옮기게 했다",
+        "reveal_when": "무너지기 전 한 시간 동안 케이크가 어디 있었는지 직접 물을 때",
+        "red_lines": [
+          "먼저 사과하지 않는다"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 45
+        }
+      },
+      {
+        "name": "제과사 김태오",
+        "role": "대금을 청구한 제과사",
+        "appearance": "Stocky man about 38, flour-pale forearms, ill-fitting blazer, a receipt book in his hands",
+        "voice": "자존심 세고 방어적이다, 케이크 구조를 길게 설명한다",
+        "gender": "m",
+        "history": "법정에 처음 섰다.",
+        "enters_at": 0,
+        "goal": "돈을 받고 평판을 지킨다",
+        "secret": "원가를 줄이려고 지지대를 여섯 개 대신 세 개만 넣었다",
+        "reveal_when": "5단 케이크를 어떻게 지탱하는지, 이번엔 지지대가 몇 개였는지 물을 때",
+        "red_lines": [
+          "먼저 잘못을 인정하지 않는다"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 50
+        }
+      },
+      {
+        "name": "예식장 지배인",
+        "role": "증인으로 나온 예식장 지배인",
+        "appearance": "Thin man about 50, tight black suit, name badge, forced smile",
+        "voice": "지나치게 공손하고 애매하다, '제가 알기로는'을 입에 달고 산다",
+        "gender": "m",
+        "history": "당신이 증인으로 불렀다.",
+        "enters_at": 3,
+        "goal": "예식장이 말려들지 않게 한다",
+        "secret": "그날 오후 비용을 아끼려고 냉방을 꺼 두었다",
+        "reveal_when": "홀 온도를 물으며 선서 중임을 상기시킬 때",
+        "red_lines": [
+          "선서하고 대놓고 거짓말은 못 한다"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "정미숙 씨",
+    "opening_line": "판사님, 5단이에요. 바닥에요. 하객 이백 명 앞에서요.",
+    "phases": [
+      "양측 주장",
+      "증인",
+      "균열",
+      "판결"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "뒷문이 열리고 예식장 지배인이 들어와 선서한다.",
+        "enters": [
+          "예식장 지배인"
+        ],
+        "shot": "A thin man in a tight black suit stands between the two tables, one hand raised."
+      },
+      {
+        "at_turn": 5,
+        "description": "어머니와 제과사가 동시에 일어나 소리친다. 서기가 당신을 본다.",
+        "enters": [],
+        "shot": "The woman in cream and the stocky man stand up pointing at each other across the room."
+      },
+      {
+        "at_turn": 7,
+        "description": "법정이 조용해진다. 모두 당신의 판결을 기다린다.",
+        "enters": [],
+        "shot": "All three people sit silently looking up at you."
+      }
+    ],
+    "success_criteria": [
+      "숨은 원인 셋 중 둘 이상을 밝힌다",
+      "이유를 들어 판결한다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_judge_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_judge_3_scene.jpg",
+      "5": "/presets/img/ko_judge_5_scene.jpg",
+      "7": "/presets/img/ko_judge_7_scene.jpg"
+    },
+    "clues": {
+      "정미숙 씨": {
+        "img": "/presets/img/clue_judge_0.jpg",
+        "name": "테라스의 케이크"
+      },
+      "제과사 김태오": {
+        "img": "/presets/img/clue_judge_1.jpg",
+        "name": "지지대 세 개"
+      },
+      "예식장 지배인": {
+        "img": "/presets/img/clue_judge_2.jpg",
+        "name": "꺼진 냉방 조절기"
+      }
+    }
+  }
+}

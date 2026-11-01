@@ -1,0 +1,132 @@
+{
+  "situation": "Maurice Leblanc's gentleman thief promised to steal a diamond before dessert. He is already sitting at this table.",
+  "ui": "en",
+  "scenario": {
+    "title": "Lupin at the Table",
+    "language": "en",
+    "setting": "A candlelit dining room in a Paris townhouse, 1905. Silver, heavy curtains, a long table. Dessert is coming and a blue diamond glitters at the countess's throat.",
+    "user_role": "A young police inspector seated at the table as a guest",
+    "user_goal": "Work out who at this table is Arsène Lupin before dessert.",
+    "user_knows": [
+      "Lupin sent a note promising to take the diamond before dessert",
+      "He is a master of disguise and is said to be in this room"
+    ],
+    "cast": [
+      {
+        "name": "Countess de Vaudreuil",
+        "role": "the hostess, wearing the diamond",
+        "appearance": "Woman about 55, silver hair piled high, black silk gown, large blue diamond necklace",
+        "voice": "Grand, amused, cuts people off with a wave",
+        "gender": "f",
+        "history": "She hired you and thinks you are too young.",
+        "enters_at": 0,
+        "goal": "Keep attention off the diamond itself",
+        "secret": "The diamond is paste; she sold the real one last year to pay debts",
+        "reveal_when": "You press her on why she wore it tonight at all",
+        "red_lines": [
+          "Will not let you examine the stone until cornered"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Dr. Morel",
+        "role": "the family's old doctor",
+        "appearance": "Stooped man about 65, white beard, gold spectacles, old-fashioned tailcoat, a limp",
+        "voice": "Gentle, rambling, then suddenly very sharp for one sentence",
+        "gender": "m",
+        "history": "He greeted you warmly and asked after your mother.",
+        "enters_at": 0,
+        "goal": "Enjoy the game and leave with the stone",
+        "secret": "He is Arsène Lupin; the real Dr. Morel is asleep in Rouen",
+        "reveal_when": "You confront him with a slip about his limp, his medicine or the family's past",
+        "red_lines": [
+          "Never harms anyone",
+          "Admits it only with a bow, never in panic"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 90
+        }
+      },
+      {
+        "name": "Claire",
+        "role": "the countess's niece, late to dinner",
+        "appearance": "Woman about 24, dark bob, pale green dress, gloves in hand, cheeks flushed from the cold",
+        "voice": "Fast, irreverent, says what the room is thinking",
+        "gender": "f",
+        "history": "You met on the stairs and she guessed you were police.",
+        "enters_at": 2,
+        "goal": "See something exciting happen at last",
+        "secret": "She watched the doctor limp on the left leg in the hall and on the right leg at table",
+        "reveal_when": "You ask her what she noticed on her way in, without talking down to her",
+        "red_lines": [
+          "Won't help anyone who talks down to her"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 60
+        }
+      }
+    ],
+    "opening_speaker": "Countess de Vaudreuil",
+    "opening_line": "So this is the great inspector. Eat something, darling, you look terrified.",
+    "phases": [
+      "Small talk",
+      "Claire arrives",
+      "The lights",
+      "Name him"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The door bangs. The niece hurries in, late, drops into the empty chair and winks at you.",
+        "enters": [
+          "Claire"
+        ],
+        "shot": "A young woman in a green dress sits down at the table beside the silver-haired woman and the old doctor."
+      },
+      {
+        "at_turn": 4,
+        "description": "The candles shudder in a draught. A footman announces that dessert is being plated.",
+        "enters": [],
+        "shot": "Candle flames lean sideways; the three people at the table look up at the same moment."
+      },
+      {
+        "at_turn": 6,
+        "description": "Every candle goes out at once. A chair scrapes. When a match flares, the countess's hand is at her bare throat.",
+        "enters": [],
+        "shot": "A dark room lit by one match; the silver-haired woman clutches her bare neck, the others half risen."
+      }
+    ],
+    "success_criteria": [
+      "Catches a contradiction in someone's story",
+      "Names the doctor as Lupin with a reason"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_lupin_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_lupin_2_scene.jpg",
+      "4": "/presets/img/en_lupin_4_scene.jpg"
+    },
+    "clues": {
+      "Countess de Vaudreuil": {
+        "img": "/presets/img/clue_lupin_0.jpg",
+        "name": "A scratch on the 'diamond'"
+      },
+      "Dr. Morel": {
+        "img": "/presets/img/clue_lupin_1.jpg",
+        "name": "A calling card on the tray"
+      },
+      "Claire": {
+        "img": "/presets/img/clue_lupin_2.jpg",
+        "name": "An old man's shoe with a raised heel"
+      }
+    }
+  }
+}

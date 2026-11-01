@@ -1,0 +1,132 @@
+{
+  "situation": "Paris, 1925. You are the real con man Victor Lustig, and you are about to sell the Eiffel Tower for scrap.",
+  "ui": "en",
+  "scenario": {
+    "title": "Sold: One Eiffel Tower",
+    "language": "en",
+    "setting": "A private salon at the Hôtel de Crillon, Paris, spring 1925. Velvet chairs, cigar smoke, official papers fanned across the table, the door shut.",
+    "user_role": "Victor Lustig, posing as Deputy Director of the Ministry of Posts and Telegraphs",
+    "user_goal": "Get Poisson to hand over the money today.",
+    "user_knows": [
+      "The tower really is costly to maintain, as the papers keep saying",
+      "The bids are a state secret, or so you have told him"
+    ],
+    "cast": [
+      {
+        "name": "André Poisson",
+        "role": "a scrap-metal dealer",
+        "appearance": "Thick-set man about 50, new expensive suit that doesn't sit right, thick moustache, nervous hands",
+        "voice": "Blunt, likes numbers, tries to sound important",
+        "gender": "m",
+        "history": "You flattered him over lunch yesterday.",
+        "enters_at": 0,
+        "goal": "Land the deal of his life",
+        "secret": "He is new money and the big dealers laugh at him; he would overpay to be taken seriously",
+        "reveal_when": "You treat him as the one serious man in the trade",
+        "red_lines": [
+          "Won't pay anything until his doubts are settled"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Dan Collins",
+        "role": "your 'private secretary' and partner",
+        "appearance": "Dapper man about 40, thin moustache, pinstripe suit, leather folder under his arm",
+        "voice": "Smooth, low voice, speaks in hints",
+        "gender": "m",
+        "history": "You have run a dozen jobs together.",
+        "enters_at": 0,
+        "goal": "Get out of here with the cash before anyone calls the ministry",
+        "secret": "He knows the surest proof you are a real official: ask for a bribe, because only real officials do",
+        "reveal_when": "You ask him quietly how to win back their trust",
+        "red_lines": [
+          "Never breaks cover in front of the Poissons"
+        ],
+        "mood": {
+          "trust": 75,
+          "patience": 70
+        }
+      },
+      {
+        "name": "Madame Poisson",
+        "role": "Poisson's wife",
+        "appearance": "Sharp-eyed woman about 48, dark cloche hat, fur collar, handbag clasped in her lap",
+        "voice": "Dry, unimpressed, asks the one awkward question",
+        "gender": "f",
+        "history": "You have not met; she insisted on coming.",
+        "enters_at": 2,
+        "goal": "Stop her husband from making a fool of himself",
+        "secret": "Her cousin clerks at a ministry and she can telephone him tomorrow morning",
+        "reveal_when": "You ask why she is so sure or try to rush her",
+        "red_lines": [
+          "Will not be charmed by flattery alone"
+        ],
+        "mood": {
+          "trust": 20,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "André Poisson",
+    "opening_line": "Seven thousand tons, you said. So tell me, Monsieur, why's a man like me hearing this in a hotel?",
+    "phases": [
+      "The pitch",
+      "The wife",
+      "Suspicion",
+      "The money"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The door opens. Poisson's wife walks in uninvited, sits down and puts her bag on your papers.",
+        "enters": [
+          "Madame Poisson"
+        ],
+        "shot": "A sharp-eyed woman in a cloche hat sits at the table beside the man, her handbag on the papers."
+      },
+      {
+        "at_turn": 4,
+        "description": "She looks at your frayed cuff and asks why a man so high in the ministry wears a shirt like that.",
+        "enters": [],
+        "shot": "The woman leans in, staring at you with raised eyebrows; her husband looks suddenly unsure."
+      },
+      {
+        "at_turn": 6,
+        "description": "Poisson slowly takes a thick envelope from his jacket, puts it on the table, and keeps his hand on it.",
+        "enters": [],
+        "shot": "A thick envelope on the table under the man's hand; the woman beside him watches you."
+      }
+    ],
+    "success_criteria": [
+      "Answers the wife's doubts without losing composure",
+      "Gets Poisson to let go of the money"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_eiffel_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_eiffel_2_scene.jpg",
+      "4": "/presets/img/en_eiffel_4_scene.jpg",
+      "6": "/presets/img/en_eiffel_6_scene.jpg"
+    },
+    "clues": {
+      "André Poisson": {
+        "img": "/presets/img/clue_eiffel_0.jpg",
+        "name": "The dealers' refusal"
+      },
+      "Dan Collins": {
+        "img": "/presets/img/clue_eiffel_1.jpg",
+        "name": "A folded bribe"
+      },
+      "Madame Poisson": {
+        "img": "/presets/img/clue_eiffel_2.jpg",
+        "name": "The telephone at the desk"
+      }
+    }
+  }
+}

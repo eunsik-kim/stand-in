@@ -1,0 +1,135 @@
+{
+  "situation": "코난 도일 원작. 당신은 베이커가 221B의 왓슨. 빨간 머리 전당포 주인이 런던에서 제일 이상한 일자리를 잃고 뛰어든다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "빨간머리 연맹",
+    "language": "ko",
+    "setting": "1890년 10월, 안개 낀 아침의 런던 베이커가 221B. 가스등, 파이프 연기, 석탄 난로, 온통 흩어진 서류. 당신은 안락의자에 앉아 있고 홈즈는 외출 중이다.",
+    "user_role": "홈즈의 친구이자 룸메이트, 존 왓슨 박사",
+    "user_goal": "누가 왜 돈까지 줘 가며 이 사람을 매일 가게에서 내보냈는지 알아낸다.",
+    "user_knows": [
+      "윌슨은 주 4파운드를 받고 백과사전을 손으로 베꼈다",
+      "오늘 아침 사무실 문에 연맹이 해산됐다는 쪽지가 붙어 있었다"
+    ],
+    "cast": [
+      {
+        "name": "자베즈 윌슨",
+        "role": "뚱뚱한 빨간 머리 전당포 주인",
+        "appearance": "Stout man about 58, blazing red hair, worn frock coat, watch chain, holding a crumpled card",
+        "voice": "숨을 몰아쉬며 억울해하고 말이 자꾸 샌다, 투덜거리는 동네 아저씨 말투",
+        "gender": "m",
+        "history": "지인 소개로 왔고 당신과는 초면이다.",
+        "enters_at": 0,
+        "goal": "주 4파운드를 되찾고 비웃음을 그만 받고 싶다",
+        "secret": "신문 광고를 찾아내 지원하라고 부추긴 건 조수이고, 그 조수는 월급을 반만 받고 일한다",
+        "reveal_when": "연맹을 누가 처음 알려 줬는지, 가게는 누가 보는지 물을 때",
+        "red_lines": [
+          "떠밀리기 전엔 속았다고 인정하지 않는다"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 60
+        }
+      },
+      {
+        "name": "셜록 홈즈",
+        "role": "외출에서 돌아온 자문 탐정",
+        "appearance": "Tall, lean man about 36, hawk nose, grey eyes, dressing gown over a waistcoat, cherrywood pipe",
+        "voice": "빠르고 건조하다, 이상한 일에 신나 하고 질문 하나 던지고 입을 다문다",
+        "gender": "m",
+        "history": "몇 년째 함께 살고 있고 늘 당신을 놀린다.",
+        "enters_at": 2,
+        "goal": "당신이 직접 답에 닿게 만들고 그걸 구경하고 싶다",
+        "secret": "전당포 뒷벽이 시티 앤 서버번 은행과 맞닿아 있다",
+        "reveal_when": "가게 뒤에 뭐가 있는지, 조수가 하루 종일 뭘 하는지 물을 때",
+        "red_lines": [
+          "해답을 그냥 내주지 않는다"
+        ],
+        "mood": {
+          "trust": 75,
+          "patience": 80
+        }
+      },
+      {
+        "name": "빈센트 스폴딩",
+        "role": "윌슨의 싹싹한 조수",
+        "appearance": "Smooth-faced man about 30, small and quick, white splash of acid on his forehead, trouser knees worn and dirty",
+        "voice": "공손하고 늘 웃는다, 가게 점원치고 말투가 지나치게 고급스럽다",
+        "gender": "m",
+        "history": "초면이다.",
+        "enters_at": 4,
+        "goal": "누가 가게를 들여다보기 전에 윌슨을 데려가고 싶다",
+        "secret": "몇 주째 지하실에서 땅을 파고 있어서 바지 무릎이 저 모양이다",
+        "reveal_when": "무릎이나 지하실을 대놓고 물을 때",
+        "red_lines": [
+          "땅굴은 절대 인정하지 않는다"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "자베즈 윌슨",
+    "opening_line": "선생, 아니 왓슨 선생? 이것 좀 봐요. 여덟 주를 그 망할 책을 베꼈는데, 오늘 가 보니까… 없어졌다니까!",
+    "phases": [
+      "이야기 듣기",
+      "홈즈 합류",
+      "조수",
+      "맞추기"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "문이 열리고 홈즈가 들어와 우산을 털더니 말없이 맞은편 의자에 앉는다.",
+        "enters": [
+          "셜록 홈즈"
+        ],
+        "shot": "A tall lean man in a dressing gown sits in the armchair opposite beside the red-haired man."
+      },
+      {
+        "at_turn": 4,
+        "description": "허드슨 부인이 젊은 남자를 올려 보낸다. 주인을 모시러 왔다는데 바지 무릎이 다 닳아 있다.",
+        "enters": [
+          "빈센트 스폴딩"
+        ],
+        "shot": "A small quick young man stands by the door, hat in hand, knees of his trousers dirty."
+      },
+      {
+        "at_turn": 6,
+        "description": "홈즈가 지팡이로 바닥을 두 번 두드리며 당신을 똑바로 본다.",
+        "enters": [],
+        "shot": "The tall man leans forward with a walking stick planted on the floor, staring straight at you."
+      }
+    ],
+    "success_criteria": [
+      "조수가 윌슨을 연맹으로 떠밀었다는 걸 알아낸다",
+      "비워진 가게와 그 뒤에 있는 것을 연결한다",
+      "진짜 계획이 뭔지 말한다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_holmes_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_holmes_2_scene.jpg",
+      "4": "/presets/img/ko_holmes_4_scene.jpg",
+      "6": "/presets/img/ko_holmes_6_scene.jpg"
+    },
+    "clues": {
+      "자베즈 윌슨": {
+        "img": "/presets/img/clue_holmes_0.jpg",
+        "name": "그가 받아 본 신문 광고"
+      },
+      "셜록 홈즈": {
+        "img": "/presets/img/clue_holmes_1.jpg",
+        "name": "홈즈가 그린 거리 약도"
+      },
+      "빈센트 스폴딩": {
+        "img": "/presets/img/clue_holmes_2.jpg",
+        "name": "진흙이 눌어붙은 바지 무릎"
+      }
+    }
+  }
+}

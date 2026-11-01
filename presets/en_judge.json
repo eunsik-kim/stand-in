@@ -1,0 +1,132 @@
+{
+  "situation": "Simulation. You are the small-claims judge. A wedding cake fell over, and everybody is lying a little. All invented.",
+  "ui": "en",
+  "scenario": {
+    "title": "The Cake Collapse",
+    "language": "en",
+    "setting": "A small municipal courtroom on a Tuesday morning, fluorescent lights, a bench, two tables, a photo of a collapsed cake on the screen.",
+    "user_role": "The judge hearing the case from the bench",
+    "user_goal": "Find out whose fault it was, and rule.",
+    "user_knows": [
+      "The cake collapsed before it was served",
+      "The bride's mother refuses to pay the baker"
+    ],
+    "cast": [
+      {
+        "name": "Mrs. Bennett",
+        "role": "the bride's mother, refusing to pay",
+        "appearance": "Elegant woman about 58, cream suit, pearl necklace, folder of photos on her lap",
+        "voice": "Wounded dignity, long sighs, interrupts",
+        "gender": "f",
+        "history": "She is before you for the first time.",
+        "enters_at": 0,
+        "goal": "Pay nothing and have the baker blamed",
+        "secret": "She had the cake moved out to the sunny terrace for photographs",
+        "reveal_when": "You ask directly where the cake was in the hour before it fell",
+        "red_lines": [
+          "Won't apologise first"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 45
+        }
+      },
+      {
+        "name": "Sam the baker",
+        "role": "the baker, suing for his fee",
+        "appearance": "Stocky man about 38, flour-pale forearms, ill-fitting blazer, a receipt book in his hands",
+        "voice": "Proud, defensive, explains cake engineering at length",
+        "gender": "m",
+        "history": "He is before you for the first time.",
+        "enters_at": 0,
+        "goal": "Get paid and save his reputation",
+        "secret": "To cut costs he used three support dowels instead of the usual six",
+        "reveal_when": "You ask how a five-tier cake is held up and how many supports this one had",
+        "red_lines": [
+          "Won't admit any fault unprompted"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Mr. Ruiz",
+        "role": "the wedding hall's manager, called as witness",
+        "appearance": "Thin man about 50, tight black suit, name badge, forced smile",
+        "voice": "Over-polite, vague, says 'to my knowledge' a lot",
+        "gender": "m",
+        "history": "You called him to testify.",
+        "enters_at": 3,
+        "goal": "Keep the hall out of it",
+        "secret": "The air conditioning was off that afternoon to save money",
+        "reveal_when": "You ask about the temperature in the hall and remind him he is under oath",
+        "red_lines": [
+          "Won't lie outright under oath"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "Mrs. Bennett",
+    "opening_line": "Your Honour, five tiers. On the floor. In front of two hundred guests.",
+    "phases": [
+      "Both sides",
+      "The witness",
+      "Cracks",
+      "Ruling"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "The door at the back opens and the hall manager is sworn in.",
+        "enters": [
+          "Mr. Ruiz"
+        ],
+        "shot": "A thin man in a tight black suit stands between the two tables, one hand raised."
+      },
+      {
+        "at_turn": 5,
+        "description": "The mother and the baker both stand up shouting. The clerk looks to you.",
+        "enters": [],
+        "shot": "The woman in cream and the stocky man stand up pointing at each other across the room."
+      },
+      {
+        "at_turn": 7,
+        "description": "The room goes quiet. Everyone waits for your ruling.",
+        "enters": [],
+        "shot": "All three people sit silently looking up at you."
+      }
+    ],
+    "success_criteria": [
+      "Uncovers at least two of the three hidden causes",
+      "Gives a ruling with reasons"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_judge_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_judge_3_scene.jpg",
+      "5": "/presets/img/en_judge_5_scene.jpg",
+      "7": "/presets/img/en_judge_7_scene.jpg"
+    },
+    "clues": {
+      "Mrs. Bennett": {
+        "img": "/presets/img/clue_judge_0.jpg",
+        "name": "A cake on the terrace"
+      },
+      "Sam the baker": {
+        "img": "/presets/img/clue_judge_1.jpg",
+        "name": "Three dowels"
+      },
+      "Mr. Ruiz": {
+        "img": "/presets/img/clue_judge_2.jpg",
+        "name": "The thermostat"
+      }
+    }
+  }
+}

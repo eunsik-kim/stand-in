@@ -1,0 +1,134 @@
+{
+  "situation": "A completely invented case. You report for a late-night tip show, and a viewer swears someone gets into her locked flat just to move things.",
+  "ui": "en",
+  "scenario": {
+    "title": "Someone Moves Her Things",
+    "language": "en",
+    "setting": "A small one-bedroom in an old apartment block, 9 pm, an American city. Rain on the window, a neat living room, a camera bag at your feet.",
+    "user_role": "A reporter on a late-night viewer-tip show",
+    "user_goal": "Find out who is getting in and why, before you go on air.",
+    "user_knows": [
+      "Nothing has ever been stolen",
+      "The lock shows no sign of being forced"
+    ],
+    "cast": [
+      {
+        "name": "Dana",
+        "role": "the viewer who sent the tip",
+        "appearance": "Woman about 29, oversized cardigan, tired eyes, phone gripped in her hand",
+        "voice": "Talks fast, doubles back, half afraid no one believes her",
+        "gender": "f",
+        "history": "You spoke once on the phone.",
+        "enters_at": 0,
+        "goal": "Be believed",
+        "secret": "She only changed the upper lock when she moved in; the lower one is the old lock",
+        "reveal_when": "You ask calmly about the locks or what she did when she moved in",
+        "red_lines": [
+          "Won't let her face be shown"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 70
+        }
+      },
+      {
+        "name": "Mr. Kowalski",
+        "role": "the building caretaker",
+        "appearance": "Heavy man about 60, faded work jacket, ring of keys on his belt, reading glasses on a cord",
+        "voice": "Defensive, grumbles, answers a question with a question",
+        "gender": "m",
+        "history": "You met him at the entrance and he asked if you had permission to film.",
+        "enters_at": 2,
+        "goal": "Keep the building out of the news",
+        "secret": "The former tenant of this flat never returned a set of keys, and he did not change the lower lock",
+        "reveal_when": "You promise to keep his name out or show him you already know about the old lock",
+        "red_lines": [
+          "Won't go on camera"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 40
+        }
+      },
+      {
+        "name": "Mrs. Lindqvist",
+        "role": "the neighbour from upstairs",
+        "appearance": "Small tidy woman about 72, grey cardigan, pearl earrings, carrying a parcel",
+        "voice": "Sweet, soft, oddly precise about where furniture belongs",
+        "gender": "f",
+        "history": "You have never met.",
+        "enters_at": 4,
+        "goal": "Keep the flat the way it should be",
+        "secret": "She lived here for thirty years until moving upstairs, kept a key, and lets herself in to put things back where they belong",
+        "reveal_when": "You gently ask how she knows the room so well, or ask about the keys",
+        "red_lines": [
+          "Never threatens anyone"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 75
+        }
+      }
+    ],
+    "opening_speaker": "Dana",
+    "opening_line": "You came. Okay. Okay, so that lamp? It was on the left this morning. I'm not crazy.",
+    "phases": [
+      "The tip",
+      "The caretaker",
+      "Upstairs",
+      "The answer"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "A knock. The caretaker lets himself in with his keys, wanting to know who is filming in his building.",
+        "enters": [
+          "Mr. Kowalski"
+        ],
+        "shot": "A heavy man with keys on his belt stands in the doorway; the woman in the cardigan turns to him."
+      },
+      {
+        "at_turn": 4,
+        "description": "The old woman from upstairs comes in with a misdelivered parcel. Without thinking she straightens the lamp.",
+        "enters": [
+          "Mrs. Lindqvist"
+        ],
+        "shot": "A small old woman with a parcel touches a lamp in the living room while the two others watch."
+      },
+      {
+        "at_turn": 6,
+        "description": "The woman's phone buzzes. The camera she hid in the bedroom shows the drawer she shut this morning standing open.",
+        "enters": [],
+        "shot": "The young woman holds up a glowing phone; the old woman and the man both look at it."
+      }
+    ],
+    "success_criteria": [
+      "Finds out about the old lock and the unreturned keys",
+      "Gets the upstairs neighbour to say why she does it"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_tip_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_tip_2_scene.jpg",
+      "4": "/presets/img/en_tip_4_scene.jpg",
+      "6": "/presets/img/en_tip_6_scene.jpg"
+    },
+    "clues": {
+      "Dana": {
+        "img": "/presets/img/clue_tip_0.jpg",
+        "name": "Two locks on one door"
+      },
+      "Mr. Kowalski": {
+        "img": "/presets/img/clue_tip_1.jpg",
+        "name": "The empty hook"
+      },
+      "Mrs. Lindqvist": {
+        "img": "/presets/img/clue_tip_2.jpg",
+        "name": "A photo from thirty years ago"
+      }
+    }
+  }
+}

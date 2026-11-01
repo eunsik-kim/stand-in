@@ -87,6 +87,15 @@ def versioned(url: str) -> str:
     return f"{url}?v={int((PRESETS / 'img' / Path(url).name).stat().st_mtime)}"
 
 
+CATEGORY = {"mystery": {"detective", "suspect", "holmes", "lupin", "celeste", "tip"}, "history": {"eiffel", "tesla", "seondal"},
+            "sim": {"lawyer", "judge", "auction", "anchor", "pitch", "deal", "debate"}}
+
+
+def category(preset_id: str) -> str:
+    name = preset_id.split("_", 1)[-1]
+    return next((c for c, names in CATEGORY.items() if name in names), "drama")
+
+
 def load_presets() -> dict[str, dict]:
     out = {p.stem: json.loads(p.read_text()) for p in sorted(PRESETS.glob("*.json"))}
     for preset in out.values():
@@ -96,6 +105,8 @@ def load_presets() -> dict[str, dict]:
         for name, faces in assets.get("portraits", {}).items():
             assets["portraits"][name] = {expr: versioned(url) for expr, url in faces.items()}
         assets["shots"] = {turn: versioned(url) for turn, url in assets.get("shots", {}).items()}
+        for clue in assets.get("clues", {}).values():
+            clue["img"] = versioned(clue["img"])
     return out
 
 
@@ -170,7 +181,7 @@ def index():
 @app.get("/api/presets")
 def presets():
     return [{"id": k, "ui": v.get("ui", "ko"), "title": v["scenario"]["title"], "situation": v["situation"],
-             "cast": [c["name"] for c in v["scenario"]["cast"]], "assets": v.get("assets", {})}
+             "cast": [c["name"] for c in v["scenario"]["cast"]], "assets": v.get("assets", {}), "category": category(k)}
             for k, v in load_presets().items()]
 
 

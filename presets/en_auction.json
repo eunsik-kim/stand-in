@@ -1,0 +1,133 @@
+{
+  "situation": "Simulation. You are the auctioneer. One painting, three bidders, and every bid comes from how you talk. All invented.",
+  "ui": "en",
+  "scenario": {
+    "title": "Last Lot",
+    "language": "en",
+    "setting": "An evening auction room, gilt frames, rows of chairs, a single painting on an easel under a spotlight, a bank of phones along the wall.",
+    "user_role": "The auctioneer at the rostrum, gavel in hand",
+    "user_goal": "Get the bidding as high as it will go.",
+    "user_knows": [
+      "The estimate is 400,000",
+      "This is the last lot of the night and the room is tired"
+    ],
+    "cast": [
+      {
+        "name": "Mrs. Vanterpool",
+        "role": "a wealthy collector in the front row",
+        "appearance": "Woman about 62, sharp white bob, black dress, large glasses, paddle resting on her knee",
+        "voice": "Languid, bored, pretends not to care",
+        "gender": "f",
+        "history": "You have sold to her for years.",
+        "enters_at": 0,
+        "goal": "Buy it without seeming to want it",
+        "secret": "The painting used to hang in her childhood home, and she will go far above her stated budget",
+        "reveal_when": "You speak of where the painting has been, not of its price",
+        "red_lines": [
+          "Won't be publicly embarrassed"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Mr. Adler",
+        "role": "a rival art dealer",
+        "appearance": "Man about 48, velvet jacket, silk scarf, restless knee",
+        "voice": "Quick, needling, mutters loud enough to be heard",
+        "gender": "m",
+        "history": "He complained about your commission last season.",
+        "enters_at": 0,
+        "goal": "Talk the price down so he can buy cheap",
+        "secret": "He has a client in Geneva who has already agreed to pay him 700,000",
+        "reveal_when": "You flatter his eye and dare him to prove it in front of the room",
+        "red_lines": [
+          "Won't bid against himself"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Yuki",
+        "role": "a phone bidder's representative",
+        "appearance": "Young woman about 28, black suit, telephone receiver at her ear, one hand over her mouth",
+        "voice": "Calm, murmurs into the phone, answers only in numbers at first",
+        "gender": "f",
+        "history": "She works for your house.",
+        "enters_at": 3,
+        "goal": "Carry out her client's wishes",
+        "secret": "Her anonymous client will stop the moment the bidding pauses too long",
+        "reveal_when": "You ask her how much time her client needs",
+        "red_lines": [
+          "Won't reveal her client's name"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 60
+        }
+      }
+    ],
+    "opening_speaker": "Mr. Adler",
+    "opening_line": "Four hundred? For that? Come on, the varnish alone's a crime.",
+    "phases": [
+      "Opening bid",
+      "The phone",
+      "The duel",
+      "Going once"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "A phone rings along the wall. The representative raises her paddle without looking up.",
+        "enters": [
+          "Yuki"
+        ],
+        "shot": "A young woman in a black suit at a phone desk raises a numbered paddle beside the seated bidders."
+      },
+      {
+        "at_turn": 5,
+        "description": "The dealer stands to leave, buttoning his jacket slowly so that everyone notices.",
+        "enters": [],
+        "shot": "The man in the velvet jacket stands buttoning it while the woman in glasses glances over."
+      },
+      {
+        "at_turn": 7,
+        "description": "The room is silent. Your gavel is in the air.",
+        "enters": [],
+        "shot": "Every face in the room looks at you; the painting glows under the spotlight."
+      }
+    ],
+    "success_criteria": [
+      "Bidding goes above the estimate",
+      "Finds what drives at least one bidder",
+      "Closes the sale"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_auction_scene.jpg",
+    "shots": {
+      "3": "/presets/img/en_auction_3_scene.jpg",
+      "5": "/presets/img/en_auction_5_scene.jpg",
+      "7": "/presets/img/en_auction_7_scene.jpg"
+    },
+    "clues": {
+      "Mrs. Vanterpool": {
+        "img": "/presets/img/clue_auction_0.jpg",
+        "name": "An old photograph"
+      },
+      "Mr. Adler": {
+        "img": "/presets/img/clue_auction_1.jpg",
+        "name": "A message from Geneva"
+      },
+      "Yuki": {
+        "img": "/presets/img/clue_auction_2.jpg",
+        "name": "The ticking phone line"
+      }
+    }
+  }
+}

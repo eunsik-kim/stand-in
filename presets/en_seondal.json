@@ -1,0 +1,135 @@
+{
+  "situation": "A Korean folk tale. You are the trickster Kim Seon-dal, and a greedy Seoul merchant has come to buy a river from you.",
+  "ui": "en",
+  "scenario": {
+    "title": "Selling the Daedong River",
+    "language": "en",
+    "setting": "The Daedong River ferry landing at Pyongyang, Joseon, at dawn. Mist on the water, wooden pails, water carriers queuing up to fill them.",
+    "user_role": "Kim Seon-dal, a witty trickster in worn scholar's robes",
+    "user_goal": "Sell the river to Heo for as much silver as you can.",
+    "user_knows": [
+      "You gave the water carriers coins last night to hand back to you each morning",
+      "Heo has watched this for two mornings and believes you own the river"
+    ],
+    "cast": [
+      {
+        "name": "Merchant Heo",
+        "role": "a rich merchant from Seoul",
+        "appearance": "Portly man about 50, fine silk robe, black horsehair hat, jade ring, abacus in hand",
+        "voice": "Greedy, loud, loves to haggle, laughs at his own lines",
+        "gender": "m",
+        "history": "You met at the inn three days ago.",
+        "enters_at": 0,
+        "goal": "Buy the river cheap and get rich on water fees",
+        "secret": "He has borrowed the silver in Seoul and cannot go home without a deal",
+        "reveal_when": "You pretend you might sell to someone else or walk away",
+        "red_lines": [
+          "Won't pay until he holds a written deed"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 65
+        }
+      },
+      {
+        "name": "Bok-su",
+        "role": "Heo's sharp young clerk",
+        "appearance": "Thin young man about 25, plain grey robe, ink brush behind his ear, ledger under his arm",
+        "voice": "Quiet, polite, asks small dangerous questions",
+        "gender": "m",
+        "history": "He has been watching you since the inn.",
+        "enters_at": 2,
+        "goal": "Protect his master's silver",
+        "secret": "He noticed the coins are all from the same fresh string",
+        "reveal_when": "You try to win him over instead of brushing him off",
+        "red_lines": [
+          "Won't take a bribe in front of his master"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Dol-soe",
+        "role": "a water carrier in on the trick",
+        "appearance": "Sunburnt man about 35, rough hemp clothes, straw headband, a yoke of wooden pails on his shoulders",
+        "voice": "Clumsy, cheerful, says the wrong thing at the wrong time",
+        "gender": "m",
+        "history": "You have known him for years.",
+        "enters_at": 4,
+        "goal": "Get a bigger share of the takings",
+        "secret": "He forgot his line and the others want double or they will talk",
+        "reveal_when": "You take him aside and promise him more",
+        "red_lines": [
+          "Won't take a beating for you"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "Merchant Heo",
+    "opening_line": "Ha! Two mornings I've watched 'em pay you, Seon-dal. So. What'll you take for the whole river?",
+    "phases": [
+      "Haggling",
+      "The clerk",
+      "The slip",
+      "The deed"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The clerk comes up behind Heo with his ledger, picks up one of the coins and turns it over.",
+        "enters": [
+          "Bok-su"
+        ],
+        "shot": "A thin young clerk with a ledger stands beside the portly merchant, holding a coin up to the light."
+      },
+      {
+        "at_turn": 4,
+        "description": "A water carrier lumbers up, stares at you and calls you the wrong name in front of everyone.",
+        "enters": [
+          "Dol-soe"
+        ],
+        "shot": "A sunburnt water carrier with a yoke of pails grins at you beside the merchant and the clerk."
+      },
+      {
+        "at_turn": 6,
+        "description": "Heo unties a heavy bag of silver, sets it on the landing and holds out his hand for the deed.",
+        "enters": [],
+        "shot": "A heavy bag of silver on the wooden landing; the merchant holds out his open hand to you."
+      }
+    ],
+    "success_criteria": [
+      "Gets past the clerk's questions",
+      "Keeps the water carrier from blowing it",
+      "Closes at a price higher than Heo's first offer"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_seondal_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_seondal_2_scene.jpg",
+      "4": "/presets/img/en_seondal_4_scene.jpg",
+      "6": "/presets/img/en_seondal_6_scene.jpg"
+    },
+    "clues": {
+      "Merchant Heo": {
+        "img": "/presets/img/clue_seondal_0.jpg",
+        "name": "The promissory note"
+      },
+      "Bok-su": {
+        "img": "/presets/img/clue_seondal_1.jpg",
+        "name": "A string of new coins"
+      },
+      "Dol-soe": {
+        "img": "/presets/img/clue_seondal_2.jpg",
+        "name": "Notches on a tally stick"
+      }
+    }
+  }
+}

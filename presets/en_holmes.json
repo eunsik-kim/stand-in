@@ -1,0 +1,135 @@
+{
+  "situation": "Conan Doyle's classic. You are Watson at 221B Baker Street, and a red-haired pawnbroker just lost the strangest job in London.",
+  "ui": "en",
+  "scenario": {
+    "title": "The Red-Headed League",
+    "language": "en",
+    "setting": "221B Baker Street, London, a foggy October morning in 1890. Gaslight, pipe smoke, a coal fire, papers everywhere. You sit in the armchair; Holmes is out.",
+    "user_role": "Dr. John Watson, Holmes's friend and flatmate",
+    "user_goal": "Find out why anyone would pay a man to leave his shop every day.",
+    "user_knows": [
+      "Mr. Wilson was paid four pounds a week to copy the encyclopedia by hand",
+      "This morning a card on the office door said the League was dissolved"
+    ],
+    "cast": [
+      {
+        "name": "Jabez Wilson",
+        "role": "a stout, red-haired pawnbroker",
+        "appearance": "Stout man about 58, blazing red hair, worn frock coat, watch chain, holding a crumpled card",
+        "voice": "Puffing, indignant, wanders off into grievances, drops h's now and then",
+        "gender": "m",
+        "history": "He came on a friend's advice; you have never met.",
+        "enters_at": 0,
+        "goal": "Get his four pounds a week back and stop being laughed at",
+        "secret": "His assistant found the newspaper advert, urged him to apply, and works for half wages",
+        "reveal_when": "You ask who first told him about the League or who minds the shop",
+        "red_lines": [
+          "Will not admit he was fooled until pressed"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Sherlock Holmes",
+        "role": "the consulting detective, back from a walk",
+        "appearance": "Tall, lean man about 36, hawk nose, grey eyes, dressing gown over a waistcoat, cherrywood pipe",
+        "voice": "Quick, dry, delighted by oddities, asks one question then goes silent",
+        "gender": "m",
+        "history": "You have shared these rooms for years and he teases you constantly.",
+        "enters_at": 2,
+        "goal": "Make you reach the answer yourself; he enjoys watching",
+        "secret": "The pawnshop's back wall stands against the City and Suburban Bank",
+        "reveal_when": "You ask what is behind the shop or what the assistant does all day",
+        "red_lines": [
+          "Never hands over the solution outright"
+        ],
+        "mood": {
+          "trust": 75,
+          "patience": 80
+        }
+      },
+      {
+        "name": "Vincent Spaulding",
+        "role": "Mr. Wilson's cheap, cheerful assistant",
+        "appearance": "Smooth-faced man about 30, small and quick, white splash of acid on his forehead, trouser knees worn and dirty",
+        "voice": "Polite, smiling, a little too well spoken for a shop boy",
+        "gender": "m",
+        "history": "You have never met him.",
+        "enters_at": 4,
+        "goal": "Take his employer home before anyone looks at the shop",
+        "secret": "He has spent the weeks in the cellar digging, which is why his knees look like that",
+        "reveal_when": "You ask straight out about his knees or the cellar",
+        "red_lines": [
+          "Never admits to the tunnel"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "Jabez Wilson",
+    "opening_line": "Doctor—you're the doctor? Look at this. Look at it. Eight weeks I copied that blasted book, and now—gone!",
+    "phases": [
+      "Hearing the story",
+      "Holmes joins",
+      "The assistant",
+      "Putting it together"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The door swings open. Holmes walks in, shakes out his umbrella and drops into the chair across from you without a word.",
+        "enters": [
+          "Sherlock Holmes"
+        ],
+        "shot": "A tall lean man in a dressing gown sits in the armchair opposite beside the red-haired man."
+      },
+      {
+        "at_turn": 4,
+        "description": "Mrs. Hudson shows up a young man who says he has come to fetch his employer. His trouser knees are worn through.",
+        "enters": [
+          "Vincent Spaulding"
+        ],
+        "shot": "A small quick young man stands by the door, hat in hand, knees of his trousers dirty."
+      },
+      {
+        "at_turn": 6,
+        "description": "Holmes picks up his stick and raps it twice on the floor, looking straight at you.",
+        "enters": [],
+        "shot": "The tall man leans forward with a walking stick planted on the floor, staring straight at you."
+      }
+    ],
+    "success_criteria": [
+      "Learns that the assistant pushed Wilson toward the League",
+      "Connects the empty shop to what lies behind it",
+      "Names what the plan really was"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_holmes_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_holmes_2_scene.jpg",
+      "4": "/presets/img/en_holmes_4_scene.jpg",
+      "6": "/presets/img/en_holmes_6_scene.jpg"
+    },
+    "clues": {
+      "Jabez Wilson": {
+        "img": "/presets/img/clue_holmes_0.jpg",
+        "name": "The advert he was shown"
+      },
+      "Sherlock Holmes": {
+        "img": "/presets/img/clue_holmes_1.jpg",
+        "name": "Holmes's sketch of the street"
+      },
+      "Vincent Spaulding": {
+        "img": "/presets/img/clue_holmes_2.jpg",
+        "name": "A trouser knee caked in clay"
+      }
+    }
+  }
+}

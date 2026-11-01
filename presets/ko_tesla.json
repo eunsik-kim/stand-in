@@ -1,0 +1,133 @@
+{
+  "situation": "1897년 피츠버그. 당신은 조지 웨스팅하우스. 회사를 살리려면 니콜라 테슬라에게 막대한 돈을 포기해 달라고 말해야 한다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "계약서를 찢어 주시오",
+    "language": "ko",
+    "setting": "1897년 겨울, 피츠버그의 웨스팅하우스 사무실. 어두운 목재 벽, 발전기 설계도, 창틀의 눈. 책상 위에 서명된 계약서가 놓여 있다.",
+    "user_role": "회사 대표 조지 웨스팅하우스",
+    "user_goal": "테슬라가 로열티를 포기하게 하되 우정은 지킨다.",
+    "user_knows": [
+      "계약상 교류 전력 1마력마다 테슬라에게 로열티가 나간다",
+      "채권단은 이 계약을 없애라고 한다"
+    ],
+    "cast": [
+      {
+        "name": "니콜라 테슬라",
+        "role": "교류 전동기 발명가",
+        "appearance": "Tall very thin man about 41, dark hair parted in the middle, immaculate black suit, grey gloves",
+        "voice": "정확하고 예의 바르며 격식 있게 말한다, 상처받으면 조용해진다",
+        "gender": "m",
+        "history": "오래전 그의 시스템을 믿고 값을 쳐 준 유일한 사람이 당신이다.",
+        "enters_at": 0,
+        "goal": "자신의 교류 시스템이 세상을 이기는 걸 보고 싶다",
+        "secret": "돈에는 별 관심이 없다. 회사와 함께 교류가 죽는 게 두렵다",
+        "reveal_when": "회사가 무너지면 교류가 어떻게 되는지 솔직히 말할 때",
+        "red_lines": [
+          "협박이나 속임수엔 그냥 나가 버린다"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 65
+        }
+      },
+      {
+        "name": "찰스 스콧",
+        "role": "수석 엔지니어이자 테슬라의 친구",
+        "appearance": "Mild man about 33, round spectacles, shirt sleeves, ink on his fingers",
+        "voice": "성실하고 긴장해서 자꾸 숫자로 돌아간다",
+        "gender": "m",
+        "history": "수년간 함께 일했고 테슬라의 설계를 현장에 옮겨 왔다.",
+        "enters_at": 0,
+        "goal": "두 사람도 공장도 지키고 싶다",
+        "secret": "나이아가라 발전 계약은 회사가 이번 분기를 넘겨야만 유효하다",
+        "reveal_when": "기술 쪽에서 진짜 걸린 게 뭔지 물을 때",
+        "red_lines": [
+          "테슬라에게 거짓말하지 않는다"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 60
+        }
+      },
+      {
+        "name": "할런",
+        "role": "채권단 대표",
+        "appearance": "Portly man about 55, gold watch chain, black overcoat still on, papers in hand",
+        "voice": "지루하고 차갑게 사람을 숫자처럼 말한다",
+        "gender": "m",
+        "history": "몇 달째 당신을 압박해 왔다.",
+        "enters_at": 3,
+        "goal": "협박을 해서라도 계약을 없앤다",
+        "secret": "계약이 사라지면 채권단은 당신도 밀어낼 계획이다",
+        "reveal_when": "계약 다음에 채권단이 뭘 원하는지 몰아붙일 때",
+        "red_lines": [
+          "문서로는 아무것도 약속 안 한다"
+        ],
+        "mood": {
+          "trust": 15,
+          "patience": 30
+        }
+      }
+    ],
+    "opening_speaker": "니콜라 테슬라",
+    "opening_line": "직접 부르셨군요, 웨스팅하우스 씨. 좋은 소식은 아니겠지요.",
+    "phases": [
+      "꺼내기",
+      "은행가",
+      "진심",
+      "대답"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "할런이 노크도 없이 들어와 외투도 안 벗고 계약서 위에 서류를 얹는다.",
+        "enters": [
+          "할런"
+        ],
+        "shot": "A portly man in a black overcoat stands at the desk beside the thin man in the dark suit."
+      },
+      {
+        "at_turn": 5,
+        "description": "스콧이 숫자가 적힌 종이를 당신 앞에 놓는다. 손이 떨린다.",
+        "enters": [],
+        "shot": "The man in shirt sleeves leans over the desk with a page of figures; the others watch."
+      },
+      {
+        "at_turn": 7,
+        "description": "테슬라가 일어나 책상으로 걸어와 계약서를 집어 든다.",
+        "enters": [],
+        "shot": "The tall thin man stands at the desk holding the contract in both hands, looking at you."
+      }
+    ],
+    "success_criteria": [
+      "압박하지 않고 테슬라에게 사실대로 말한다",
+      "은행가에게 휘둘리지 않는다",
+      "테슬라가 로열티 포기에 동의한다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_tesla_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_tesla_3_scene.jpg",
+      "5": "/presets/img/ko_tesla_5_scene.jpg",
+      "7": "/presets/img/ko_tesla_7_scene.jpg"
+    },
+    "clues": {
+      "니콜라 테슬라": {
+        "img": "/presets/img/clue_tesla_0.jpg",
+        "name": "작은 다상 전동기"
+      },
+      "찰스 스콧": {
+        "img": "/presets/img/clue_tesla_1.jpg",
+        "name": "나이아가라 설계도"
+      },
+      "할런": {
+        "img": "/presets/img/clue_tesla_2.jpg",
+        "name": "채권단 결의서"
+      }
+    }
+  }
+}

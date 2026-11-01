@@ -1,0 +1,134 @@
+{
+  "situation": "Simulation. You are the news anchor, on air, and a slippery CEO has seven minutes to avoid your question. All invented.",
+  "ui": "en",
+  "scenario": {
+    "title": "Live in Five",
+    "language": "en",
+    "setting": "A live TV news studio at 8 pm. Bright lights, a glass desk, a red light on the camera, a producer counting down in your ear.",
+    "user_role": "The evening news anchor",
+    "user_goal": "Get a straight answer on air before the break.",
+    "user_knows": [
+      "Fizzly, a fictional soda brand, has had a run of bottles bursting in stores",
+      "The company says it was a shipping problem"
+    ],
+    "cast": [
+      {
+        "name": "Mark Tolliver",
+        "role": "CEO of the soda company",
+        "appearance": "Tanned man about 52, navy suit, no tie, very white teeth, sitting across a glass desk",
+        "voice": "Warm, media-trained, answers a different question every time",
+        "gender": "m",
+        "history": "You interviewed him once when the brand launched.",
+        "enters_at": 0,
+        "goal": "Get through it without saying the word 'recall'",
+        "secret": "He signed off on thinner bottles to save costs eight months ago",
+        "reveal_when": "You calmly repeat the same question and ask who approved the bottle",
+        "red_lines": [
+          "Won't lose his temper on air"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 65
+        }
+      },
+      {
+        "name": "Renee",
+        "role": "his head of communications, just off camera",
+        "appearance": "Woman about 41, headset, grey blazer, standing at the edge of the studio set with a tablet",
+        "voice": "Crisp, hisses, tries to end things",
+        "gender": "f",
+        "history": "She agreed the topics with your producer.",
+        "enters_at": 4,
+        "goal": "Pull him out if it goes badly",
+        "secret": "The agreement said the interview could not be cut before seven minutes",
+        "reveal_when": "You ask on air what was agreed",
+        "red_lines": [
+          "Won't come on camera willingly"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 40
+        }
+      },
+      {
+        "name": "Priya",
+        "role": "a former quality manager on the line",
+        "appearance": "Woman about 36, plain sweater, home bookshelf behind her, shown on a large studio monitor",
+        "voice": "Nervous, precise, stops mid-sentence",
+        "gender": "f",
+        "history": "She reached out to your newsroom an hour ago.",
+        "enters_at": 2,
+        "goal": "Tell the truth without being sued",
+        "secret": "She wrote a warning memo about the thin bottles and it was ignored",
+        "reveal_when": "You reassure her and ask only what she saw herself",
+        "red_lines": [
+          "Won't guess about things she did not see"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "Mark Tolliver",
+    "opening_line": "Great to be back. And hey, first, thanks to the folks in our warehouses—",
+    "phases": [
+      "The dodge",
+      "The call",
+      "Pressure",
+      "The answer"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The producer in your ear: 'We've got a former employee on the line. Your call.' The monitor lights up.",
+        "enters": [
+          "Priya"
+        ],
+        "shot": "A woman in a plain sweater appears on a large studio monitor beside the man at the glass desk."
+      },
+      {
+        "at_turn": 4,
+        "description": "The head of communications steps to the edge of the set, tapping her wrist at the CEO.",
+        "enters": [
+          "Renee"
+        ],
+        "shot": "A woman with a headset stands at the edge of the set beside a studio camera, gesturing at the seated man."
+      },
+      {
+        "at_turn": 6,
+        "description": "'Thirty seconds to the break,' says the voice in your ear. The CEO's smile stays exactly where it is.",
+        "enters": [],
+        "shot": "The man at the glass desk holds a fixed smile under bright lights, the red camera light on."
+      }
+    ],
+    "success_criteria": [
+      "Doesn't let the CEO change the subject",
+      "Gets the bottle decision on the record"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_anchor_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_anchor_2_scene.jpg",
+      "4": "/presets/img/en_anchor_4_scene.jpg",
+      "6": "/presets/img/en_anchor_6_scene.jpg"
+    },
+    "clues": {
+      "Mark Tolliver": {
+        "img": "/presets/img/clue_anchor_0.jpg",
+        "name": "The thin bottle"
+      },
+      "Renee": {
+        "img": "/presets/img/clue_anchor_1.jpg",
+        "name": "The signed agreement"
+      },
+      "Priya": {
+        "img": "/presets/img/clue_anchor_2.jpg",
+        "name": "The ignored warning"
+      }
+    }
+  }
+}

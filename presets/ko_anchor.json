@@ -1,0 +1,134 @@
+{
+  "situation": "시뮬레이션. 당신은 생방송 앵커. 말 잘 피하는 CEO가 7분 동안 당신 질문을 피한다. 모두 가상.",
+  "ui": "ko",
+  "scenario": {
+    "title": "생방송 5초 전",
+    "language": "ko",
+    "setting": "저녁 8시 생방송 뉴스 스튜디오. 환한 조명, 유리 데스크, 카메라의 빨간 불, 귀에서 카운트다운하는 PD.",
+    "user_role": "저녁 뉴스 앵커",
+    "user_goal": "광고 전에 생방송에서 정면 답변을 받아낸다.",
+    "user_knows": [
+      "가상의 탄산음료 피즐리 병이 매장에서 잇달아 터졌다",
+      "회사는 운송 문제라고 주장한다"
+    ],
+    "cast": [
+      {
+        "name": "마크 톨리버",
+        "role": "음료 회사 CEO",
+        "appearance": "Tanned man about 52, navy suit, no tie, very white teeth, sitting across a glass desk",
+        "voice": "친근하고 미디어 훈련을 받아 늘 다른 질문에 답한다",
+        "gender": "m",
+        "history": "브랜드 출시 때 한 번 인터뷰했다.",
+        "enters_at": 0,
+        "goal": "'리콜'이라는 말 없이 넘긴다",
+        "secret": "8개월 전 비용 절감용 얇은 병을 직접 승인했다",
+        "reveal_when": "같은 질문을 침착하게 반복하며 병 변경을 누가 승인했는지 물을 때",
+        "red_lines": [
+          "방송에서 화내지 않는다"
+        ],
+        "mood": {
+          "trust": 40,
+          "patience": 65
+        }
+      },
+      {
+        "name": "홍보실장 르네",
+        "role": "카메라 밖의 홍보실장",
+        "appearance": "Woman about 41, headset, grey blazer, standing at the edge of the studio set with a tablet",
+        "voice": "또렷하게 쉿 하며 자꾸 끊으려 한다",
+        "gender": "f",
+        "history": "PD와 질문 범위를 협의했다.",
+        "enters_at": 4,
+        "goal": "상황이 나빠지면 빼낸다",
+        "secret": "합의상 인터뷰는 7분 전에 끊을 수 없다",
+        "reveal_when": "방송에서 합의 내용을 물을 때",
+        "red_lines": [
+          "자진해서 카메라 앞에 서지 않는다"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 40
+        }
+      },
+      {
+        "name": "전 품질팀장 프리야",
+        "role": "연결된 전 품질팀장",
+        "appearance": "Woman about 36, plain sweater, home bookshelf behind her, shown on a large studio monitor",
+        "voice": "긴장했지만 정확하다, 문장 중간에 멈춘다",
+        "gender": "f",
+        "history": "한 시간 전 보도국에 연락해 왔다.",
+        "enters_at": 2,
+        "goal": "소송당하지 않고 진실을 말한다",
+        "secret": "얇은 병을 경고한 메모를 썼지만 무시당했다",
+        "reveal_when": "안심시키고 직접 본 것만 물을 때",
+        "red_lines": [
+          "직접 안 본 건 추측하지 않는다"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 40
+        }
+      }
+    ],
+    "opening_speaker": "마크 톨리버",
+    "opening_line": "불러 줘서 고맙습니다. 그전에 저희 물류 직원분들께 먼저 감사를—",
+    "phases": [
+      "회피",
+      "연결",
+      "압박",
+      "답변"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "귀에서 PD 목소리. '전 직원 연결됐어요. 판단하세요.' 모니터가 켜진다.",
+        "enters": [
+          "전 품질팀장 프리야"
+        ],
+        "shot": "A woman in a plain sweater appears on a large studio monitor beside the man at the glass desk."
+      },
+      {
+        "at_turn": 4,
+        "description": "홍보실장이 세트 끝으로 와서 CEO에게 손목을 톡톡 친다.",
+        "enters": [
+          "홍보실장 르네"
+        ],
+        "shot": "A woman with a headset stands at the edge of the set beside a studio camera, gesturing at the seated man."
+      },
+      {
+        "at_turn": 6,
+        "description": "'광고까지 30초.' 귀에서 들린다. CEO의 미소는 그대로다.",
+        "enters": [],
+        "shot": "The man at the glass desk holds a fixed smile under bright lights, the red camera light on."
+      }
+    ],
+    "success_criteria": [
+      "CEO가 화제를 돌리지 못하게 한다",
+      "병 변경 결정을 방송에서 인정받는다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_anchor_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_anchor_2_scene.jpg",
+      "4": "/presets/img/ko_anchor_4_scene.jpg",
+      "6": "/presets/img/ko_anchor_6_scene.jpg"
+    },
+    "clues": {
+      "마크 톨리버": {
+        "img": "/presets/img/clue_anchor_0.jpg",
+        "name": "얇아진 병"
+      },
+      "홍보실장 르네": {
+        "img": "/presets/img/clue_anchor_1.jpg",
+        "name": "서명한 합의서"
+      },
+      "전 품질팀장 프리야": {
+        "img": "/presets/img/clue_anchor_2.jpg",
+        "name": "무시당한 경고 메모"
+      }
+    }
+  }
+}

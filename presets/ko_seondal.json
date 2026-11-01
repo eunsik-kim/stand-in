@@ -1,0 +1,135 @@
+{
+  "situation": "전해 내려오는 설화. 당신은 봉이 김선달. 욕심 많은 한양 상인이 대동강을 사러 왔다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "대동강을 팝니다",
+    "language": "ko",
+    "setting": "조선 후기 평양 대동강 나루터의 새벽. 물안개, 나무 물지게, 물을 뜨려고 줄 선 물장수들.",
+    "user_role": "낡은 도포 차림의 재담꾼 봉이 김선달",
+    "user_goal": "허 대인에게 대동강을 최대한 비싸게 판다.",
+    "user_knows": [
+      "어젯밤 물장수들에게 엽전을 나눠 주고 아침마다 물값처럼 돌려받기로 했다",
+      "허 대인은 이틀째 그걸 지켜보고 강 주인이 당신이라 믿는다"
+    ],
+    "cast": [
+      {
+        "name": "허 대인",
+        "role": "한양에서 온 거상",
+        "appearance": "Portly man about 50, fine silk robe, black horsehair hat, jade ring, abacus in hand",
+        "voice": "욕심 많고 목소리가 크며 흥정을 즐기고 자기 말에 웃는다",
+        "gender": "m",
+        "history": "사흘 전 주막에서 만났다.",
+        "enters_at": 0,
+        "goal": "강을 싸게 사서 물값으로 큰돈을 번다",
+        "secret": "은자를 한양에서 빌려 왔고 거래 없이는 돌아갈 수 없다",
+        "reveal_when": "딴 사람에게 넘기겠다고 하거나 그냥 가 버리는 척할 때",
+        "red_lines": [
+          "문서를 받기 전엔 돈을 안 넘긴다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 65
+        }
+      },
+      {
+        "name": "복수",
+        "role": "허 대인의 눈치 빠른 서기",
+        "appearance": "Thin young man about 25, plain grey robe, ink brush behind his ear, ledger under his arm",
+        "voice": "조용하고 공손하게 작고 위험한 질문을 한다",
+        "gender": "m",
+        "history": "주막에서부터 당신을 지켜봤다.",
+        "enters_at": 2,
+        "goal": "주인의 은자를 지킨다",
+        "secret": "엽전이 전부 같은 꾸러미의 새 돈이라는 걸 봤다",
+        "reveal_when": "무시하지 않고 그를 구슬리려 할 때",
+        "red_lines": [
+          "주인 앞에서는 뇌물을 안 받는다"
+        ],
+        "mood": {
+          "trust": 25,
+          "patience": 50
+        }
+      },
+      {
+        "name": "돌쇠",
+        "role": "한패인 물장수",
+        "appearance": "Sunburnt man about 35, rough hemp clothes, straw headband, a yoke of wooden pails on his shoulders",
+        "voice": "털털하고 눈치 없이 꼭 아닌 때 말한다",
+        "gender": "m",
+        "history": "오래 알고 지낸 사이다.",
+        "enters_at": 4,
+        "goal": "자기 몫을 더 받고 싶다",
+        "secret": "대사를 까먹었고 다른 물장수들은 곱절을 안 주면 불겠다고 한다",
+        "reveal_when": "따로 불러 몫을 더 주겠다고 할 때",
+        "red_lines": [
+          "대신 매 맞을 생각은 없다"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "허 대인",
+    "opening_line": "허허, 이틀을 봤네. 다들 자네한테 돈을 내더구먼. 그래서, 강을 통째로 얼마면 되겠나?",
+    "phases": [
+      "흥정",
+      "서기",
+      "말실수",
+      "문서"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "서기가 장부를 들고 허 대인 뒤로 와서 엽전 하나를 집어 뒤집어 본다.",
+        "enters": [
+          "복수"
+        ],
+        "shot": "A thin young clerk with a ledger stands beside the portly merchant, holding a coin up to the light."
+      },
+      {
+        "at_turn": 4,
+        "description": "물장수 돌쇠가 물지게를 지고 와서 모두 앞에서 다른 이름으로 당신을 부른다.",
+        "enters": [
+          "돌쇠"
+        ],
+        "shot": "A sunburnt water carrier with a yoke of pails grins at you beside the merchant and the clerk."
+      },
+      {
+        "at_turn": 6,
+        "description": "허 대인이 묵직한 은자 자루를 풀어 나루에 내려놓고 문서를 달라며 손을 내민다.",
+        "enters": [],
+        "shot": "A heavy bag of silver on the wooden landing; the merchant holds out his open hand to you."
+      }
+    ],
+    "success_criteria": [
+      "서기의 질문을 넘긴다",
+      "물장수가 판을 깨지 않게 막는다",
+      "허 대인의 첫 제안보다 비싸게 판다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_seondal_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_seondal_2_scene.jpg",
+      "4": "/presets/img/ko_seondal_4_scene.jpg",
+      "6": "/presets/img/ko_seondal_6_scene.jpg"
+    },
+    "clues": {
+      "허 대인": {
+        "img": "/presets/img/clue_seondal_0.jpg",
+        "name": "빌린 은자의 차용증"
+      },
+      "복수": {
+        "img": "/presets/img/clue_seondal_1.jpg",
+        "name": "꾸러미째 새 엽전"
+      },
+      "돌쇠": {
+        "img": "/presets/img/clue_seondal_2.jpg",
+        "name": "눈금을 새긴 물장수 패"
+      }
+    }
+  }
+}

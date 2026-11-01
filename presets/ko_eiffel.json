@@ -1,0 +1,132 @@
+{
+  "situation": "1925년 파리. 당신은 실존 사기꾼 빅토르 뤼스티그. 지금부터 에펠탑을 고철로 팔아야 한다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "에펠탑을 팝니다",
+    "language": "ko",
+    "setting": "1925년 봄, 파리 크리용 호텔의 밀실. 벨벳 의자, 시가 연기, 탁자에 펼쳐진 공문서, 닫힌 문.",
+    "user_role": "체신부 차관보로 위장한 사기꾼 빅토르 뤼스티그",
+    "user_goal": "오늘 푸아송이 돈을 내놓게 만든다.",
+    "user_knows": [
+      "에펠탑 유지비가 비싸다는 건 신문에도 나온 사실이다",
+      "입찰은 국가 기밀이라고 그에게 말해 뒀다"
+    ],
+    "cast": [
+      {
+        "name": "앙드레 푸아송",
+        "role": "고철상",
+        "appearance": "Thick-set man about 50, new expensive suit that doesn't sit right, thick moustache, nervous hands",
+        "voice": "투박하고 숫자를 좋아하며 큰손처럼 말하려 애쓴다",
+        "gender": "m",
+        "history": "어제 점심에 당신이 한껏 추켜세웠다.",
+        "enters_at": 0,
+        "goal": "인생 최대의 거래를 따내고 싶다",
+        "secret": "벼락부자라 업계 거물들이 비웃는다. 대접만 받으면 웃돈도 낸다",
+        "reveal_when": "업계에서 유일하게 진지한 인물로 대접할 때",
+        "red_lines": [
+          "의심이 풀리기 전엔 한 푼도 안 낸다"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 60
+        }
+      },
+      {
+        "name": "댄 콜린스",
+        "role": "당신의 '비서'이자 공범",
+        "appearance": "Dapper man about 40, thin moustache, pinstripe suit, leather folder under his arm",
+        "voice": "매끄럽고 낮은 목소리로 넌지시 말한다",
+        "gender": "m",
+        "history": "함께 사기를 열두 번쯤 쳤다.",
+        "enters_at": 0,
+        "goal": "누가 체신부에 전화하기 전에 돈 들고 빠지고 싶다",
+        "secret": "진짜 관리임을 증명할 확실한 수를 안다. 뇌물을 요구하는 것, 진짜 관리만 그러니까",
+        "reveal_when": "조용히 신뢰를 되찾을 방법을 물을 때",
+        "red_lines": [
+          "푸아송 부부 앞에선 정체를 안 깬다"
+        ],
+        "mood": {
+          "trust": 75,
+          "patience": 70
+        }
+      },
+      {
+        "name": "푸아송 부인",
+        "role": "푸아송의 아내",
+        "appearance": "Sharp-eyed woman about 48, dark cloche hat, fur collar, handbag clasped in her lap",
+        "voice": "건조하게 감흥이 없고 곤란한 질문만 골라서 한다",
+        "gender": "f",
+        "history": "초면이고 본인이 우겨서 따라왔다.",
+        "enters_at": 2,
+        "goal": "남편이 바보짓 못 하게 막고 싶다",
+        "secret": "사촌이 정부 부처 서기라 내일 아침 전화해 볼 수 있다",
+        "reveal_when": "왜 그리 확신하는지 묻거나 서두르게 할 때",
+        "red_lines": [
+          "빈말만으로는 안 넘어간다"
+        ],
+        "mood": {
+          "trust": 20,
+          "patience": 45
+        }
+      }
+    ],
+    "opening_speaker": "앙드레 푸아송",
+    "opening_line": "칠천 톤이라고 하셨죠. 근데 차관보님, 이런 얘길 왜 호텔에서 합니까?",
+    "phases": [
+      "미끼",
+      "부인",
+      "의심",
+      "돈"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "문이 열리고 푸아송 부인이 불쑥 들어와 앉더니 핸드백을 공문서 위에 올려놓는다.",
+        "enters": [
+          "푸아송 부인"
+        ],
+        "shot": "A sharp-eyed woman in a cloche hat sits at the table beside the man, her handbag on the papers."
+      },
+      {
+        "at_turn": 4,
+        "description": "부인이 당신의 해진 소맷단을 보며 그렇게 높은 분이 왜 저런 셔츠를 입느냐고 묻는다.",
+        "enters": [],
+        "shot": "The woman leans in, staring at you with raised eyebrows; her husband looks suddenly unsure."
+      },
+      {
+        "at_turn": 6,
+        "description": "푸아송이 품에서 두툼한 봉투를 꺼내 탁자에 놓지만 손은 떼지 않는다.",
+        "enters": [],
+        "shot": "A thick envelope on the table under the man's hand; the woman beside him watches you."
+      }
+    ],
+    "success_criteria": [
+      "부인의 의심을 침착하게 넘긴다",
+      "푸아송이 봉투에서 손을 떼게 한다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_eiffel_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_eiffel_2_scene.jpg",
+      "4": "/presets/img/ko_eiffel_4_scene.jpg",
+      "6": "/presets/img/ko_eiffel_6_scene.jpg"
+    },
+    "clues": {
+      "앙드레 푸아송": {
+        "img": "/presets/img/clue_eiffel_0.jpg",
+        "name": "업계의 거절 편지"
+      },
+      "댄 콜린스": {
+        "img": "/presets/img/clue_eiffel_1.jpg",
+        "name": "접어 놓은 뇌물"
+      },
+      "푸아송 부인": {
+        "img": "/presets/img/clue_eiffel_2.jpg",
+        "name": "호텔 프런트의 전화기"
+      }
+    }
+  }
+}

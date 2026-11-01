@@ -1,0 +1,133 @@
+{
+  "situation": "시뮬레이션. 당신은 경매사. 그림 하나, 입찰자 셋. 호가는 당신 말솜씨에 달렸다. 모두 가상.",
+  "ui": "ko",
+  "scenario": {
+    "title": "마지막 낙찰",
+    "language": "ko",
+    "setting": "저녁 경매장. 금빛 액자, 줄지은 의자, 조명 아래 이젤에 놓인 그림 한 점, 벽쪽의 전화 입찰석.",
+    "user_role": "연단에서 봉을 든 경매사",
+    "user_goal": "호가를 끝까지 끌어올린다.",
+    "user_knows": [
+      "추정가는 40만 달러다",
+      "오늘 밤 마지막 출품작이고 객석은 지쳐 있다"
+    ],
+    "cast": [
+      {
+        "name": "민 회장",
+        "role": "맨 앞줄의 부유한 수집가",
+        "appearance": "Woman about 62, sharp white bob, black dress, large glasses, paddle resting on her knee",
+        "voice": "나른하고 지루한 척, 관심 없는 척한다",
+        "gender": "f",
+        "history": "오랫동안 그에게 작품을 팔아 왔다.",
+        "enters_at": 0,
+        "goal": "원하지 않는 척하며 낙찰받는다",
+        "secret": "이 그림은 어린 시절 집에 걸려 있던 것이고 말한 예산보다 훨씬 더 낼 수 있다",
+        "reveal_when": "값이 아니라 그림이 지나온 곳을 이야기할 때",
+        "red_lines": [
+          "공개 망신은 못 참는다"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 50
+        }
+      },
+      {
+        "name": "화상 애들러",
+        "role": "경쟁 화상",
+        "appearance": "Man about 48, velvet jacket, silk scarf, restless knee",
+        "voice": "빠르고 비꼬며 들리게 중얼거린다",
+        "gender": "m",
+        "history": "지난 시즌 수수료로 항의했다.",
+        "enters_at": 0,
+        "goal": "값을 깎아내려 싸게 산다",
+        "secret": "제네바 고객이 이미 70만 달러에 사겠다고 했다",
+        "reveal_when": "그의 안목을 띄워 주고 객석 앞에서 증명해 보라고 할 때",
+        "red_lines": [
+          "자기 호가를 스스로 올리지는 않는다"
+        ],
+        "mood": {
+          "trust": 30,
+          "patience": 50
+        }
+      },
+      {
+        "name": "전화 대리인 유키",
+        "role": "전화 입찰 대리인",
+        "appearance": "Young woman about 28, black suit, telephone receiver at her ear, one hand over her mouth",
+        "voice": "차분하고 전화기에 속삭이며 처음엔 숫자로만 답한다",
+        "gender": "f",
+        "history": "경매사 소속 직원이다.",
+        "enters_at": 3,
+        "goal": "고객 지시를 수행한다",
+        "secret": "익명 고객은 호가가 오래 멈추면 그 순간 포기한다",
+        "reveal_when": "고객에게 시간이 얼마나 필요한지 물을 때",
+        "red_lines": [
+          "고객 이름은 말하지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 60
+        }
+      }
+    ],
+    "opening_speaker": "화상 애들러",
+    "opening_line": "40만? 저게요? 에이, 바니시만 봐도 범죄네.",
+    "phases": [
+      "시작가",
+      "전화 입찰",
+      "맞대결",
+      "낙찰"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "벽쪽 전화가 울린다. 대리인이 고개도 안 들고 패들을 든다.",
+        "enters": [
+          "전화 대리인 유키"
+        ],
+        "shot": "A young woman in a black suit at a phone desk raises a numbered paddle beside the seated bidders."
+      },
+      {
+        "at_turn": 5,
+        "description": "화상이 일어나 천천히 재킷 단추를 채운다. 모두가 보라는 듯이.",
+        "enters": [],
+        "shot": "The man in the velvet jacket stands buttoning it while the woman in glasses glances over."
+      },
+      {
+        "at_turn": 7,
+        "description": "장내가 조용하다. 당신의 봉이 공중에 떠 있다.",
+        "enters": [],
+        "shot": "Every face in the room looks at you; the painting glows under the spotlight."
+      }
+    ],
+    "success_criteria": [
+      "추정가를 넘긴다",
+      "입찰자 한 명 이상의 진짜 동기를 찾아낸다",
+      "낙찰을 끝낸다"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_auction_scene.jpg",
+    "shots": {
+      "3": "/presets/img/ko_auction_3_scene.jpg",
+      "5": "/presets/img/ko_auction_5_scene.jpg",
+      "7": "/presets/img/ko_auction_7_scene.jpg"
+    },
+    "clues": {
+      "민 회장": {
+        "img": "/presets/img/clue_auction_0.jpg",
+        "name": "오래된 사진"
+      },
+      "화상 애들러": {
+        "img": "/presets/img/clue_auction_1.jpg",
+        "name": "제네바에서 온 메시지"
+      },
+      "전화 대리인 유키": {
+        "img": "/presets/img/clue_auction_2.jpg",
+        "name": "대기 중인 전화선"
+      }
+    }
+  }
+}

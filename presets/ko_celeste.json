@@ -1,0 +1,133 @@
+{
+  "situation": "1872년 12월, 아무도 없는 배가 대서양을 떠다닌다. 끝내 풀리지 않은 실제 미스터리. 당신이 제일 먼저 오른다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "메리 셀레스트호",
+    "language": "ko",
+    "setting": "1872년 12월 대서양 한복판, 쌍돛대 범선 메리 셀레스트호의 갑판. 잿빛 너울, 찢어진 돛, 늘어진 밧줄. 사람은 없고 바람 소리뿐이다.",
+    "user_role": "데이 그라티아호의 일등항해사 올리버 데보. 승선조를 이끌고 있다",
+    "user_goal": "멀쩡한 배를 열 명이 왜 버렸는지 결론을 낸다.",
+    "user_knows": [
+      "배는 멀쩡하고 화물도 그대로인 듯하다",
+      "하나뿐인 구명정이 없다",
+      "브릭스 선장은 아내와 어린 딸을 태우고 있었다"
+    ],
+    "cast": [
+      {
+        "name": "존 라이트",
+        "role": "데이 그라티아호의 이등항해사",
+        "appearance": "Weathered man about 40, dark wool pea coat, salt-stained beard, oilskin hat",
+        "voice": "짧고 실무적이다, 추측을 싫어한다",
+        "gender": "m",
+        "history": "2년째 함께 배를 탔다.",
+        "enters_at": 0,
+        "goal": "사실만 정리하고 이 배에서 내리고 싶다",
+        "secret": "펌프 하나가 분해돼 있고 측심봉이 갑판에 나뒹군다. 배에 물이 찬다고 겁낸 듯하다",
+        "reveal_when": "펌프나 선창 수위를 확인했는지 물을 때",
+        "red_lines": [
+          "직접 안 본 건 단정하지 않는다"
+        ],
+        "mood": {
+          "trust": 65,
+          "patience": 60
+        }
+      },
+      {
+        "name": "존슨",
+        "role": "선창에 내려갔다 온 젊은 선원",
+        "appearance": "Young man about 22, knitted cap, pale and uneasy, lantern in hand",
+        "voice": "겁먹고 속삭이며 자꾸 흉조 이야기를 한다",
+        "gender": "m",
+        "history": "당신 밑에서 처음 하는 긴 항해다.",
+        "enters_at": 0,
+        "goal": "저주받은 배라고 설득해 다들 내리게 하고 싶다",
+        "secret": "선창에서 화물 알코올 아홉 통이 비어 있고 증기 냄새가 진동한다",
+        "reveal_when": "무시하지 않고 아래에서 정확히 뭘 맡고 봤는지 물을 때",
+        "red_lines": [
+          "혼자서는 다시 안 내려간다"
+        ],
+        "mood": {
+          "trust": 45,
+          "patience": 45
+        }
+      },
+      {
+        "name": "모어하우스 선장",
+        "role": "데이 그라티아호 선장",
+        "appearance": "Broad man about 45, grey side-whiskers, dark captain's coat with brass buttons",
+        "voice": "느리고 묵직하게 한 마디씩 끊는다, 목소리를 높이지 않는다",
+        "gender": "m",
+        "history": "당신에게 승선을 맡겼고 신호를 보자 직접 건너왔다.",
+        "enters_at": 4,
+        "goal": "진상을 알되 구조금 청구에 흠이 없게 한다",
+        "secret": "출항 전날 브릭스와 저녁을 먹었다. 둘은 오랜 친구고 브릭스는 알코올 화물을 걱정했다",
+        "reveal_when": "브릭스나 화물에 대해 뭘 아는지 물을 때",
+        "red_lines": [
+          "브릭스를 불명예스럽게 몰지 않는다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 70
+        }
+      }
+    ],
+    "opening_speaker": "존 라이트",
+    "opening_line": "아무도 없어요. 앞뒤 다 봤는데 아무도. 식탁도 그대로고… 직접 보시는 게 낫겠습니다.",
+    "phases": [
+      "수색",
+      "선실",
+      "선장",
+      "결론"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "선장실에서 외침이 들린다. 침대 위에 아이 장난감이 있고 매트리스에 작은 몸 자국이 남아 있다.",
+        "enters": [],
+        "shot": "The two sailors stand in a narrow wooden cabin looking down at a small bunk with a child's toy on it."
+      },
+      {
+        "at_turn": 4,
+        "description": "보트가 선체에 부딪힌다. 모어하우스 선장이 난간을 넘어와 빈 갑판을 천천히 둘러본다.",
+        "enters": [
+          "모어하우스 선장"
+        ],
+        "shot": "A broad captain in a brass-buttoned coat stands on deck with the two sailors, the grey sea behind."
+      },
+      {
+        "at_turn": 6,
+        "description": "바람이 거세지며 찢어진 돛이 머리 위에서 터지듯 운다. 선장이 해 지기 전에 답을 달라고 한다.",
+        "enters": [],
+        "shot": "Dark clouds over the sea; the three men look up at a torn sail cracking in the wind."
+      }
+    ],
+    "success_criteria": [
+      "펌프와 알코올 단서를 모두 찾아낸다",
+      "왜 떠났는지 근거 있게 설명한다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_celeste_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_celeste_2_scene.jpg",
+      "4": "/presets/img/ko_celeste_4_scene.jpg",
+      "6": "/presets/img/ko_celeste_6_scene.jpg"
+    },
+    "clues": {
+      "존 라이트": {
+        "img": "/presets/img/clue_celeste_0.jpg",
+        "name": "분해된 펌프"
+      },
+      "존슨": {
+        "img": "/presets/img/clue_celeste_1.jpg",
+        "name": "텅 빈 아홉 개의 통"
+      },
+      "모어하우스 선장": {
+        "img": "/presets/img/clue_celeste_2.jpg",
+        "name": "브릭스의 편지"
+      }
+    }
+  }
+}

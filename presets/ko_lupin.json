@@ -1,0 +1,133 @@
+{
+  "situation": "모리스 르블랑의 괴도 신사가 디저트 전에 다이아몬드를 훔치겠다고 예고했다. 그는 이미 이 식탁에 앉아 있다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "식탁 위의 뤼팽",
+    "language": "ko",
+    "setting": "1905년 파리의 저택, 촛불 켠 식당. 은식기, 무거운 커튼, 긴 식탁. 곧 디저트가 나오고 백작부인의 목에서 푸른 다이아몬드가 빛난다.",
+    "user_role": "손님으로 위장해 식탁에 앉은 젊은 형사",
+    "user_goal": "디저트 전에 이 식탁의 누가 아르센 뤼팽인지 찾아낸다.",
+    "user_knows": [
+      "뤼팽이 디저트 전에 다이아몬드를 가져가겠다는 예고장을 보냈다",
+      "그는 변장의 달인이고 지금 이 방에 있다고 한다"
+    ],
+    "cast": [
+      {
+        "name": "보드뢰유 백작부인",
+        "role": "다이아몬드를 건 안주인",
+        "appearance": "Woman about 55, silver hair piled high, black silk gown, large blue diamond necklace",
+        "voice": "우아하게 비꼬고 손짓 하나로 말을 자른다",
+        "gender": "f",
+        "history": "당신을 불렀지만 너무 어리다고 생각한다.",
+        "enters_at": 0,
+        "goal": "다이아몬드 자체에 시선이 쏠리지 않게 한다",
+        "secret": "이 다이아몬드는 가짜다. 진짜는 작년에 빚 갚느라 팔았다",
+        "reveal_when": "왜 하필 오늘 밤 그걸 걸고 나왔는지 몰아붙일 때",
+        "red_lines": [
+          "궁지에 몰리기 전엔 보석을 못 만지게 한다"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 55
+        }
+      },
+      {
+        "name": "모렐 박사",
+        "role": "집안의 노주치의",
+        "appearance": "Stooped man about 65, white beard, gold spectacles, old-fashioned tailcoat, a limp",
+        "voice": "온화하게 횡설수설하다가 한 문장만 갑자기 날카롭다",
+        "gender": "m",
+        "history": "반갑게 인사하며 당신 어머니 안부를 물었다.",
+        "enters_at": 0,
+        "goal": "게임을 즐기고 보석을 들고 나간다",
+        "secret": "그가 아르센 뤼팽이다. 진짜 모렐 박사는 루앙에서 자고 있다",
+        "reveal_when": "다리, 의학, 집안 과거에 대한 실수를 들이댈 때",
+        "red_lines": [
+          "누구도 해치지 않는다",
+          "들켜도 당황하지 않고 인사로 인정한다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 90
+        }
+      },
+      {
+        "name": "클레르",
+        "role": "늦게 도착한 백작부인의 조카",
+        "appearance": "Woman about 24, dark bob, pale green dress, gloves in hand, cheeks flushed from the cold",
+        "voice": "빠르고 버릇없게 모두가 생각만 하던 말을 해 버린다",
+        "gender": "f",
+        "history": "계단에서 마주쳤는데 경찰인 걸 바로 알아봤다.",
+        "enters_at": 2,
+        "goal": "드디어 뭔가 재밌는 일이 벌어지길 바란다",
+        "secret": "복도에서는 왼쪽 다리를 절던 박사가 식탁에서는 오른쪽을 저는 걸 봤다",
+        "reveal_when": "얕보지 않고 오는 길에 뭘 봤는지 물을 때",
+        "red_lines": [
+          "자기를 얕보는 사람은 안 도와준다"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 60
+        }
+      }
+    ],
+    "opening_speaker": "보드뢰유 백작부인",
+    "opening_line": "이분이 그 대단하신 형사님? 뭐라도 좀 드세요, 얼굴이 하얗네.",
+    "phases": [
+      "떠보기",
+      "클레르 등장",
+      "불빛",
+      "지목"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "문이 벌컥 열리고 조카가 늦게 뛰어들어와 빈자리에 앉으며 당신에게 윙크한다.",
+        "enters": [
+          "클레르"
+        ],
+        "shot": "A young woman in a green dress sits down at the table beside the silver-haired woman and the old doctor."
+      },
+      {
+        "at_turn": 4,
+        "description": "외풍에 촛불이 일렁인다. 하인이 디저트를 담고 있다고 알린다.",
+        "enters": [],
+        "shot": "Candle flames lean sideways; the three people at the table look up at the same moment."
+      },
+      {
+        "at_turn": 6,
+        "description": "촛불이 한꺼번에 꺼진다. 의자 끄는 소리. 성냥이 켜지자 백작부인의 손이 빈 목을 짚고 있다.",
+        "enters": [],
+        "shot": "A dark room lit by one match; the silver-haired woman clutches her bare neck, the others half risen."
+      }
+    ],
+    "success_criteria": [
+      "누군가의 이야기에서 모순을 잡아낸다",
+      "근거를 들어 박사를 뤼팽으로 지목한다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_lupin_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_lupin_2_scene.jpg",
+      "4": "/presets/img/ko_lupin_4_scene.jpg",
+      "6": "/presets/img/ko_lupin_6_scene.jpg"
+    },
+    "clues": {
+      "보드뢰유 백작부인": {
+        "img": "/presets/img/clue_lupin_0.jpg",
+        "name": "'다이아몬드'에 난 긁힌 자국"
+      },
+      "모렐 박사": {
+        "img": "/presets/img/clue_lupin_1.jpg",
+        "name": "은쟁반 위의 명함"
+      },
+      "클레르": {
+        "img": "/presets/img/clue_lupin_2.jpg",
+        "name": "굽을 덧댄 노인 구두"
+      }
+    }
+  }
+}

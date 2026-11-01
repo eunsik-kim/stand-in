@@ -1,0 +1,132 @@
+{
+  "situation": "Pittsburgh, 1897. You are George Westinghouse, and you must ask Nikola Tesla to give up a fortune to save your company.",
+  "ui": "en",
+  "scenario": {
+    "title": "Tear Up the Contract",
+    "language": "en",
+    "setting": "Westinghouse's office in Pittsburgh, winter 1897. Dark panelling, blueprints of dynamos, snow on the sill, a signed contract on the desk.",
+    "user_role": "George Westinghouse, head of the company",
+    "user_goal": "Get Tesla to give up the royalties, and keep his friendship.",
+    "user_knows": [
+      "The contract pays Tesla a royalty on every horsepower of AC sold",
+      "The company's lenders say the contract must go"
+    ],
+    "cast": [
+      {
+        "name": "Nikola Tesla",
+        "role": "the inventor of the AC motor",
+        "appearance": "Tall very thin man about 41, dark hair parted in the middle, immaculate black suit, grey gloves",
+        "voice": "Precise, courtly, Serbian-accented formality, goes quiet when hurt",
+        "gender": "m",
+        "history": "Years ago you were the only one who believed in his system and paid him for it.",
+        "enters_at": 0,
+        "goal": "See his alternating current system win",
+        "secret": "He cares little for the money; what he fears is AC dying with the company",
+        "reveal_when": "You tell him honestly what happens to AC if the company falls",
+        "red_lines": [
+          "Won't be bullied or tricked; he would walk out first"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 65
+        }
+      },
+      {
+        "name": "Charles Scott",
+        "role": "your chief engineer, Tesla's friend",
+        "appearance": "Mild man about 33, round spectacles, shirt sleeves, ink on his fingers",
+        "voice": "Earnest, nervous, keeps coming back to the numbers",
+        "gender": "m",
+        "history": "He has worked for you for years and brought Tesla's designs to the shop floor.",
+        "enters_at": 0,
+        "goal": "Keep both men and the plant together",
+        "secret": "The Niagara Falls power contract is only safe if the company survives this quarter",
+        "reveal_when": "You ask him what is really at stake on the engineering side",
+        "red_lines": [
+          "Won't lie to Tesla"
+        ],
+        "mood": {
+          "trust": 70,
+          "patience": 60
+        }
+      },
+      {
+        "name": "Mr. Harlan",
+        "role": "a representative of the lenders",
+        "appearance": "Portly man about 55, gold watch chain, black overcoat still on, papers in hand",
+        "voice": "Bored, cold, talks about people as line items",
+        "gender": "m",
+        "history": "He has been after you for months.",
+        "enters_at": 3,
+        "goal": "Have the contract cancelled, by threat if needed",
+        "secret": "Once the contract is gone the lenders plan to push you out as well",
+        "reveal_when": "You press him on what the lenders want after the contract",
+        "red_lines": [
+          "Offers nothing in writing"
+        ],
+        "mood": {
+          "trust": 15,
+          "patience": 30
+        }
+      }
+    ],
+    "opening_speaker": "Nikola Tesla",
+    "opening_line": "You sent for me yourself, Mr. Westinghouse. So it is not good news.",
+    "phases": [
+      "Saying it",
+      "The banker",
+      "The truth",
+      "His answer"
+    ],
+    "events": [
+      {
+        "at_turn": 3,
+        "description": "The banker comes in without knocking, keeps his coat on and puts a paper on the contract.",
+        "enters": [
+          "Mr. Harlan"
+        ],
+        "shot": "A portly man in a black overcoat stands at the desk beside the thin man in the dark suit."
+      },
+      {
+        "at_turn": 5,
+        "description": "Scott sets a page of figures in front of you. His hand is shaking.",
+        "enters": [],
+        "shot": "The man in shirt sleeves leans over the desk with a page of figures; the others watch."
+      },
+      {
+        "at_turn": 7,
+        "description": "Tesla stands, crosses to the desk and picks up the contract.",
+        "enters": [],
+        "shot": "The tall thin man stands at the desk holding the contract in both hands, looking at you."
+      }
+    ],
+    "success_criteria": [
+      "Tells Tesla the truth rather than pressuring him",
+      "Stands up to the banker",
+      "Tesla agrees to give up the royalties"
+    ],
+    "max_turns": 9
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_tesla_scene.jpg",
+    "shots": {
+      "5": "/presets/img/en_tesla_5_scene.jpg",
+      "7": "/presets/img/en_tesla_7_scene.jpg"
+    },
+    "clues": {
+      "Nikola Tesla": {
+        "img": "/presets/img/clue_tesla_0.jpg",
+        "name": "The little polyphase motor"
+      },
+      "Charles Scott": {
+        "img": "/presets/img/clue_tesla_1.jpg",
+        "name": "The Niagara drawings"
+      },
+      "Mr. Harlan": {
+        "img": "/presets/img/clue_tesla_2.jpg",
+        "name": "The lenders' resolution"
+      }
+    }
+  }
+}

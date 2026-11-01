@@ -1,0 +1,133 @@
+{
+  "situation": "Simulation. You are the defence lawyer, and the case rests on one witness. All people and events are invented.",
+  "ui": "en",
+  "scenario": {
+    "title": "Cross-Examination",
+    "language": "en",
+    "setting": "A wood-panelled county courtroom, afternoon. The jury box is full, the witness stand is a few steps away, and a clock ticks above the bench.",
+    "user_role": "Defence lawyer for a young man accused of a night-time burglary",
+    "user_goal": "Show the jury the witness could not have seen what she says she saw.",
+    "user_knows": [
+      "Mrs. Hale says she saw your client from her window across the street",
+      "It happened around 11 at night"
+    ],
+    "cast": [
+      {
+        "name": "Mrs. Hale",
+        "role": "the prosecution's key witness",
+        "appearance": "Woman about 68, neat grey hair, navy cardigan, hands folded on a handbag, sitting in a witness box",
+        "voice": "Careful, proud of her good memory, stiffens when doubted",
+        "gender": "f",
+        "history": "You have only seen her testify this morning.",
+        "enters_at": 0,
+        "goal": "Be believed, and see someone punished for the fear she felt",
+        "secret": "Her reading glasses and distance glasses were both at the optician's that week",
+        "reveal_when": "You ask patiently and politely how she sees things at a distance",
+        "red_lines": [
+          "Won't be called a liar"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 55
+        }
+      },
+      {
+        "name": "Prosecutor Grant",
+        "role": "the prosecutor",
+        "appearance": "Sharp man about 45, charcoal suit, standing at a counsel table with a thick file",
+        "voice": "Fast, smooth, objects at any chance",
+        "gender": "m",
+        "history": "You have faced each other in two earlier trials.",
+        "enters_at": 2,
+        "goal": "Keep the witness's story intact",
+        "secret": "A city repair log says the streetlight outside was out that night, and the file he is holding contains it",
+        "reveal_when": "You formally ask whether the state has any record of the street lighting",
+        "red_lines": [
+          "Won't lie to the court"
+        ],
+        "mood": {
+          "trust": 20,
+          "patience": 50
+        }
+      },
+      {
+        "name": "Judge Okafor",
+        "role": "the presiding judge",
+        "appearance": "Stern woman about 60, black robe, reading glasses low on her nose, on a raised bench",
+        "voice": "Few words, dry, sustains and overrules in one syllable",
+        "gender": "f",
+        "history": "She warned you once this morning about your tone.",
+        "enters_at": 0,
+        "goal": "Keep the trial fair and moving",
+        "secret": "She will give you latitude only if you stop badgering the witness",
+        "reveal_when": "You apologise or show respect for the witness",
+        "red_lines": [
+          "Won't allow badgering"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "Judge Okafor",
+    "opening_line": "Your witness, counsel. Be brief.",
+    "phases": [
+      "Warming up",
+      "Objection",
+      "The opening",
+      "Closing in"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "The prosecutor rises before you finish. 'Objection, Your Honour.'",
+        "enters": [
+          "Prosecutor Grant"
+        ],
+        "shot": "A sharp man in a charcoal suit stands at the counsel table, the judge above and the witness to the side."
+      },
+      {
+        "at_turn": 4,
+        "description": "A juror leans forward. The witness reaches into her handbag and quietly takes it back out empty.",
+        "enters": [],
+        "shot": "The older woman in the witness box looks down at her handbag; the judge watches over her glasses."
+      },
+      {
+        "at_turn": 6,
+        "description": "The judge looks at the clock. 'One more question, counsel. Make it count.'",
+        "enters": [],
+        "shot": "The judge points her pen at you from the bench while the witness waits."
+      }
+    ],
+    "success_criteria": [
+      "Gets the witness to reveal the problem with her eyesight",
+      "Exposes the streetlight record",
+      "Avoids badgering"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/en_lawyer_scene.jpg",
+    "shots": {
+      "2": "/presets/img/en_lawyer_2_scene.jpg",
+      "4": "/presets/img/en_lawyer_4_scene.jpg",
+      "6": "/presets/img/en_lawyer_6_scene.jpg"
+    },
+    "clues": {
+      "Mrs. Hale": {
+        "img": "/presets/img/clue_lawyer_0.jpg",
+        "name": "The optician's ticket"
+      },
+      "Prosecutor Grant": {
+        "img": "/presets/img/clue_lawyer_1.jpg",
+        "name": "The repair log"
+      },
+      "Judge Okafor": {
+        "img": "/presets/img/clue_lawyer_2.jpg",
+        "name": "The judge's pen"
+      }
+    }
+  }
+}

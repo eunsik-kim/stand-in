@@ -1,0 +1,133 @@
+{
+  "situation": "시뮬레이션. 당신은 변호인이고 사건은 증인 한 명에 달려 있다. 인물과 사건은 모두 가상.",
+  "ui": "ko",
+  "scenario": {
+    "title": "반대신문",
+    "language": "ko",
+    "setting": "오후의 형사 법정. 배심원석이 차 있고 증인석이 몇 걸음 앞이며 법대 위에서 시계가 째깍거린다.",
+    "user_role": "야간 절도로 기소된 청년의 변호인",
+    "user_goal": "증인이 말한 것을 실제로 볼 수 없었다는 걸 배심원에게 보여 준다.",
+    "user_knows": [
+      "이순자 씨는 길 건너 창문에서 피고인을 봤다고 증언했다",
+      "사건은 밤 11시쯤 일어났다"
+    ],
+    "cast": [
+      {
+        "name": "이순자 씨",
+        "role": "검찰 측 핵심 증인",
+        "appearance": "Woman about 68, neat grey hair, navy cardigan, hands folded on a handbag, sitting in a witness box",
+        "voice": "조심스럽고 기억력에 자부심이 있다, 의심받으면 굳는다",
+        "gender": "f",
+        "history": "오전 증언에서 처음 봤다.",
+        "enters_at": 0,
+        "goal": "믿음을 얻고 그날의 공포에 대한 벌을 보고 싶다",
+        "secret": "그 주에 안경이 전부 안경점에 맡겨져 있었다",
+        "reveal_when": "차분하고 예의 바르게 먼 곳을 어떻게 보는지 물을 때",
+        "red_lines": [
+          "거짓말쟁이 취급은 못 참는다"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 55
+        }
+      },
+      {
+        "name": "최 검사",
+        "role": "검사",
+        "appearance": "Sharp man about 45, charcoal suit, standing at a counsel table with a thick file",
+        "voice": "빠르고 매끄럽게 틈만 나면 이의를 제기한다",
+        "gender": "m",
+        "history": "전에 두 번 맞붙었다.",
+        "enters_at": 2,
+        "goal": "증인의 진술을 지킨다",
+        "secret": "그날 밤 앞 가로등이 고장이었다는 수리 기록이 그의 서류철에 있다",
+        "reveal_when": "거리 조명 관련 기록이 있는지 정식으로 요구할 때",
+        "red_lines": [
+          "법정에서 거짓말은 하지 않는다"
+        ],
+        "mood": {
+          "trust": 20,
+          "patience": 50
+        }
+      },
+      {
+        "name": "오 판사",
+        "role": "재판장",
+        "appearance": "Stern woman about 60, black robe, reading glasses low on her nose, on a raised bench",
+        "voice": "말수가 적고 건조하다, 인용과 기각을 한 마디로 끝낸다",
+        "gender": "f",
+        "history": "오전에 말투를 한 번 지적했다.",
+        "enters_at": 0,
+        "goal": "공정하고 빠르게 진행한다",
+        "secret": "증인을 몰아붙이지 않을 때만 신문 범위를 넓혀 줄 생각이다",
+        "reveal_when": "사과하거나 증인을 존중하는 태도를 보일 때",
+        "red_lines": [
+          "증인 괴롭히기는 금지"
+        ],
+        "mood": {
+          "trust": 50,
+          "patience": 50
+        }
+      }
+    ],
+    "opening_speaker": "오 판사",
+    "opening_line": "변호인, 반대신문하세요. 짧게.",
+    "phases": [
+      "라포",
+      "이의",
+      "틈",
+      "마무리"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "말이 끝나기도 전에 검사가 일어선다. '이의 있습니다.'",
+        "enters": [
+          "최 검사"
+        ],
+        "shot": "A sharp man in a charcoal suit stands at the counsel table, the judge above and the witness to the side."
+      },
+      {
+        "at_turn": 4,
+        "description": "배심원 하나가 몸을 내민다. 증인이 핸드백에 손을 넣었다가 빈손으로 뺀다.",
+        "enters": [],
+        "shot": "The older woman in the witness box looks down at her handbag; the judge watches over her glasses."
+      },
+      {
+        "at_turn": 6,
+        "description": "판사가 시계를 본다. '변호인, 마지막 질문입니다. 잘 고르세요.'",
+        "enters": [],
+        "shot": "The judge points her pen at you from the bench while the witness waits."
+      }
+    ],
+    "success_criteria": [
+      "증인의 시력 문제를 끌어낸다",
+      "가로등 기록을 드러낸다",
+      "증인을 몰아붙이지 않는다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_lawyer_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_lawyer_2_scene.jpg",
+      "4": "/presets/img/ko_lawyer_4_scene.jpg",
+      "6": "/presets/img/ko_lawyer_6_scene.jpg"
+    },
+    "clues": {
+      "이순자 씨": {
+        "img": "/presets/img/clue_lawyer_0.jpg",
+        "name": "안경점 수리표"
+      },
+      "최 검사": {
+        "img": "/presets/img/clue_lawyer_1.jpg",
+        "name": "가로등 수리 기록"
+      },
+      "오 판사": {
+        "img": "/presets/img/clue_lawyer_2.jpg",
+        "name": "판사의 펜"
+      }
+    }
+  }
+}

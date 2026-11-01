@@ -1,0 +1,134 @@
+{
+  "situation": "완전히 지어낸 사건. 당신은 심야 제보 프로그램 기자. 잠긴 집에 누가 들어와 물건 위치만 바꾼다는 제보를 받았다.",
+  "ui": "ko",
+  "scenario": {
+    "title": "누가 자꾸 물건을 옮겨요",
+    "language": "ko",
+    "setting": "오래된 복도식 아파트의 작은 집, 밤 9시. 창밖엔 비가 오고 거실은 깔끔하다. 당신 발밑에 카메라 가방이 있다.",
+    "user_role": "심야 시청자 제보 프로그램의 기자",
+    "user_goal": "방송 전에 누가, 왜 들어오는지 밝혀낸다.",
+    "user_knows": [
+      "없어진 물건은 하나도 없다",
+      "자물쇠에 억지로 연 흔적이 없다"
+    ],
+    "cast": [
+      {
+        "name": "윤서연",
+        "role": "제보자",
+        "appearance": "Woman about 29, oversized cardigan, tired eyes, phone gripped in her hand",
+        "voice": "말이 빠르고 자꾸 되돌아간다, 아무도 안 믿어 줄까 봐 겁낸다",
+        "gender": "f",
+        "history": "전화로 한 번 통화했다.",
+        "enters_at": 0,
+        "goal": "누가 믿어 주길 바란다",
+        "secret": "이사 올 때 윗잠금만 바꿨고 아랫잠금은 옛날 그대로다",
+        "reveal_when": "자물쇠나 이사 때 뭘 했는지 차분히 물을 때",
+        "red_lines": [
+          "얼굴 공개는 안 한다"
+        ],
+        "mood": {
+          "trust": 60,
+          "patience": 70
+        }
+      },
+      {
+        "name": "박 소장",
+        "role": "관리소장",
+        "appearance": "Heavy man about 60, faded work jacket, ring of keys on his belt, reading glasses on a cord",
+        "voice": "방어적으로 툴툴대고 질문에 질문으로 답한다",
+        "gender": "m",
+        "history": "입구에서 촬영 허락 받았냐고 따졌다.",
+        "enters_at": 2,
+        "goal": "아파트가 방송에 안 나가게 한다",
+        "secret": "이 집 전 세입자가 열쇠 한 벌을 안 돌려줬고 그는 아랫잠금을 안 바꿨다",
+        "reveal_when": "이름을 빼 주겠다고 하거나 옛 자물쇠를 이미 안다고 보여 줄 때",
+        "red_lines": [
+          "카메라 앞에는 안 선다"
+        ],
+        "mood": {
+          "trust": 35,
+          "patience": 40
+        }
+      },
+      {
+        "name": "한 여사",
+        "role": "윗집 할머니",
+        "appearance": "Small tidy woman about 72, grey cardigan, pearl earrings, carrying a parcel",
+        "voice": "상냥하고 조용한데 가구 위치에 이상하게 정확하다",
+        "gender": "f",
+        "history": "초면이다.",
+        "enters_at": 4,
+        "goal": "그 집을 원래 있어야 할 모습으로 지킨다",
+        "secret": "윗집으로 옮기기 전 30년을 이 집에 살았고 열쇠를 간직한 채 들어와 물건을 원래 자리로 돌려놓는다",
+        "reveal_when": "방을 왜 그렇게 잘 아는지 다정하게 묻거나 열쇠를 물을 때",
+        "red_lines": [
+          "누구도 위협하지 않는다"
+        ],
+        "mood": {
+          "trust": 55,
+          "patience": 75
+        }
+      }
+    ],
+    "opening_speaker": "윤서연",
+    "opening_line": "오셨네요. 네, 저기 스탠드 보이시죠? 아침엔 왼쪽에 있었어요. 저 진짜 안 미쳤거든요.",
+    "phases": [
+      "제보",
+      "관리소장",
+      "윗집",
+      "진실"
+    ],
+    "events": [
+      {
+        "at_turn": 2,
+        "description": "노크와 동시에 관리소장이 열쇠로 문을 열고 들어와 누가 촬영하냐고 묻는다.",
+        "enters": [
+          "박 소장"
+        ],
+        "shot": "A heavy man with keys on his belt stands in the doorway; the woman in the cardigan turns to him."
+      },
+      {
+        "at_turn": 4,
+        "description": "윗집 할머니가 잘못 온 택배를 들고 들어온다. 무심코 스탠드를 바로잡아 놓는다.",
+        "enters": [
+          "한 여사"
+        ],
+        "shot": "A small old woman with a parcel touches a lamp in the living room while the two others watch."
+      },
+      {
+        "at_turn": 6,
+        "description": "제보자의 휴대폰이 울린다. 침실에 숨겨 둔 카메라 화면에 아침에 닫아 둔 서랍이 열려 있다.",
+        "enters": [],
+        "shot": "The young woman holds up a glowing phone; the old woman and the man both look at it."
+      }
+    ],
+    "success_criteria": [
+      "옛 자물쇠와 안 돌아온 열쇠를 알아낸다",
+      "윗집 할머니가 왜 그러는지 직접 듣는다"
+    ],
+    "max_turns": 8
+  },
+  "gate1": [],
+  "assets": {
+    "background": "/presets/img/ko_tip_scene.jpg",
+    "shots": {
+      "2": "/presets/img/ko_tip_2_scene.jpg",
+      "4": "/presets/img/ko_tip_4_scene.jpg",
+      "6": "/presets/img/ko_tip_6_scene.jpg"
+    },
+    "clues": {
+      "윤서연": {
+        "img": "/presets/img/clue_tip_0.jpg",
+        "name": "문 하나에 자물쇠 둘"
+      },
+      "박 소장": {
+        "img": "/presets/img/clue_tip_1.jpg",
+        "name": "비어 있는 열쇠 고리"
+      },
+      "한 여사": {
+        "img": "/presets/img/clue_tip_2.jpg",
+        "name": "삼십 년 전 사진"
+      }
+    }
+  }
+}
