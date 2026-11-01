@@ -53,7 +53,7 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .top .ttl{min-width:0}.top .ttl b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top .setting{color:var(--mute);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top .acts{display:flex;align-items:center;gap:8px;flex:none}
-.top .acts button{padding:7px 13px;font-size:14px;background:#ffffff1a}
+.top .acts button{background:#0006;color:#fff;border-radius:10px}
 #turnText{color:var(--mute);font-size:14px;margin-right:6px}
 .caption{position:absolute;z-index:4;left:50%;bottom:112px;transform:translateX(-50%);width:min(760px,calc(100% - 32px));padding:10px 20px;border-radius:14px;background:#000000b8;backdrop-filter:blur(8px);font-size:19px;line-height:1.45;text-align:center}
 .caption:empty{display:none}
@@ -69,11 +69,13 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .choices button:hover{background:#2a2f3a}
 .choices button{position:relative;overflow:hidden}
 .choices .rec{box-shadow:inset 0 0 0 1px #f2c14e80}
-.pick{display:flex;align-items:center;gap:6px;height:22px}
+.pick{display:flex;align-items:center;gap:4px;height:24px}
 .pick i{flex:1;height:4px;border-radius:2px;background:var(--acc);transform-origin:left}
-.choices .pick button{all:unset;width:22px;height:22px;display:grid;place-items:center;border-radius:6px;cursor:pointer;color:#dfe2e8;background:#14161ce0}
-.pick .ic{width:14px;height:14px}
-.choices.held .pick{display:none}
+.pick b{flex:1}
+.choices .pick button{all:unset;min-width:24px;height:24px;padding:0 6px;box-sizing:border-box;display:grid;place-items:center;border-radius:7px;cursor:pointer;color:#dfe2e8;background:#14161ce0;font-size:12px}
+.choices .pick button:hover{background:#2a2f3a}
+.pick .ic{width:13px;height:13px}
+.choices.held .pick i{visibility:hidden}.choices.held .pick .pp{display:none}
 #stage:has(.choices:not(:empty)) .caption{bottom:calc(92px + var(--choices,132px))}
 .acts button.off{opacity:.55}
 .autobar{display:none;align-items:center;justify-content:space-between;gap:12px;padding:2px 4px 2px 10px;font-size:14px;color:#dfe2e8}
@@ -290,6 +292,7 @@ h2{margin:0;font-size:22px}
         <button id="camBtn" data-t="camOn"></button>
         <span class="badge"><span id="camDot" class="dot"></span><span id="camText" data-t="camOff"></span></span>
         <span class="badge hidden"><span id="micDot" class="dot"></span><span id="micText"></span></span>
+        <label class="badge"><input type="checkbox" id="soundOpt"> <span data-t="sound"></span></label>
         <label class="badge"><input type="checkbox" id="voiceOut"> <span data-t="hearThem"></span></label>
         <label class="badge"><input type="checkbox" id="voiceIn" checked> <span data-t="speakIn"></span></label>
       </div>
@@ -348,7 +351,7 @@ h2{margin:0;font-size:22px}
   <div class="room" id="room"><div class="cast" id="cast"></div></div>
   <div class="top">
     <div class="ttl"><b id="title"></b><div class="setting" id="setting"></div></div>
-    <div class="acts"><span id="turnText"></span><button id="soundBtn" data-t="sound"></button><button id="choiceBtn" data-t="cChoices"></button><button id="pickBtn"></button><button id="autoBtn" data-t="bAuto"></button><button id="speedBtn" data-tl="speedTip"></button><button id="logBtn" data-t="log"></button><button id="endBtn" data-t="finish"></button></div>
+    <div class="acts"><span id="turnText"></span><button class="ibtn" id="logBtn" data-ic="chat" data-tl="log"></button><button class="ibtn" id="endBtn" data-ic="exit" data-tl="finish"></button></div>
   </div>
   <div class="caption" id="caption"></div>
   <div class="choices" id="choices"></div>
@@ -357,10 +360,12 @@ h2{margin:0;font-size:22px}
     <div class="bar">
       <button class="ibtn micb" id="micToggle" data-ic="mic" data-tl="bMicTip"></button>
       <div class="field"><div class="heard" id="heard"></div><input type="text" id="typed" data-tp="typePh"></div>
+      <button class="ibtn" id="choiceBtn" data-ic="list" data-tl="cShow"></button>
       <button class="ibtn" id="againLine" data-ic="undo" data-tl="bRetryTip"></button>
+      <button class="tbtn" id="autoBtn" data-t="cAutoShort"></button>
       <button class="ibtn send" id="doneBtn" data-ic="send" data-tl="bSendTip"></button>
     </div>
-    <div class="autobar"><span data-t="aRunning"></span><button class="primary" id="takeBtn" data-t="aTake"></button></div>
+    <div class="autobar"><span data-t="aRunning"></span><span class="row"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><button class="primary" id="takeBtn" data-t="aTake"></button></span></div>
   </div></div>
   <div class="me"><video id="selfView" class="self" autoplay muted playsinline></video>
     <span class="badge cam-state"><span id="eyeDot" class="dot"></span><span id="eyeText" data-t="noCam"></span></span></div>
@@ -389,7 +394,7 @@ h2{margin:0;font-size:22px}
 <div id="debrief" class="wrap hidden"></div>
 
 <script type="module">
-const T = {"camOff":{"en":"Camera off","ko":"카메라 꺼짐","ja":"カメラオフ"},"camOn":{"en":"Turn on camera","ko":"카메라 켜기","ja":"カメラをオン"},"hearThem":{"en":"Hear their voices","ko":"상대 목소리 듣기","ja":"相手の声を聞く"},"speakIn":{"en":"Answer by voice","ko":"말로 답하기","ja":"声で答える"},"privacy":{"en":"Your gaze is computed in this browser and video never leaves it. Speech recognition works in Chrome.","ko":"카메라는 시선·고개 방향만 이 브라우저 안에서 계산하고, 영상은 어디에도 보내지 않습니다. 음성 인식은 Chrome에서 동작합니다.","ja":"視線と顔の向きはこのブラウザ内で計算し、映像は外に送りません。音声認識はChromeで動作します。"},"home":{"en":"Back to start","ko":"처음으로","ja":"最初に戻る"},"log":{"en":"Transcript","ko":"대화 기록","ja":"会話ログ"},"finish":{"en":"End","ko":"종료","ja":"終了"},"typePh":{"en":"Message","ko":"메시지","ja":"メッセージ"},"done":{"en":"I'm done","ko":"말 다 했어요","ja":"話し終えた"},"noCam":{"en":"No camera","ko":"카메라 없음","ja":"カメラなし"},"camDenied":{"en":"Camera blocked","ko":"카메라 권한 없음","ja":"カメラ権限なし"},"camLoading":{"en":"Loading face tracking","ko":"얼굴 인식 모델 불러오는 중","ja":"顔認識を読み込み中"},"camCal":{"en":"Look at the screen: calibrating","ko":"정면(화면)을 봐 주세요: 기준 잡는 중","ja":"画面を見てください: 調整中"},"camFail":{"en":"Face tracking unavailable","ko":"얼굴 인식 불러오기 실패: 카메라 영상만 사용","ja":"顔認識を読み込めません"},"camReady":{"en":"Camera ready","ko":"카메라 준비됨","ja":"カメラ準備完了"},"noFace":{"en":"Face not visible","ko":"얼굴이 안 보임","ja":"顔が見えません"},"eye":{"en":"Eye contact","ko":"눈 맞춤","ja":"視線OK"},"down":{"en":"Looking down","ko":"아래를 봄","ja":"下を見ている"},"away":{"en":"Looking away","ko":"다른 곳을 봄","ja":"よそ見"},"srOk":{"en":"Speech recognition ready","ko":"음성 인식 사용 가능","ja":"音声認識OK"},"srNo":{"en":"Speech recognition needs Chrome: type instead","ko":"이 브라우저는 음성 인식 미지원 (Chrome 권장): 입력으로 진행","ja":"音声認識はChromeが必要です: 入力で進めます"},"listening":{"en":"Listening. Pause and it sends automatically","ko":"듣고 있어요. 말씀하세요 (잠시 멈추면 자동으로 넘어갑니다)","ja":"聞いています (少し間を置くと自動で送信)"},"typeNow":{"en":"Type your answer","ko":"답을 입력하세요","ja":"回答を入力"},"micDenied":{"en":"Microphone blocked: type instead","ko":"마이크 권한이 없어 입력으로 진행","ja":"マイク権限なし: 入力で進めます"},"thinking":{"en":"They're thinking…","ko":"상대가 생각하는 중…","ja":"相手が考えています…"},"me":{"en":"You","ko":"나","ja":"自分"},"seen":{"en":"Seen","ko":"관찰","ja":"観察"},"lost":{"en":"The conversation was interrupted. Start it again from the menu.","ko":"대화가 끊겼어요. 메뉴에서 다시 들어가 주세요.","ja":"会話が中断されました。もう一度入り直してください。"},"failed":{"en":"Failed: ","ko":"실패: ","ja":"失敗: "},"loading":{"en":"Loading…","ko":"불러오는 중…","ja":"読み込み中…"},"secret":{"en":"Secret","ko":"비밀","ja":"秘密"},"reveal":{"en":"Reveals it when","ko":"비밀을 털어놓는 조건","ja":"秘密を明かす条件"},"trust":{"en":"Trust","ko":"신뢰","ja":"信頼"},"patience":{"en":"Patience","ko":"인내","ja":"忍耐"},"cantStart":{"en":"Can't start: ","ko":"시작할 수 없어요: ","ja":"開始できません: "},"goalLabel":{"en":"My goal: ","ko":"내 목표: ","ja":"私の目標: "},"sceneOver":{"en":"Scene over: ","ko":"장면이 끝났습니다: ","ja":"シーン終了: "},"seeDebrief":{"en":"Look back","ko":"돌아보기","ja":"振り返る"},"endedByYou":{"en":"Ended by you","ko":"직접 종료","ja":"自分で終了"},"debrief":{"en":"Debrief","ko":"복기","ja":"振り返り"},"debriefing":{"en":"Working out what they really thought… (about 30s)","ko":"상대들의 속마음을 정리하는 중… (20~40초)","ja":"相手の本音をまとめています… (約30秒)"},"goalsH":{"en":"Goals","ko":"성공 기준","ja":"目標"},"turn":{"en":"turn","ko":"턴","ja":"ターン"},"hidden":{"en":"What they were hiding","ko":"그들이 숨기고 있던 것","ja":"隠していたこと"},"told":{"en":"Told you","ko":"털어놓음","ja":"明かした"},"kept":{"en":"Kept it hidden","ko":"끝까지 숨김","ja":"隠し通した"},"gShort":{"en":"Goal","ko":"목표","ja":"目的"},"moments":{"en":"Moments that changed things","ko":"흐름이 바뀐 순간","ja":"流れが変わった瞬間"},"thought":{"en":"They thought: ","ko":"속마음: ","ja":"本音: "},"tryThis":{"en":"Try saying: ","ko":"이렇게 말해 보기: ","ja":"こう言ってみる: "},"full":{"en":"Full transcript with their thoughts","ko":"전체 기록 (속마음 포함)","ja":"全記録(本音つき)"},"narr":{"en":"Scene","ko":"상황","ja":"状況"},"other":{"en":"Another scene","ko":"다른 장면","ja":"別のシーン"},"cFound":{"en":"Secrets uncovered","ko":"알아낸 비밀","ja":"見つけた秘密"},"cSecret":{"en":"Secret uncovered","ko":"비밀을 알아냈어요","ja":"秘密を聞き出した"},"cGoals":{"en":"Goals","ko":"목표","ja":"目標"},"cCoach":{"en":"Coach","ko":"코치","ja":"コーチ"},"cWait":{"en":"Say something and I'll start tracking.","ko":"말을 시작하면 체크를 시작할게요.","ja":"話し始めるとチェックを始めます。"},"cBetter":{"en":"Could sound like","ko":"이렇게 말할 수도 있어요","ja":"こう言えます"},"cRetry":{"en":"Say that again","ko":"다시 말하기","ja":"言い直す"},"cDone":{"en":"Goal reached!","ko":"목표 달성!","ja":"目標達成!"},"coachBtn":{"en":"Coach","ko":"코치","ja":"コーチ"},"again":{"en":"Practice again","ko":"다시 도전","ja":"もう一度挑戦"},"attempts":{"en":"Your attempts","ko":"도전 기록","ja":"挑戦の記録"},"attempt":{"en":"Attempt","ko":"도전","ja":"挑戦"},"improved":{"en":"Better than last time!","ko":"지난번보다 나아졌어요!","ja":"前回より良くなりました!"},"bHello":{"en":"Tell me more.","ko":"좀 더 들려주세요.","ja":"もう少し聞かせてください。"},"bPh":{"en":"Tell me about it…","ko":"편하게 이야기해 주세요…","ja":"自由に話してください…"},"bSend":{"en":"Send","ko":"보내기","ja":"送信"},"bEmpty":{"en":"Tell me what you imagine. It will appear here.","ko":"상상하는 걸 말해 보세요. 여기에 나타날 거예요.","ja":"想像を話してください。ここに現れます。"},"bEnter":{"en":"Let's begin","ko":"시작하자","ja":"始めよう"},"bDrawing":{"en":"Appearing…","ko":"나타나는 중…","ja":"現れています…"},"bYou":{"en":"You","ko":"나","ja":"自分"},"bGoal":{"en":"My goal","ko":"내 목표","ja":"私の目標"},"bSetting":{"en":"Walking in…","ko":"들어가는 중…","ja":"入っています…"},"bMic":{"en":"Talk","ko":"말하기","ja":"話す"},"bMicOn":{"en":"Listening","ko":"듣는 중","ja":"聞いています"},"bSparks":{"en":"Start from an idea","ko":"아이디어로 시작하기","ja":"アイデアから始める"},"bExamples":{"en":"Ready-made scenes","ko":"바로 해 볼 수 있는 장면","ja":"すぐ試せるシーン"},"oHi":{"en":"Stand-In","ko":"Stand-In","ja":"Stand-In"},"oLang":{"en":"Which language feels like home?","ko":"어떤 언어가 편하세요?","ja":"どの言語が話しやすいですか?"},"oWhat":{"en":"Describe any moment, from your memories or your future. It appears in front of you, and you step inside and talk to the people in it.","ko":"기억 속 순간이든 앞으로 올 순간이든 말해 보세요. 눈앞에 나타나고, 그 안에 들어가 사람들과 직접 이야기할 수 있어요.","ja":"思い出でも、これからの場面でも話してください。目の前に現れ、その中で人と話せます。"},"oTalk":{"en":"You'll talk to them out loud","ko":"실제로 말을 걸게 될 거예요","ja":"声に出して話します"},"oTalkSub":{"en":"Allow the mic to speak. The camera is optional and only lets them notice your eye contact; video never leaves this browser.","ko":"마이크를 켜면 말로 대화할 수 있어요. 카메라는 선택이고, 상대가 내 시선을 알아차리는 데만 쓰여요. 영상은 이 브라우저 밖으로 나가지 않습니다.","ja":"マイクで会話できます。カメラは任意で、視線を相手が感じ取るためだけに使います。映像はブラウザの外に出ません。"},"oMic":{"en":"Allow microphone","ko":"마이크 허용","ja":"マイクを許可"},"oMicOk":{"en":"Microphone ready","ko":"마이크 준비됨","ja":"マイク準備完了"},"oMicNo":{"en":"Mic blocked: you can type instead","ko":"마이크가 막혀 있어요: 입력으로 할 수 있어요","ja":"マイク不可: 入力できます"},"oName":{"en":"What should they call you?","ko":"뭐라고 불러 드릴까요?","ja":"何とお呼びしましょう?"},"oNameSub":{"en":"People in your scenes will use this name.","ko":"장면 속 사람들이 이 이름으로 불러요.","ja":"シーンの人々がこの名前で呼びます。"},"oNamePh":{"en":"Your name","ko":"이름","ja":"名前"},"oNext":{"en":"Next","ko":"다음","ja":"次へ"},"oSkip":{"en":"Skip","ko":"건너뛰기","ja":"スキップ"},"oDone":{"en":"Let's begin","ko":"시작하자","ja":"始めよう"},"bNew":{"en":"New story","ko":"새 이야기","ja":"新しい話"},"bContinue":{"en":"Pick up where you left off","ko":"이어서 하기","ja":"続きから"},"bTemplates":{"en":"Templates","ko":"템플릿","ja":"テンプレート"},"bHistory":{"en":"Past rehearsals","ko":"지난 연습","ja":"過去の練習"},"bClose":{"en":"Close","ko":"닫기","ja":"閉じる"},"bStuck":{"en":"Not sure where to start? Here are a few ideas.","ko":"어디서 시작할지 막막하면 이 중에서 골라 보세요.","ja":"迷ったら、ここから選んでみてください。"},"hWorlds":{"en":"Worlds in progress","ko":"만들던 세계","ja":"作りかけの世界"},"hRuns":{"en":"Past rehearsals","ko":"지난 연습","ja":"過去の練習"},"hNone":{"en":"Nothing here yet.","ko":"아직 기록이 없어요.","ja":"まだ履歴がありません。"},"dTrust":{"en":"How the mood moved","ko":"분위기가 움직인 흐름","ja":"雰囲気の流れ"},"dBack":{"en":"Go back to this moment","ko":"이 순간으로 돌아가기","ja":"この瞬間に戻る"},"dReplay":{"en":"What they were really thinking","ko":"그때 상대의 속마음","ja":"あのときの本音"},"dSaid":{"en":"You said","ko":"내가 한 말","ja":"自分の言葉"},"dBranch":{"en":"Back in the moment. Say it differently.","ko":"그 순간으로 돌아왔어요. 다르게 말해 보세요.","ja":"あの瞬間に戻りました。違う言い方をしてみましょう。"},"bSettings":{"en":"Settings","ko":"설정","ja":"設定"},"bRecent":{"en":"Recent","ko":"최근","ja":"最近"},"bMicTip":{"en":"Microphone on or off","ko":"마이크 켜기/끄기","ja":"マイクのオン/オフ"},"bRetryTip":{"en":"Take that back and say it again","ko":"다시 말하기","ja":"言い直す"},"bClearTip":{"en":"Clear what was heard and listen again","ko":"지우고 다시 듣기","ja":"消して聞き直す"},"bSendTip":{"en":"Send","ko":"보내기","ja":"送信"},"bTemplateReady":{"en":"Want to change anything? Just tell me. Otherwise, let's begin.","ko":"바꾸고 싶은 게 있으면 말해 주세요. 없으면 바로 시작해요.","ja":"変えたいことがあれば教えてください。なければ始めましょう。"},"bHero":{"en":"Pick a story and step in","ko":"이야기를 골라 들어가 보세요","ja":"物語を選んで入ってみましょう"},"bIdeas":{"en":"Need an idea?","ko":"아이디어가 필요하면","ja":"アイデアが必要なら"},"bYouAre":{"en":"You are: ","ko":"당신은: ","ja":"あなたは: "},"speedTip":{"en":"Conversation speed","ko":"대화 속도","ja":"会話の速さ"},"bAuto":{"en":"Auto mode","ko":"자동 모드","ja":"オートモード"},"aRunning":{"en":"Auto mode is on. It's speaking for you.","ko":"자동 모드로 진행 중이에요.","ja":"オートモードで進行中です。"},"aTake":{"en":"Take over","ko":"내가 이어받기","ja":"自分で話す"},"cChoices":{"en":"Choices","ko":"답변 선택지","ja":"選択肢"},"cAuto":{"en":"Auto","ko":"자동 선택","ja":"自動選択"},"cOff":{"en":"off","ko":"끔","ja":"オフ"},"cPause":{"en":"Stop the timer","ko":"자동 선택 멈추기","ja":"タイマーを止める"},"tTitle":{"en":"How it works","ko":"이렇게 진행돼요","ja":"こう進みます"},"t1":{"en":"Speak or type. They hear you and answer right back.","ko":"말하거나 입력하세요. 상대가 듣고 바로 답해요.","ja":"話すか入力してください。相手がすぐ答えます。"},"t2":{"en":"Or tap a reply. If you do nothing, the recommended one goes ahead.","ko":"답변을 골라도 돼요. 가만히 있으면 추천 답변으로 진행돼요.","ja":"返答を選んでもOK。何もしなければおすすめで進みます。"},"t3":{"en":"Step back any time with Auto mode, and take over whenever you like.","ko":"자동 모드로 지켜보다가 언제든 끼어들 수 있어요.","ja":"オートモードで見守り、いつでも割り込めます。"},"t4":{"en":"People may walk in and things will change. Stay with it.","ko":"중간에 누가 들어오거나 상황이 바뀔 수 있어요.","ja":"途中で人が来たり、状況が変わることがあります。"},"tOk":{"en":"Got it","ko":"알겠어요","ja":"わかった"},"eTitle":{"en":"That's the scene.","ko":"장면이 끝났어요.","ja":"シーン終了です。"},"eAgain":{"en":"Play it again","ko":"다시 하기","ja":"もう一度"},"eNew":{"en":"New story","ko":"새 이야기","ja":"新しい話"},"bOwn":{"en":"Make my own","ko":"직접 만들기","ja":"自分で作る"},"sound":{"en":"Sound","ko":"효과음","ja":"効果音"}};
+const T = {"camOff":{"en":"Camera off","ko":"카메라 꺼짐","ja":"カメラオフ"},"camOn":{"en":"Turn on camera","ko":"카메라 켜기","ja":"カメラをオン"},"hearThem":{"en":"Hear their voices","ko":"상대 목소리 듣기","ja":"相手の声を聞く"},"speakIn":{"en":"Answer by voice","ko":"말로 답하기","ja":"声で答える"},"privacy":{"en":"Your gaze is computed in this browser and video never leaves it. Speech recognition works in Chrome.","ko":"카메라는 시선·고개 방향만 이 브라우저 안에서 계산하고, 영상은 어디에도 보내지 않습니다. 음성 인식은 Chrome에서 동작합니다.","ja":"視線と顔の向きはこのブラウザ内で計算し、映像は外に送りません。音声認識はChromeで動作します。"},"home":{"en":"Back to start","ko":"처음으로","ja":"最初に戻る"},"log":{"en":"Transcript","ko":"대화 기록","ja":"会話ログ"},"finish":{"en":"End","ko":"종료","ja":"終了"},"typePh":{"en":"Message","ko":"메시지","ja":"メッセージ"},"done":{"en":"I'm done","ko":"말 다 했어요","ja":"話し終えた"},"noCam":{"en":"No camera","ko":"카메라 없음","ja":"カメラなし"},"camDenied":{"en":"Camera blocked","ko":"카메라 권한 없음","ja":"カメラ権限なし"},"camLoading":{"en":"Loading face tracking","ko":"얼굴 인식 모델 불러오는 중","ja":"顔認識を読み込み中"},"camCal":{"en":"Look at the screen: calibrating","ko":"정면(화면)을 봐 주세요: 기준 잡는 중","ja":"画面を見てください: 調整中"},"camFail":{"en":"Face tracking unavailable","ko":"얼굴 인식 불러오기 실패: 카메라 영상만 사용","ja":"顔認識を読み込めません"},"camReady":{"en":"Camera ready","ko":"카메라 준비됨","ja":"カメラ準備完了"},"noFace":{"en":"Face not visible","ko":"얼굴이 안 보임","ja":"顔が見えません"},"eye":{"en":"Eye contact","ko":"눈 맞춤","ja":"視線OK"},"down":{"en":"Looking down","ko":"아래를 봄","ja":"下を見ている"},"away":{"en":"Looking away","ko":"다른 곳을 봄","ja":"よそ見"},"srOk":{"en":"Speech recognition ready","ko":"음성 인식 사용 가능","ja":"音声認識OK"},"srNo":{"en":"Speech recognition needs Chrome: type instead","ko":"이 브라우저는 음성 인식 미지원 (Chrome 권장): 입력으로 진행","ja":"音声認識はChromeが必要です: 入力で進めます"},"listening":{"en":"Listening. Pause and it sends automatically","ko":"듣고 있어요. 말씀하세요 (잠시 멈추면 자동으로 넘어갑니다)","ja":"聞いています (少し間を置くと自動で送信)"},"typeNow":{"en":"Type your answer","ko":"답을 입력하세요","ja":"回答を入力"},"micDenied":{"en":"Microphone blocked: type instead","ko":"마이크 권한이 없어 입력으로 진행","ja":"マイク権限なし: 入力で進めます"},"thinking":{"en":"They're thinking…","ko":"상대가 생각하는 중…","ja":"相手が考えています…"},"me":{"en":"You","ko":"나","ja":"自分"},"seen":{"en":"Seen","ko":"관찰","ja":"観察"},"lost":{"en":"The conversation was interrupted. Start it again from the menu.","ko":"대화가 끊겼어요. 메뉴에서 다시 들어가 주세요.","ja":"会話が中断されました。もう一度入り直してください。"},"failed":{"en":"Failed: ","ko":"실패: ","ja":"失敗: "},"loading":{"en":"Loading…","ko":"불러오는 중…","ja":"読み込み中…"},"secret":{"en":"Secret","ko":"비밀","ja":"秘密"},"reveal":{"en":"Reveals it when","ko":"비밀을 털어놓는 조건","ja":"秘密を明かす条件"},"trust":{"en":"Trust","ko":"신뢰","ja":"信頼"},"patience":{"en":"Patience","ko":"인내","ja":"忍耐"},"cantStart":{"en":"Can't start: ","ko":"시작할 수 없어요: ","ja":"開始できません: "},"goalLabel":{"en":"My goal: ","ko":"내 목표: ","ja":"私の目標: "},"sceneOver":{"en":"Scene over: ","ko":"장면이 끝났습니다: ","ja":"シーン終了: "},"seeDebrief":{"en":"Look back","ko":"돌아보기","ja":"振り返る"},"endedByYou":{"en":"Ended by you","ko":"직접 종료","ja":"自分で終了"},"debrief":{"en":"Debrief","ko":"복기","ja":"振り返り"},"debriefing":{"en":"Working out what they really thought… (about 30s)","ko":"상대들의 속마음을 정리하는 중… (20~40초)","ja":"相手の本音をまとめています… (約30秒)"},"goalsH":{"en":"Goals","ko":"성공 기준","ja":"目標"},"turn":{"en":"turn","ko":"턴","ja":"ターン"},"hidden":{"en":"What they were hiding","ko":"그들이 숨기고 있던 것","ja":"隠していたこと"},"told":{"en":"Told you","ko":"털어놓음","ja":"明かした"},"kept":{"en":"Kept it hidden","ko":"끝까지 숨김","ja":"隠し通した"},"gShort":{"en":"Goal","ko":"목표","ja":"目的"},"moments":{"en":"Moments that changed things","ko":"흐름이 바뀐 순간","ja":"流れが変わった瞬間"},"thought":{"en":"They thought: ","ko":"속마음: ","ja":"本音: "},"tryThis":{"en":"Try saying: ","ko":"이렇게 말해 보기: ","ja":"こう言ってみる: "},"full":{"en":"Full transcript with their thoughts","ko":"전체 기록 (속마음 포함)","ja":"全記録(本音つき)"},"narr":{"en":"Scene","ko":"상황","ja":"状況"},"other":{"en":"Another scene","ko":"다른 장면","ja":"別のシーン"},"cFound":{"en":"Secrets uncovered","ko":"알아낸 비밀","ja":"見つけた秘密"},"cSecret":{"en":"Secret uncovered","ko":"비밀을 알아냈어요","ja":"秘密を聞き出した"},"cGoals":{"en":"Goals","ko":"목표","ja":"目標"},"cCoach":{"en":"Coach","ko":"코치","ja":"コーチ"},"cWait":{"en":"Say something and I'll start tracking.","ko":"말을 시작하면 체크를 시작할게요.","ja":"話し始めるとチェックを始めます。"},"cBetter":{"en":"Could sound like","ko":"이렇게 말할 수도 있어요","ja":"こう言えます"},"cRetry":{"en":"Say that again","ko":"다시 말하기","ja":"言い直す"},"cDone":{"en":"Goal reached!","ko":"목표 달성!","ja":"目標達成!"},"coachBtn":{"en":"Coach","ko":"코치","ja":"コーチ"},"again":{"en":"Practice again","ko":"다시 도전","ja":"もう一度挑戦"},"attempts":{"en":"Your attempts","ko":"도전 기록","ja":"挑戦の記録"},"attempt":{"en":"Attempt","ko":"도전","ja":"挑戦"},"improved":{"en":"Better than last time!","ko":"지난번보다 나아졌어요!","ja":"前回より良くなりました!"},"bHello":{"en":"Tell me more.","ko":"좀 더 들려주세요.","ja":"もう少し聞かせてください。"},"bPh":{"en":"Tell me about it…","ko":"편하게 이야기해 주세요…","ja":"自由に話してください…"},"bSend":{"en":"Send","ko":"보내기","ja":"送信"},"bEmpty":{"en":"Tell me what you imagine. It will appear here.","ko":"상상하는 걸 말해 보세요. 여기에 나타날 거예요.","ja":"想像を話してください。ここに現れます。"},"bEnter":{"en":"Let's begin","ko":"시작하자","ja":"始めよう"},"bDrawing":{"en":"Appearing…","ko":"나타나는 중…","ja":"現れています…"},"bYou":{"en":"You","ko":"나","ja":"自分"},"bGoal":{"en":"My goal","ko":"내 목표","ja":"私の目標"},"bSetting":{"en":"Walking in…","ko":"들어가는 중…","ja":"入っています…"},"bMic":{"en":"Talk","ko":"말하기","ja":"話す"},"bMicOn":{"en":"Listening","ko":"듣는 중","ja":"聞いています"},"bSparks":{"en":"Start from an idea","ko":"아이디어로 시작하기","ja":"アイデアから始める"},"bExamples":{"en":"Ready-made scenes","ko":"바로 해 볼 수 있는 장면","ja":"すぐ試せるシーン"},"oHi":{"en":"Stand-In","ko":"Stand-In","ja":"Stand-In"},"oLang":{"en":"Which language feels like home?","ko":"어떤 언어가 편하세요?","ja":"どの言語が話しやすいですか?"},"oWhat":{"en":"Describe any moment, from your memories or your future. It appears in front of you, and you step inside and talk to the people in it.","ko":"기억 속 순간이든 앞으로 올 순간이든 말해 보세요. 눈앞에 나타나고, 그 안에 들어가 사람들과 직접 이야기할 수 있어요.","ja":"思い出でも、これからの場面でも話してください。目の前に現れ、その中で人と話せます。"},"oTalk":{"en":"You'll talk to them out loud","ko":"실제로 말을 걸게 될 거예요","ja":"声に出して話します"},"oTalkSub":{"en":"Allow the mic to speak. The camera is optional and only lets them notice your eye contact; video never leaves this browser.","ko":"마이크를 켜면 말로 대화할 수 있어요. 카메라는 선택이고, 상대가 내 시선을 알아차리는 데만 쓰여요. 영상은 이 브라우저 밖으로 나가지 않습니다.","ja":"マイクで会話できます。カメラは任意で、視線を相手が感じ取るためだけに使います。映像はブラウザの外に出ません。"},"oMic":{"en":"Allow microphone","ko":"마이크 허용","ja":"マイクを許可"},"oMicOk":{"en":"Microphone ready","ko":"마이크 준비됨","ja":"マイク準備完了"},"oMicNo":{"en":"Mic blocked: you can type instead","ko":"마이크가 막혀 있어요: 입력으로 할 수 있어요","ja":"マイク不可: 入力できます"},"oName":{"en":"What should they call you?","ko":"뭐라고 불러 드릴까요?","ja":"何とお呼びしましょう?"},"oNameSub":{"en":"People in your scenes will use this name.","ko":"장면 속 사람들이 이 이름으로 불러요.","ja":"シーンの人々がこの名前で呼びます。"},"oNamePh":{"en":"Your name","ko":"이름","ja":"名前"},"oNext":{"en":"Next","ko":"다음","ja":"次へ"},"oSkip":{"en":"Skip","ko":"건너뛰기","ja":"スキップ"},"oDone":{"en":"Let's begin","ko":"시작하자","ja":"始めよう"},"bNew":{"en":"New story","ko":"새 이야기","ja":"新しい話"},"bContinue":{"en":"Pick up where you left off","ko":"이어서 하기","ja":"続きから"},"bTemplates":{"en":"Templates","ko":"템플릿","ja":"テンプレート"},"bHistory":{"en":"Past rehearsals","ko":"지난 연습","ja":"過去の練習"},"bClose":{"en":"Close","ko":"닫기","ja":"閉じる"},"bStuck":{"en":"Not sure where to start? Here are a few ideas.","ko":"어디서 시작할지 막막하면 이 중에서 골라 보세요.","ja":"迷ったら、ここから選んでみてください。"},"hWorlds":{"en":"Worlds in progress","ko":"만들던 세계","ja":"作りかけの世界"},"hRuns":{"en":"Past rehearsals","ko":"지난 연습","ja":"過去の練習"},"hNone":{"en":"Nothing here yet.","ko":"아직 기록이 없어요.","ja":"まだ履歴がありません。"},"dTrust":{"en":"How the mood moved","ko":"분위기가 움직인 흐름","ja":"雰囲気の流れ"},"dBack":{"en":"Go back to this moment","ko":"이 순간으로 돌아가기","ja":"この瞬間に戻る"},"dReplay":{"en":"What they were really thinking","ko":"그때 상대의 속마음","ja":"あのときの本音"},"dSaid":{"en":"You said","ko":"내가 한 말","ja":"自分の言葉"},"dBranch":{"en":"Back in the moment. Say it differently.","ko":"그 순간으로 돌아왔어요. 다르게 말해 보세요.","ja":"あの瞬間に戻りました。違う言い方をしてみましょう。"},"bSettings":{"en":"Settings","ko":"설정","ja":"設定"},"bRecent":{"en":"Recent","ko":"최근","ja":"最近"},"bMicTip":{"en":"Microphone on or off","ko":"마이크 켜기/끄기","ja":"マイクのオン/オフ"},"bRetryTip":{"en":"Take that back and say it again","ko":"다시 말하기","ja":"言い直す"},"bClearTip":{"en":"Clear what was heard and listen again","ko":"지우고 다시 듣기","ja":"消して聞き直す"},"bSendTip":{"en":"Send","ko":"보내기","ja":"送信"},"bTemplateReady":{"en":"Want to change anything? Just tell me. Otherwise, let's begin.","ko":"바꾸고 싶은 게 있으면 말해 주세요. 없으면 바로 시작해요.","ja":"変えたいことがあれば教えてください。なければ始めましょう。"},"bHero":{"en":"Pick a story and step in","ko":"이야기를 골라 들어가 보세요","ja":"物語を選んで入ってみましょう"},"bIdeas":{"en":"Need an idea?","ko":"아이디어가 필요하면","ja":"アイデアが必要なら"},"bYouAre":{"en":"You are: ","ko":"당신은: ","ja":"あなたは: "},"speedTip":{"en":"Conversation speed","ko":"대화 속도","ja":"会話の速さ"},"bAuto":{"en":"Auto mode","ko":"자동 모드","ja":"オートモード"},"aRunning":{"en":"Auto mode is on. It's speaking for you.","ko":"자동 모드로 진행 중이에요.","ja":"オートモードで進行中です。"},"aTake":{"en":"Take over","ko":"내가 이어받기","ja":"自分で話す"},"cChoices":{"en":"Choices","ko":"답변 선택지","ja":"選択肢"},"cAuto":{"en":"Auto","ko":"자동 선택","ja":"自動選択"},"cOff":{"en":"off","ko":"끔","ja":"オフ"},"cPause":{"en":"Stop the timer","ko":"자동 선택 멈추기","ja":"タイマーを止める"},"tTitle":{"en":"How it works","ko":"이렇게 진행돼요","ja":"こう進みます"},"t1":{"en":"Speak or type. They hear you and answer right back.","ko":"말하거나 입력하세요. 상대가 듣고 바로 답해요.","ja":"話すか入力してください。相手がすぐ答えます。"},"t2":{"en":"Or tap a reply. If you do nothing, the recommended one goes ahead.","ko":"답변을 골라도 돼요. 가만히 있으면 추천 답변으로 진행돼요.","ja":"返答を選んでもOK。何もしなければおすすめで進みます。"},"t3":{"en":"Step back any time with Auto mode, and take over whenever you like.","ko":"자동 모드로 지켜보다가 언제든 끼어들 수 있어요.","ja":"オートモードで見守り、いつでも割り込めます。"},"t4":{"en":"People may walk in and things will change. Stay with it.","ko":"중간에 누가 들어오거나 상황이 바뀔 수 있어요.","ja":"途中で人が来たり、状況が変わることがあります。"},"tOk":{"en":"Got it","ko":"알겠어요","ja":"わかった"},"eTitle":{"en":"That's the scene.","ko":"장면이 끝났어요.","ja":"シーン終了です。"},"eAgain":{"en":"Play it again","ko":"다시 하기","ja":"もう一度"},"eNew":{"en":"New story","ko":"새 이야기","ja":"新しい話"},"bOwn":{"en":"Make my own","ko":"직접 만들기","ja":"自分で作る"},"sound":{"en":"Sound","ko":"효과음","ja":"効果音"},"cAutoShort":{"en":"Auto","ko":"자동","ja":"オート"},"cHide":{"en":"Hide choices","ko":"선택지 끄기","ja":"選択肢を消す"},"cShow":{"en":"Show choices","ko":"선택지 켜기","ja":"選択肢を出す"},"cTimer":{"en":"Change the timer","ko":"시간 바꾸기","ja":"時間を変える"}};
 let UI = "en";
 try{ UI = localStorage.getItem("standin-ui") || (["ko","ja"].includes(navigator.language.slice(0,2)) ? navigator.language.slice(0,2) : "en"); }catch(e){}
 const t = k => T[k]?.[UI] ?? k;
@@ -402,6 +407,9 @@ const ICONS = {
   mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>',
   send:'<path d="M12 19V5M6 11l6-6 6 6"/>',
   pause:'<path d="M9 5v14M15 5v14"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+  exit:'<path d="M14 4h5v16h-5M4 12h11M11 8l4 4-4 4"/>',
+  list:'<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>',
   undo:'<path d="M4 9h11a5 5 0 0 1 0 10H9M4 9l4-4M4 9l4 4"/>',
   x:'<path d="M6 6l12 12M18 6L6 18"/>',
   users:'<circle cx="9" cy="8" r="3.5"/><path d="M3 20a6 6 0 0 1 12 0M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.5a6 6 0 0 1 3 5.5"/>',
@@ -579,13 +587,17 @@ let CHOICES = true, choiceSeq = 0, pickTimer = null;
 const PICK_OPTIONS = [3, 5, 10, 0];  // seconds before the recommended reply goes; 0 turns it off
 let PICK_S = 3;
 try{ const s = localStorage.getItem("standin-pick"); if(s !== null) PICK_S = +s; }catch(e){}
-function pickLabel(){ $("pickBtn").textContent = `${t("cAuto")} ${PICK_S ? PICK_S + "s" : t("cOff")}`; }
 function holdPick(){  // they stepped in: keep the choices but stop the clock
   clearTimeout(pickTimer);
   $("choices").classList.add("held");
 }
 try{ CHOICES = localStorage.getItem("standin-choices") !== "0"; }catch(e){}
-function choiceLabel(){ $("choiceBtn").classList.toggle("off", !CHOICES); }
+function setChoices(on){
+  CHOICES = on; clearTimeout(pickTimer);
+  try{ localStorage.setItem("standin-choices", on ? "1" : "0"); }catch(e){}
+  $("choiceBtn").classList.toggle("hidden", on);
+  if(state === "listen") offerReplies();
+}
 async function offerReplies(){
   const seq = ++choiceSeq;
   $("choices").innerHTML = "";
@@ -594,14 +606,23 @@ async function offerReplies(){
   try{ r = await post("/api/replies", {id:S.id}); }catch(e){ console.warn(e); return; }
   if(seq !== choiceSeq || state !== "listen") return;
   $("choices").classList.remove("held");
-  $("choices").innerHTML = (PICK_S ? `<div class="pick"><i></i><button type="button" class="ibtn" aria-label="${t("cPause")}" title="${t("cPause")}">${icon("pause")}</button></div>` : "")
+  $("choices").innerHTML = `<div class="pick">${PICK_S ? "<i></i>" : "<b></b>"}
+      <button type="button" class="pt" title="${t("cTimer")}">${PICK_S ? PICK_S + "s" : t("cOff")}</button>
+      ${PICK_S ? `<button type="button" class="pp" title="${t("cPause")}">${icon("pause")}</button>` : ""}
+      <button type="button" class="px" title="${t("cHide")}">${icon("x")}</button></div>`
     + r.replies.map((x, i) => `<button type="button" class="reply ${i ? "" : "rec"}"><span>${esc(x)}</span></button>`).join("");
   $("choices").querySelectorAll(".reply").forEach(b => b.onclick = () => finish(b.querySelector("span").textContent));
   $("stage").style.setProperty("--choices", $("choices").offsetHeight + "px");
+  $("choices").querySelector(".pt").onclick = () => {
+    PICK_S = PICK_OPTIONS[(PICK_OPTIONS.indexOf(PICK_S) + 1) % PICK_OPTIONS.length];
+    try{ localStorage.setItem("standin-pick", PICK_S); }catch(e){}
+    offerReplies();
+  };
+  $("choices").querySelector(".px").onclick = () => { setChoices(false); };
   // nothing chosen, nothing said: the recommended line goes ahead
   clearTimeout(pickTimer);
   if(!PICK_S) return;
-  $("choices").querySelector(".pick button").onclick = holdPick;
+  $("choices").querySelector(".pp").onclick = holdPick;
   const ms = PICK_S * 1000, bar = $("choices").querySelector(".pick i");
   bar.style.transition = `transform ${ms}ms linear`;
   requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.transform = "scaleX(0)"; }));
@@ -1423,7 +1444,7 @@ function startBuilding(){
 }
 document.querySelectorAll(".olangs button").forEach(b => b.onclick = () => {
   UI = b.dataset.lang; store.set("standin-ui", UI);
-  applyLang(); micLabel(); pickLabel(); step(1);
+  applyLang(); micLabel(); step(1);
 });
 $("oMic").onclick = async () => {
   try{
@@ -1461,21 +1482,12 @@ $("bsay").addEventListener("keydown", e => { if(e.key === "Enter" && !e.shiftKey
 $("benter").onclick = stepInside;
 $("takeBtn").onclick = () => { AUTO = false; stopVoice(); };
 $("autoBtn").onclick = () => { if(state !== "listen") return; stopRec(); choiceSeq++; clearTimeout(pickTimer); $("choices").innerHTML = ""; AUTO = true; autoRun(); };
-$("choiceBtn").onclick = () => {
-  CHOICES = !CHOICES; choiceLabel();
-  try{ localStorage.setItem("standin-choices", CHOICES ? "1" : "0"); }catch(e){}
-  if(state === "listen") offerReplies();
-};
-$("soundBtn").classList.toggle("off", !SOUND);
-$("soundBtn").onclick = () => {
-  SOUND = !SOUND; $("soundBtn").classList.toggle("off", !SOUND);
-  try{ localStorage.setItem("standin-sound", SOUND ? "1" : "0"); }catch(e){}
-};
-choiceLabel(); pickLabel();
-$("pickBtn").onclick = () => {
-  PICK_S = PICK_OPTIONS[(PICK_OPTIONS.indexOf(PICK_S) + 1) % PICK_OPTIONS.length];
-  try{ localStorage.setItem("standin-pick", PICK_S); }catch(e){}
-  pickLabel(); holdPick();
+$("choiceBtn").onclick = () => setChoices(true);
+$("choiceBtn").classList.toggle("hidden", CHOICES);
+$("soundOpt").checked = SOUND;
+$("soundOpt").onchange = e => {
+  SOUND = e.target.checked;
+  try{ localStorage.setItem("standin-sound", SOUND ? "1" : "0"); }catch(err){}
 };
 </script>
 </html>
