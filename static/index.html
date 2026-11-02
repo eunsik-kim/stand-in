@@ -172,6 +172,7 @@ video.self{width:100%;border-radius:12px;transform:scaleX(-1);background:#000;as
 .eslots div.now{background:#f2c14e26;color:inherit}.eslots b{font-weight:600;line-height:1.3}
 .eback{width:100%;padding:10px 14px;display:grid;gap:2px;text-align:center;animation-delay:1s}.eback small{color:var(--mute);font-weight:400}
 .thumb em{position:absolute;right:8px;top:8px;padding:2px 8px;border-radius:999px;background:#000000b3;color:#fff;font-style:normal;font-size:12px}
+#clock{margin-right:10px;font-size:13px;font-style:italic;color:#ffffffd9;text-shadow:0 1px 6px #000c}
 #eMissed{display:grid;gap:4px;font-size:13px;color:var(--mute);animation-delay:.75s}#eMissed p{margin:0}#eMissed:empty{display:none}
 #eLine{font-style:italic;font-size:14px;color:var(--mute);animation-delay:.6s}
 #endCard.waiting #eName{color:var(--mute);font-size:16px;font-weight:500}
@@ -447,7 +448,7 @@ h2{margin:0;font-size:22px}
   <div class="room" id="room"><div class="cast" id="cast"></div></div>
   <div class="top">
     <div class="ttl"><b id="title"></b><div class="setting" id="setting"></div></div>
-    <div class="acts"><span id="turnText"></span><button class="ibtn" id="endBtn" data-ic="exit" data-tl="finish"></button></div>
+    <div class="acts"><span id="clock"></span><span id="turnText"></span><button class="ibtn" id="endBtn" data-ic="exit" data-tl="finish"></button></div>
   </div>
   <div class="capbox"><div class="log hidden" id="log"></div><button class="ibtn" id="logToggle" data-ic="chevron" data-tl="log"></button><div class="caption" id="caption" title=""></div><span class="smenu"><button class="tbtn" id="speedBtn" data-tl="speedTip"></button><span class="spop hidden" id="speedPop"></span></span></div>
   <div class="choices" id="choices"></div>
@@ -914,6 +915,7 @@ async function streamTurn(body, lead, onServerDone){
     if(ev.type === "secret" && S.assets?.clues?.[ev.speaker]) push(() => showClue(ev.speaker));
     if(ev.type === "secret" && !S.assets?.scene) push(() => { S.found = (S.found || 0) + 1; showFound(); toast(`${t("cSecret")}: ${ev.speaker}`); });
     if(ev.type === "failed") failed = true;
+    if(ev.type === "clock") push(() => { $("clock").textContent = ev.text; });
     if(ev.type === "done"){ done = ev; onServerDone?.(ev); }
   };
 
@@ -1483,7 +1485,7 @@ async function enter(){
   $("log").innerHTML = ""; $("log").classList.add("hidden"); $("logToggle").classList.remove("open");
   $("caption").textContent = ""; $("typed").value = "";
   $("doneBtn").innerHTML = icon("send"); $("doneBtn").onclick = () => finish();
-  gesture = ""; S.shown = new Set(); S.beats = 0; S.goals = []; S.lastBetter = ""; S.found = 0; showFound(); $("clues").innerHTML = ""; $("clueBig").classList.add("hidden");
+  gesture = ""; $("clock").textContent = ""; S.shown = new Set(); S.beats = 0; S.goals = []; S.lastBetter = ""; S.found = 0; showFound(); $("clues").innerHTML = ""; $("clueBig").classList.add("hidden");
   S.here = new Set(); S.opening = S.assets?.background;
   $("stage").classList.toggle("coached", COACH && !S.assets?.scene); renderGoals(); coachText();
   $("title").textContent = S.scenario.title;

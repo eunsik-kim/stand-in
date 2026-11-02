@@ -48,6 +48,7 @@ class Take(BaseModel):
     end: bool = False
     end_reason: str = ""
     closing: str = ""  # when the scene ends: one line of narration showing how
+    clock: str = ""  # story time, when it has moved
 
 
 @dataclass
@@ -251,10 +252,12 @@ def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: str
         + ("You are also the director. Set advance=true only when this moment has truly peaked and something new should happen. "
            "Do not invent that something yourself.\n" if coming else
            "No planned events remain, so someone must make a move that changes things.\n" if turn < s.max_turns else "")
+        + "clock: only when story time has really moved, a few words in the language of the scene saying what time it is now, "
+        "concrete to this place, like a low candle, the last train, the light going. It only moves forward and tightens towards the end. Otherwise empty.\n"
         + f"speaker must be one of {names}. Keep exactly this key order:\n"
         '{"lines": [{"speaker": "...", "expression": "neutral|pleased|skeptical|annoyed", '
         '"inner": "one private thought", "gesture": "", "say": "...", "reveals": [], "leaves": false, "mood_delta": {"trust": -25..25, "patience": -25..25}}], '
-        '"advance": false, "end": false, "end_reason": "", "closing": ""}'
+        '"advance": false, "end": false, "end_reason": "", "closing": "", "clock": ""}'
     )
 
 
@@ -326,7 +329,7 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
     e, happened = next_beat(scene), None
     # on time as a rule; the one moment that truly calls for it may come a turn early
     ahead = scene.advance and not scene.early and turn == e.at_turn - 1 if e else False
-    if e and (ahead or turn >= e.at_turn):
+    if e and not shown and (ahead or turn >= e.at_turn):  # laying down evidence is this turn's moment
         scene.beat += 1
         scene.advance = False
         scene.early = scene.early or ahead
@@ -409,6 +412,8 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
         if beat.leaves and (c.name != s.opening_speaker or turn >= s.max_turns - 1):
             scene.left.add(c.name)
 
+    if take.clock.strip():
+        yield {"type": "clock", "text": take.clock.strip()}
     closing = re.sub(r"\buser\b|사용자", "you" if s.language == "en" else "당신", take.closing).strip()
     if closing:
         add(Line(turn, "narration", closing))
