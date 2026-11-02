@@ -1,7 +1,5 @@
 """The last page of a scene: how it ended, told back to the player like a game's ending."""
 
-from concurrent.futures import ThreadPoolExecutor
-
 from pydantic import BaseModel
 
 from .debrief import full_record
@@ -34,19 +32,21 @@ def judged(writer: LLM, scene: Scene, ui: str) -> Judged:
         + f"\n\n{full_record(scene)}\n\n"
         "came_out: the names of people whose secret was actually stated out loud in the transcript, by anyone. A lie or a hint does not count.\n"
         "met: true or false for each outcome. It is true only if it happened in the transcript through the player's own side. "
-        "An outcome that needs a secret is false unless that secret came out. If someone else did it, or you are unsure, it is false.\n"
+        "If someone else did it, it is false.\n"
         f"truths: for every person, one plain sentence in language '{ui or s.language}' saying what was really going on with them, naming them, "
         "stating the fact only, written for the player to read afterwards. No notes about how to act, and nothing about what they wanted.\n"
         'Return {"came_out": ["..."], "met": [true, false], "truths": [{"name": "...", "line": "..."}]}',
     )
 
 
-def written(writer: LLM, scene: Scene, ui: str) -> Ending:
+def written(writer: LLM, scene: Scene, ui: str, met: list[bool]) -> Ending:
     s = scene.scenario
     return writer.ask(
         Ending, "You write the closing page of an interactive story. Reply with a single JSON object.",
         f"Setting: {s.setting}\nThe player was: {s.user_role}\nTheir goal: {s.user_goal}\n"
-        f"\nEverything that was said and happened:\n{scene.public(viewer='record')}\n\n"
+        "Outcomes, already decided, and the story must agree with them:\n"
+        + "\n".join(f"- {c}: {'reached' if m else 'not reached'}" for c, m in zip(s.success_criteria, met))
+        + f"\n\nEverything that was said and happened:\n{scene.public(viewer='record')}\n\n"
         f"Write in language '{ui or s.language}', addressing the player as 'you' (in Korean 당신, with plain -다 endings and no honorific 시 on others).\n"
         "title: the name of this ending, 2-5 words, like an ending in a game, not a headline.\n"
         "story: 2-3 short sentences. First what actually came out and what the player really did, jokes and failures included; "
@@ -58,9 +58,7 @@ def written(writer: LLM, scene: Scene, ui: str) -> Ending:
 
 
 def ending(writer: LLM, scene: Scene, ui: str) -> tuple[Ending, Judged]:
-    with ThreadPoolExecutor(2) as pool:
-        words, verdict = pool.submit(written, writer, scene, ui), pool.submit(judged, writer, scene, ui)
-    done = verdict.result()
-    if scene.verdict is not None:  # the story was told from this verdict, so the page keeps it
+    done = judged(writer, scene, ui)
+    if scene.verdict is not None:  # the last turn was played from this verdict, so the page keeps it
         done.met = scene.verdict
-    return words.result(), done
+    return written(writer, scene, ui, done.met), done

@@ -89,7 +89,7 @@
       },
       {
         "at_turn": 3,
-        "description": "She looks at your frayed cuff and asks why a man so high in the ministry wears a shirt like that.",
+        "description": "She looks at your frayed cuff, then at her husband.",
         "enters": [],
         "shot": "The woman leans in, staring at you with raised eyebrows; her husband looks suddenly unsure."
       },

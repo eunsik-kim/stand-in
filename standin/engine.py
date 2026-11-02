@@ -182,7 +182,7 @@ def _who_must_speak(scene: Scene, names: list[str], fresh: list[str]) -> str:
 def _ending_note(scene: Scene, turn: int, earned: str | None) -> str:
     s = scene.scenario
     close = ("If the user has just given a ruling, closed a deal, or someone leaves for good, that stands: set end=true now and write "
-             "closing, one line of stage narration showing what physically happens last.\n")
+             "closing, one line of stage narration showing what physically happens last, calling the user 'you', never by name.\n")
     if turn < s.max_turns - 2:
         return close
     if turn == s.max_turns - 2:
@@ -196,7 +196,7 @@ def _ending_note(scene: Scene, turn: int, earned: str | None) -> str:
                "The user got part of the way: land a mixed result, what they earned stands and the rest stays open, like a compromise, a delay or a bitter yes."
                if earned == "partial" else
                "The user did not get there: nobody gives in and red lines hold. Choose what fits this story: a delay, a cold no, a question left hanging, or someone leaving.")
-            + " Set end=true, and write closing: one line of stage narration showing what physically happens last.\n")
+            + " Set end=true, and write closing: one line of stage narration showing what physically happens last, calling the user 'you', never by name.\n")
 
 
 class Goals(BaseModel):
@@ -385,7 +385,7 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
     if not take.lines:
         take = Take.model_validate_json(_extract_json(actor.stream_full(_bible(s), prompt)))
 
-    ended_by_take = take.end
+    ended_by_take = take.end and (not auto or turn >= s.max_turns)  # the stand-in never closes a story for them
     scene.advance = take.advance
     for i, beat in enumerate(take.lines[:MOST_LINES]):
         c = who(i, beat.speaker)

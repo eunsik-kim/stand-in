@@ -631,7 +631,8 @@ def replies(req: AutoReq):
         f"Turn {s.turn + 1} of {sc.max_turns}.\n\nTranscript:\n{s.scene.public()}\n\n"
         f"Write 3 different things they could say next, in language '{sc.language}', in the first person. {SPOKEN} "
         "Keep each one light and short, what someone actually blurts out: 2 to 10 words, naming people or things from the transcript exactly. "
-        "The first one always moves toward what winning takes: it asks about a thread left open or pushes on what someone dodged. "
+        "The first one moves toward what winning takes: a thread left open, a new question or an offer. Never re-ask what the player just asked; "
+        "if it was dodged, try another way in. "
         + ("Time is nearly up: if winning needs a decision, such as a ruling, a price or a yes or no, the first one makes it. " if s.turn + 3 >= sc.max_turns else "")
         +
         f"How this person talks, follow it closely: {req.tone or 'casual'}. "
