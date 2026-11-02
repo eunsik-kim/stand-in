@@ -77,6 +77,7 @@ class Scene:
     advance: bool = False  # the scene judged that the next one should land now
     hinted: set[str] = field(default_factory=set)  # who has let their one unprompted clue slip
     early: bool = False  # the one turning point allowed to land ahead of time has
+    verdict: list[bool] | None = None  # which goals the player reached, decided once at the end
     ended: str = ""
 
     def __post_init__(self):
@@ -116,7 +117,7 @@ def _bible(s: Scenario) -> str:
         "Lines marked 'observed' are what they could see and hear (pauses, eye contact); react only when a real "
         "person in that role would notice and care. A secret stays hidden until its condition is clearly met, or until the "
         "user confronts them with a specific fact that makes hiding it impossible. The first direct question gets a dodge or half an answer; "
-        "only a second push, or a matching action, brings out the real thing. People know only their own secret unless it has been said aloud. "
+        "a second push on the same subject, or any evidence, always brings out the real thing. People know only their own secret unless it has been said aloud. "
         "Nobody tells a secret in front of the person it concerns unless forced to. Nobody tells the user what to ask or do next. "
         "The user is always 'you', never third person. Work out how each person really addresses each other from their relationship, "
         "never using a kinship word from someone else's point of view. A talking style is a flavour, not a tic for every line. "
@@ -178,7 +179,7 @@ def _who_must_speak(scene: Scene, names: list[str], fresh: list[str]) -> str:
         f"{', '.join(worn)} have run out of patience: they may walk out in their own words (leaves=true), unless a red line or the place stops them.\n" if worn else ""])
 
 
-def _ending_note(scene: Scene, turn: int, earned: bool | None) -> str:
+def _ending_note(scene: Scene, turn: int, earned: str | None) -> str:
     s = scene.scenario
     close = ("If the user has just given a ruling, closed a deal, or someone leaves for good, that stands: set end=true now and write "
              "closing, one line of stage narration showing what physically happens last.\n")
@@ -190,8 +191,11 @@ def _ending_note(scene: Scene, turn: int, earned: bool | None) -> str:
         return close + "No new facts now. Someone makes a decision, and the user is left something to answer. The next turn is the last.\n"
     return ("This is the last turn. Answer the user's last line, then close the story; the last line is a statement, never a question. "
             "Anything the user decided stands. The person the user's goal is mainly about speaks on this turn. "
-            + ("The user earned this: let it land." if earned else
-               "The user has not earned a win: nobody gives in and red lines hold. End on a refusal, a walk-out or a door closing.")
+            "Whatever was agreed last turn stands; do not reverse it. "
+            + ("The user earned this: let it land." if earned == "won" else
+               "The user got part of the way: land a mixed result, what they earned stands and the rest stays open, like a compromise, a delay or a bitter yes."
+               if earned == "partial" else
+               "The user did not get there: nobody gives in and red lines hold. Choose what fits this story: a delay, a cold no, a question left hanging, or someone leaving.")
             + " Set end=true, and write closing: one line of stage narration showing what physically happens last.\n")
 
 
@@ -199,17 +203,18 @@ class Goals(BaseModel):
     met: list[bool]
 
 
-def earned(scene: Scene, actor: LLM) -> bool:
+def earned(scene: Scene, actor: LLM) -> str:
     """Whether the player got there, judged from what was said rather than from any one flag."""
     s = scene.scenario
     got = actor.ask(
         Goals, "You judge a story fairly. Reply with a single JSON object.",
         "Outcomes, in order:\n" + "\n".join(f"- {c}" for c in s.success_criteria)
-        + f"\n\nTranscript:\n{scene.public()}\n\nFor each outcome: did the user's own words and actions really earn this? "
-        "Jokes, repeated demands, and things other people did or a planned event handed them do not count. If unsure, false. "
+        + f"\n\nTranscript:\n{scene.public()}\n\nFor each outcome: did the user's own words and actions get them there? "
+        "Jokes, repeated demands, and things a planned event simply handed them do not count. "
         'Return {"met": [true, false]}',
     )
-    return len(got.met) >= len(s.success_criteria) and all(got.met)
+    scene.verdict = (got.met + [False] * len(s.success_criteria))[:len(s.success_criteria)]
+    return "won" if all(scene.verdict) else "partial" if any(scene.verdict) else "lost"
 
 
 def _their_last_lines(scene: Scene, names: list[str]) -> str:
@@ -218,7 +223,7 @@ def _their_last_lines(scene: Scene, names: list[str]) -> str:
     return "Each person's last lines; do not repeat their structure, opening or complaint:\n" + "\n".join(lines) + "\n\n" if lines else ""
 
 
-def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: bool | None = None) -> str:
+def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: str | None = None) -> str:
     s = scene.scenario
     names = present(scene, turn)
     moods = "\n".join(
@@ -242,7 +247,8 @@ def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: boo
         "a lie, a cover story or a hint is not a reveal.\n"
         + _who_must_speak(scene, names, happened.enters if happened else []) + _ending_note(scene, turn, won)
         + ("You are also the director. Set advance=true only when this moment has truly peaked and something new should happen. "
-           "Do not invent that something yourself.\n" if coming else "")
+           "Do not invent that something yourself.\n" if coming else
+           "No planned events remain, so someone must make a move that changes things.\n" if turn < s.max_turns else "")
         + f"speaker must be one of {names}. Keep exactly this key order:\n"
         '{"lines": [{"speaker": "...", "expression": "neutral|pleased|skeptical|annoyed", '
         '"inner": "one private thought", "gesture": "", "say": "...", "reveals": [], "leaves": false, "mood_delta": {"trust": -25..25, "patience": -25..25}}], '
@@ -334,7 +340,7 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
         try:
             won = earned(scene, actor)
         except Exception:
-            won = bool(scene.revealed)
+            won = "partial" if scene.revealed else "lost"
     prompt = take_prompt(scene, turn, happened, won)
     stream = actor.stream(_bible(s), prompt)
 
@@ -401,9 +407,10 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
         if beat.leaves and (c.name != s.opening_speaker or turn >= s.max_turns - 1):
             scene.left.add(c.name)
 
-    if take.closing.strip():
-        add(Line(turn, "narration", take.closing.strip()))
-        yield {"type": "narration", "text": take.closing.strip()}
+    closing = re.sub(r"\buser\b|사용자", "you" if s.language == "en" else "당신", take.closing).strip()
+    if closing:
+        add(Line(turn, "narration", closing))
+        yield {"type": "narration", "text": closing}
     if len(scene.left) == len(s.cast):
         scene.ended = "everyone ran out of patience"
     elif ended_by_take:

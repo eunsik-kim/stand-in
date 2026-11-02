@@ -493,6 +493,16 @@ class TurnReq(BaseModel):
     auto: bool = False
 
 
+def take_back(s, index: int) -> None:
+    size, moods, revealed, left, turn, goals, arrived, beat, advance = s.history[index]
+    del s.history[index:]
+    sc = s.scene
+    del sc.lines[size:]
+    sc.moods, sc.revealed, sc.left, sc.ended = moods, revealed, left, ""
+    sc.arrived, sc.beat, sc.advance = arrived, beat, advance
+    s.turn, s.goals = turn, goals
+
+
 @app.post("/api/turn")
 def turn(req: TurnReq):
     s = sessions.get(req.id)
@@ -512,12 +522,18 @@ def turn(req: TurnReq):
             s.turn += 1
             cues = describe(req.signals, s.ui)
             t0, first = time.time(), True
-            for ev in stream_step(s.scene, s.turn, req.say.strip(), actor, cues=cues,
-                                  signals=req.signals.model_dump(), auto=req.auto):  # raw numbers kept for the debrief
-                if first and ev["type"] == "sentence":
-                    spend.seconds.setdefault("first_sentence", []).append(time.time() - t0)
-                    first = False
-                yield json.dumps(ev, ensure_ascii=False) + "\n"
+            try:
+                for ev in stream_step(s.scene, s.turn, req.say.strip(), actor, cues=cues,
+                                      signals=req.signals.model_dump(), auto=req.auto):  # raw numbers kept for the debrief
+                    if first and ev["type"] == "sentence":
+                        spend.seconds.setdefault("first_sentence", []).append(time.time() - t0)
+                        first = False
+                    yield json.dumps(ev, ensure_ascii=False) + "\n"
+            except Exception as e:  # the turn never happened: they can send it again
+                print(f"turn failed {s.id}: {e!r}", flush=True)
+                take_back(s, len(s.history) - 1)
+                yield json.dumps({"type": "failed"}) + "\n"
+                return
         print(f"turn {s.id}/{s.turn}: cues=[{cues}] | {spend.summary()} | {spend.latency()}", flush=True)
 
     return StreamingResponse(events(), media_type="application/x-ndjson")
@@ -554,14 +570,8 @@ def rewind(req: RewindReq):
     if not s or not 0 <= index < len(s.history):
         raise HTTPException(400, "nothing to take back")
     with s.lock:
-        size, moods, revealed, left, turn, goals, arrived, beat, advance = s.history[index]
-        del s.history[index:]
-        sc = s.scene
-        del sc.lines[size:]
-        sc.moods, sc.revealed, sc.left, sc.ended = moods, revealed, left, ""
-        sc.arrived, sc.beat, sc.advance = arrived, beat, advance
-        s.turn, s.goals = turn, goals
-    return {"turn": s.turn, "goals": s.goals, "found": len(sc.revealed)}
+        take_back(s, index)
+    return {"turn": s.turn, "goals": s.goals, "found": len(s.scene.revealed)}
 
 
 class SpeakReq(BaseModel):
@@ -617,14 +627,18 @@ def replies(req: AutoReq):
     sc = s.scene.scenario
     got = actor.ask(
         Replies, "You suggest what a person could say next in a live conversation. Reply with a single JSON object.",
-        f"Setting: {sc.setting}\nThe person: {sc.user_role}\nWhat they want: {sc.user_goal}\n\nTranscript:\n{s.scene.public()}\n\n"
+        f"Setting: {sc.setting}\nThe person: {sc.user_role}\nWhat they want: {sc.user_goal}\nWhat winning takes: {'; '.join(sc.success_criteria)}\n"
+        f"Turn {s.turn + 1} of {sc.max_turns}.\n\nTranscript:\n{s.scene.public()}\n\n"
         f"Write 3 different things they could say next, in language '{sc.language}', in the first person. {SPOKEN} "
-        "Keep each one really light and short, what someone actually blurts out: 2 to 8 words, like 'Wait, seriously?' or '아니 그건 좀...' or '왜요?'. "
+        "Keep each one light and short, what someone actually blurts out: 2 to 10 words, naming people or things from the transcript exactly. "
+        "The first one always moves toward what winning takes: it asks about a thread left open or pushes on what someone dodged. "
+        + ("Time is nearly up: if winning needs a decision, such as a ruling, a price or a yes or no, the first one makes it. " if s.turn + 3 >= sc.max_turns else "")
+        +
         f"How this person talks, follow it closely: {req.tone or 'casual'}. "
         "Put the one you recommend first. Make them really different: push back, ask something, or dodge. "
         "No quotation marks. Do not repeat anything already said.\n"
         f"thought: what is going through this person's head right now, in the first person, one short natural sentence in language '{sc.language}', "
-        "about what they just saw or heard and what they feel. It is their own inner voice, never advice.\n"
+        "about what they just noticed and what they want to find out next. It holds only what they could know: never an answer, a verdict or advice.\n"
         'Return {"thought": "...", "replies": ["...", "...", "..."]}',
     )
     return {"thought": got.thought.strip(), "replies": [r.strip().strip('"“”\'') for r in got.replies[:3]]}
@@ -643,7 +657,7 @@ def closing_page(req: EndReq):
     e, verdict = ending(quick_writer, sc, s.ui)
     found = sc.revealed | ({c.name for c in sc.scenario.cast} & set(verdict.came_out))
     return {"title": e.title, "story": e.story, "best_line": e.best_line, "found": sorted(found),
-            "missed": [x.line for x in verdict.truths if x.name not in found] or [x.line for x in verdict.truths[:1]],
+            "missed": [x.line for x in verdict.truths if x.name not in found],
             "goals": [{"text": c, "met": i < len(verdict.met) and verdict.met[i]} for i, c in enumerate(sc.scenario.success_criteria)]}
 
 

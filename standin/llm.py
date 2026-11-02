@@ -133,7 +133,9 @@ class LLM:
         self.spend.check()
         t0 = time.time()
         parts, usage = [], None
-        for chunk in self.client.chat.completions.create(**body, stream=True, stream_options={"include_usage": True}):
+        # someone is waiting on this one: fail fast and let them send it again
+        client = self.client.with_options(timeout=20, max_retries=1)
+        for chunk in client.chat.completions.create(**body, stream=True, stream_options={"include_usage": True}):
             usage = chunk.usage or usage
             piece = chunk.choices[0].delta.content if chunk.choices else None
             if piece:

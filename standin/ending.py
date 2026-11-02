@@ -36,7 +36,7 @@ def judged(writer: LLM, scene: Scene, ui: str) -> Judged:
         "met: true or false for each outcome. It is true only if it happened in the transcript through the player's own side. "
         "An outcome that needs a secret is false unless that secret came out. If someone else did it, or you are unsure, it is false.\n"
         f"truths: for every person, one plain sentence in language '{ui or s.language}' saying what was really going on with them, naming them, "
-        "written for the player to read afterwards. No notes about how to act.\n"
+        "stating the fact only, written for the player to read afterwards. No notes about how to act, and nothing about what they wanted.\n"
         'Return {"came_out": ["..."], "met": [true, false], "truths": [{"name": "...", "line": "..."}]}',
     )
 
@@ -51,7 +51,7 @@ def written(writer: LLM, scene: Scene, ui: str) -> Ending:
         "title: the name of this ending, 2-5 words, like an ending in a game, not a headline.\n"
         "story: 2-3 short sentences. First what actually came out and what the player really did, jokes and failures included; "
         "then what that leads to. Name the central event. Never praise the player, end on no moral, and do not list where people are. "
-        "Invent no facts, names or objects, and give no advice.\n"
+        "Invent no facts, names or objects, give no advice, and do not quote lines inside the sentences. Write 'you', never 'user'.\n"
         "best_line: the player's own line that changed things most, copied exactly, never one marked (auto); empty if none did.\n"
         'Return {"title": "...", "story": "...", "best_line": "..."}',
     )
@@ -60,4 +60,7 @@ def written(writer: LLM, scene: Scene, ui: str) -> Ending:
 def ending(writer: LLM, scene: Scene, ui: str) -> tuple[Ending, Judged]:
     with ThreadPoolExecutor(2) as pool:
         words, verdict = pool.submit(written, writer, scene, ui), pool.submit(judged, writer, scene, ui)
-    return words.result(), verdict.result()
+    done = verdict.result()
+    if scene.verdict is not None:  # the story was told from this verdict, so the page keeps it
+        done.met = scene.verdict
+    return words.result(), done
