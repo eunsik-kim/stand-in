@@ -48,7 +48,6 @@ class Take(BaseModel):
     end: bool = False
     end_reason: str = ""
     closing: str = ""  # when the scene ends: one line of narration showing how
-    clock: str = ""  # story time, when it has moved
 
 
 @dataclass
@@ -183,7 +182,7 @@ def _who_must_speak(scene: Scene, names: list[str], fresh: list[str]) -> str:
 def _ending_note(scene: Scene, turn: int, earned: str | None) -> str:
     s = scene.scenario
     close = ("If the user has just given a ruling, closed a deal, or someone leaves for good, that stands: set end=true now and write "
-             "closing, one line of stage narration showing what physically happens last, calling the user 'you', never by name.\n")
+             "closing, one line of stage narration showing what physically happens last, calling the user 'you' (in Korean 당신), never by name.\n")
     if turn < s.max_turns - 2:
         return close
     if turn == s.max_turns - 2:
@@ -197,7 +196,7 @@ def _ending_note(scene: Scene, turn: int, earned: str | None) -> str:
                "The user got part of the way: land a mixed result, what they earned stands and the rest stays open, like a compromise, a delay or a bitter yes."
                if earned == "partial" else
                "The user did not get there: nobody gives in and red lines hold. Choose what fits this story: a delay, a cold no, a question left hanging, or someone leaving.")
-            + " Set end=true, and write closing: one line of stage narration showing what physically happens last, calling the user 'you', never by name.\n")
+            + " Set end=true, and write closing: one line of stage narration showing what physically happens last, calling the user 'you' (in Korean 당신), never by name.\n")
 
 
 class Goals(BaseModel):
@@ -235,7 +234,8 @@ def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: str
     return (
         (f"This just happened: {happened.description} People react to it, and it does not happen again.\n\n" if happened else "")
         + (f"The user has just laid evidence on the table: {shown}. Everyone sees it. This is the big moment of the turn: "
-           "whoever it touches reacts at once, and what it proves comes out now.\n\n" if shown else "")
+           "whoever it touches must answer it now: they admit a part, lie badly, or turn it back on the user. "
+           "The full truth still needs a matching question or a second piece of evidence.\n\n" if shown else "")
         + f"Turn {turn} of at most {s.max_turns}. Mood now:\n{moods}\n\n"
         + (f"Not in the room yet, so they cannot speak and nobody mentions them: {', '.join(absent)}.\n\n" if absent else "")
         + f"Transcript:\n{scene.public(viewer='*')}\n\n" + _their_last_lines(scene, names)
@@ -252,13 +252,10 @@ def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: str
         + ("You are also the director. Set advance=true only when this moment has truly peaked and something new should happen. "
            "Do not invent that something yourself.\n" if coming else
            "No planned events remain, so someone must make a move that changes things.\n" if turn < s.max_turns else "")
-        + ("clock is required this turn. " if happened or turn >= s.max_turns - 2 else "")
-        + "clock: when story time has moved, a few words in the language of the scene saying what time it is now, "
-        "concrete to this place, like a low candle, the last train, the light going. It only moves forward and tightens towards the end. Otherwise empty.\n"
         + f"speaker must be one of {names}. Keep exactly this key order:\n"
         '{"lines": [{"speaker": "...", "expression": "neutral|pleased|skeptical|annoyed", '
         '"inner": "one private thought", "gesture": "", "say": "...", "reveals": [], "leaves": false, "mood_delta": {"trust": -25..25, "patience": -25..25}}], '
-        '"advance": false, "end": false, "end_reason": "", "closing": "", "clock": ""}'
+        '"advance": false, "end": false, "end_reason": "", "closing": ""}'
     )
 
 
@@ -413,9 +410,9 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
         if beat.leaves and (c.name != s.opening_speaker or turn >= s.max_turns - 1):
             scene.left.add(c.name)
 
-    if take.clock.strip():
-        yield {"type": "clock", "text": take.clock.strip()}
-    closing = re.sub(r"\buser\b|사용자", "you" if s.language == "en" else "당신", take.closing).strip()
+    closing = take.closing.strip()
+    if s.language == "ko":
+        closing = re.sub(r"(?<![A-Za-z])(?:[Yy]ou|user)(?![A-Za-z])|사용자", "당신", closing)
     if closing:
         add(Line(turn, "narration", closing))
         yield {"type": "narration", "text": closing}

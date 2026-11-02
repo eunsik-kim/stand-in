@@ -30,7 +30,7 @@ from standin.builder import Person, World, as_situation, build_turn, lock, other
 from standin.coach import coach_turn
 from standin.compiler import compile_scenario, structural_problems
 from standin.debrief import debrief
-from standin.engine import Line, Scene, open_scene, simulated_user, stream_step
+from standin.engine import Line, Scene, open_scene, simulated_user, stream_step, FOREIGN
 from standin.llm import LLM, Spend
 from standin.signals import Signals, describe
 from standin.spec import SPOKEN, Scenario
@@ -200,6 +200,7 @@ class Build:
         self.shots: dict[str, str] = {}  # turn -> photograph, prepared ahead for a template
         self.background = ""
         self.extras: dict = {}  # a template's clues and what it's based on
+        self.extras_place = ""
         self.faces: dict[str, dict] = {}  # name -> that person's reactions in the same photograph
         self.drawn: dict[str, str] = {}  # what each image was drawn from, to redraw only on a real change
         self.prepared: dict[str, Future] = {}  # world as JSON -> its scene, written before the user asks
@@ -374,7 +375,10 @@ def build_finish(req: FinishReq, request: Request):
         raise HTTPException(404, "unknown build")
     b.ui = req.ui
     key_was_edited = b.world.model_dump_json() not in b.prepared
-    scenario = prepare(b).result()
+    if b.extras and b.world.place == b.extras_place:  # talking on a template's page must not rewrite the story
+        scenario, key_was_edited = next(iter(b.prepared.values())).result(), False
+    else:
+        scenario = prepare(b).result()
     return draft(scenario, {"background": b.background, "scene": {}, "shots": {} if key_was_edited else b.shots,
                             **({} if key_was_edited else b.extras)}, None)
 
@@ -456,6 +460,7 @@ def template(req: TemplateReq, request: Request):
     assets = p.get("assets", {})
     b.background, b.shots = assets.get("background", ""), assets.get("shots", {})
     b.extras = {k: assets[k] for k in ("clues", "basis") if k in assets}
+    b.extras_place = b.world.place
     b.drawn["names"] = ",".join(sorted(person.name for person in b.world.people))
     builds[b.id] = b
     return build_state(b)
@@ -649,7 +654,8 @@ def replies(req: AutoReq):
         "about what they just noticed and what they want to find out next. It holds only what they could know: never an answer, a verdict or advice.\n"
         'Return {"thought": "...", "replies": ["...", "...", "..."]}',
     )
-    return {"thought": got.thought.strip(), "replies": [r.strip().strip('"“”\'') for r in got.replies[:3]]}
+    plain = (lambda x: FOREIGN.sub("", x).strip().strip('"“”\'')) if sc.language in ("ko", "en") else str.strip
+    return {"thought": plain(got.thought), "replies": [plain(r) for r in got.replies[:3]]}
 
 
 class EndReq(BaseModel):
@@ -664,10 +670,13 @@ def closing_page(req: EndReq):
     sc = s.scene
     e, verdict = ending(quick_writer, sc, s.ui)
     found = sc.revealed | ({c.name for c in sc.scenario.cast} & set(verdict.came_out))
-    pivot = next((ln.say for ln in sc.lines if ln.speaker == "user" and ln.turn == e.pivot_turn), "")
-    return {"title": e.title, "story": e.story, "best_line": e.best_line, "found": sorted(found),
-            "outcome": "won" if all(verdict.met) else "partial" if any(verdict.met) else "lost",
-            "pivot": {"turn": e.pivot_turn, "line": pivot} if pivot else None,
+    own = [ln for ln in sc.lines if ln.speaker == "user" and not ln.say.startswith("(")]  # a silence or a clue isn't a line to retake
+    pivot = next((ln for ln in own if ln.turn == e.pivot_turn), None) or (own[-3] if len(own) >= 3 else None)
+    won = all(verdict.met)
+    best = "" if e.best_line.startswith("(") else e.best_line
+    return {"title": e.title, "story": e.story, "best_line": best, "found": sorted(found),
+            "outcome": "won" if won else "partial" if any(verdict.met) else "lost",
+            "pivot": {"turn": pivot.turn, "line": pivot.say} if pivot and not won else None,
             "missed": [x.line for x in verdict.truths if x.name not in found],
             "goals": [{"text": c, "met": i < len(verdict.met) and verdict.met[i]} for i, c in enumerate(sc.scenario.success_criteria)]}
 
