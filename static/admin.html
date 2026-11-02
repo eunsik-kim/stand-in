@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stand-In admin</title>
+<style>
+:root{--bg:#0f1115;--card:#14161c;--fg:#eef0f4;--ink2:#c9cdd6;--mute:#8d94a3;--line:#2a2f3a;--acc:#f2c14e;--bar:#b8892c;--bad:#ef6b5b;--good:#4cc38a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1100px;margin:0 auto;padding:28px 16px 64px;display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
+h1{margin:0;font-size:24px}
+h2{margin:0 0 12px;font-size:16px;color:var(--ink2);font-weight:600}
+a{color:var(--acc)}
+small,.mute{color:var(--mute)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.big{font-size:30px;font-weight:700;letter-spacing:-.5px}
+.meter{height:8px;border-radius:4px;background:var(--line);margin-top:10px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--bar);border-radius:4px}
+.meter.over i{background:var(--bad)}
+.chart{position:relative;height:200px;display:grid;grid-template-columns:repeat(7,1fr);gap:2px;align-items:end;padding-top:18px;border-bottom:1px solid var(--line)}
+.col{position:relative;height:100%;display:flex;align-items:end;justify-content:center;cursor:default}
+.col i{display:block;width:min(56px,70%);background:var(--bar);border-radius:4px 4px 0 0;min-height:1px}
+.col:hover i{filter:brightness(1.15)}
+.col b{position:absolute;bottom:calc(var(--h) + 4px);font-size:12px;color:var(--ink2);font-weight:600}
+.cap{position:absolute;left:0;right:0;border-top:1px dashed var(--mute);pointer-events:none}
+.cap span{position:absolute;right:0;top:-18px;font-size:12px;color:var(--mute)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:6px;font-size:12px;color:var(--mute);text-align:center}
+#tip{position:fixed;pointer-events:none;background:#1d2029;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px;display:none;z-index:5}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:600;font-size:13px}
+td.num{font-variant-numeric:tabular-nums}
+.kinds{display:flex;flex-wrap:wrap;gap:6px}
+.kinds span{font-size:12px;padding:2px 8px;border-radius:999px;background:#1d2029;border:1px solid var(--line);color:var(--ink2)}
+.kinds span.full{border-color:var(--bad)}
+.badge{font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--bad);color:var(--fg)}
+button{font:inherit;font-size:13px;color:var(--fg);background:#1d2029;border:1px solid var(--line);border-radius:8px;padding:5px 10px;cursor:pointer}
+button:hover{border-color:var(--mute)}
+details summary{cursor:pointer;color:var(--mute);font-size:13px;margin-top:10px}
+#err{color:var(--bad)}
+@media(max-width:700px){.hide-s{display:none}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Stand-In admin</h1>
+    <small><span id="when"></span> · <a href="/">Back to the app</a> · <a href="/auth/logout">Sign out</a></small>
+  </header>
+  <p id="err"></p>
+
+  <section class="tiles">
+    <div class="card"><small>Spent today (UTC)</small><div class="big" id="spent">–</div><small id="budget"></small><div class="meter" id="meter"><i></i></div></div>
+    <div class="card"><small>Accounts active today</small><div class="big" id="active">–</div><small id="total"></small></div>
+    <div class="card"><small>Scenes open right now</small><div class="big" id="open">–</div><small id="openNote">kept in memory, gone on restart</small></div>
+  </section>
+
+  <section class="card">
+    <h2>Spend, last 7 days</h2>
+    <div class="chart" id="chart"></div>
+    <div class="days" id="days"></div>
+    <details><summary>Show as a table</summary><table id="daysTable"><thead><tr><th>Day (UTC)</th><th>Spent</th></tr></thead><tbody></tbody></table></details>
+  </section>
+
+  <section class="card">
+    <h2>Accounts</h2>
+    <table>
+      <thead><tr><th>Account</th><th class="hide-s">Last seen</th><th>Used today</th><th>Est. spend</th><th></th></tr></thead>
+      <tbody id="accounts"></tbody>
+    </table>
+    <small>Daily caps per account: <span id="caps"></span>. Admins have no caps. Est. spend counts text and image calls made for that account; voices count only toward the server total.</small>
+  </section>
+</main>
+<div id="tip"></div>
+<script>
+const $ = id => document.getElementById(id);
+const money = v => "$" + (v < 1 ? v.toFixed(3) : v.toFixed(2));
+const ago = t => { if(!t) return "–"; const s = Date.now()/1000 - t;
+  return s < 90 ? "just now" : s < 5400 ? Math.round(s/60) + " min ago" : s < 129600 ? Math.round(s/3600) + " h ago" : Math.round(s/86400) + " days ago"; };
+const el = (tag, text, cls) => { const e = document.createElement(tag); if(text != null) e.textContent = text; if(cls) e.className = cls; return e; };
+let me = "";
+
+function tip(e, text){ const t = $("tip"); t.textContent = text; t.style.display = "block"; t.style.left = (e.clientX + 12) + "px"; t.style.top = (e.clientY - 34) + "px"; }
+function hideTip(){ $("tip").style.display = "none"; }
+
+function chart(days, budget){
+  const max = Math.max(budget, ...days.map(d => d[1]), 0.001);
+  const c = $("chart"); c.innerHTML = ""; $("days").innerHTML = "";
+  const top = days.reduce((a, d) => d[1] > a[1] ? d : a, days[0]);
+  days.forEach(([day, usd], i) => {
+    const col = el("div", null, "col"), bar = el("i"), h = (usd / max * 100).toFixed(1) + "%";
+    bar.style.height = h; col.style.setProperty("--h", h); col.append(bar);
+    if(usd > 0 && (day === top[0] || i === days.length - 1)) col.append(el("b", money(usd)));  // label only the peak and today
+    col.onmousemove = e => tip(e, `${day}: ${money(usd)}`); col.onmouseleave = hideTip;
+    c.append(col); $("days").append(el("span", day.slice(5)));
+  });
+  const cap = el("div", null, "cap"); cap.style.bottom = (budget / max * 100) + "%";
+  cap.append(el("span", "daily cap " + money(budget))); c.append(cap);
+  const body = $("daysTable").querySelector("tbody"); body.innerHTML = "";
+  days.forEach(([day, usd]) => { const tr = el("tr"); tr.append(el("td", day), el("td", money(usd), "num")); body.append(tr); });
+}
+
+function accounts(list, caps){
+  const body = $("accounts"); body.innerHTML = "";
+  if(!list.length){ const tr = el("tr"); const td = el("td", "Nobody has signed in yet."); td.colSpan = 5; tr.append(td); body.append(tr); return; }
+  list.forEach(a => {
+    const tr = el("tr"), who = el("td");
+    who.append(el("div", a.name || a.email || a.sub), el("small", a.email || a.sub));
+    if(a.blocked){ who.append(document.createTextNode(" ")); who.append(el("span", "⛔ Blocked", "badge")); }
+    const kinds = el("div", null, "kinds");
+    Object.entries(a.used).forEach(([k, n]) => kinds.append(el("span", `${k} ${n}${caps[k] ? " / " + caps[k] : ""}`, caps[k] && n >= caps[k] ? "full" : "")));
+    if(!Object.keys(a.used).length) kinds.append(el("small", "nothing today"));
+    const used = el("td"); used.append(kinds);
+    const act = el("td");
+    if(a.sub !== me){
+      const b = el("button", a.blocked ? "Unblock" : "Block");
+      b.onclick = async () => { b.disabled = true; await post("/api/admin/block", {sub: a.sub, blocked: !a.blocked}); load(); };
+      act.append(b);
+    }
+    tr.append(who, el("td", ago(a.last_seen), "hide-s"), used, el("td", money(a.usd), "num"), act);
+    body.append(tr);
+  });
+}
+
+async function post(url, body){
+  const r = await fetch(url, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+  if(!r.ok) $("err").textContent = (await r.json().catch(() => ({}))).detail || `Failed (${r.status})`;
+}
+
+async function load(){
+  const r = await fetch("/api/admin/usage");
+  if(!r.ok){ $("err").textContent = r.status === 403 ? "This page is for admins. Sign in with an admin account." : `Couldn't load (${r.status}).`; return; }
+  const d = await r.json(); $("err").textContent = "";
+  const meRes = await fetch("/api/me").then(x => x.json()).catch(() => ({}));
+  me = (d.accounts.find(a => a.email && a.email === meRes.email) || {}).sub || "";
+  $("when").textContent = `${d.day} UTC · refreshed ${new Date().toLocaleTimeString()}`;
+  $("spent").textContent = money(d.spent);
+  $("budget").textContent = `of ${money(d.budget)} daily cap`;
+  $("meter").classList.toggle("over", d.spent >= d.budget);
+  $("meter").firstElementChild.style.width = Math.min(100, d.spent / d.budget * 100) + "%";
+  const active = d.accounts.filter(a => Object.keys(a.used).length);
+  $("active").textContent = active.length; $("total").textContent = `${d.accounts.length} accounts in total`;
+  $("open").textContent = d.live.scenes ?? "–";
+  $("caps").textContent = Object.entries(d.caps).map(([k, v]) => `${k} ${v}`).join(", ");
+  chart(d.days, d.budget); accounts(d.accounts, d.caps);
+}
+load(); setInterval(load, 30000);
+</script>
+</body>
+</html>

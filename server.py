@@ -8,6 +8,7 @@ import base64
 import json
 import os
 import re
+import secrets
 import threading
 import time
 import uuid
@@ -21,9 +22,9 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from standin import voice
+from standin import admin, auth, voice
 from standin.ending import ending
 from standin.art import background, background_prompt, portraits, scene, scene_edit, scene_from
 from standin.builder import Person, World, as_situation, build_turn, lock, others
@@ -31,9 +32,10 @@ from standin.coach import coach_turn
 from standin.compiler import compile_scenario, structural_problems
 from standin.debrief import debrief
 from standin.engine import Line, Scene, open_scene, simulated_user, stream_step, FOREIGN
-from standin.llm import LLM, Spend
+from standin.llm import LLM
 from standin.signals import Signals, describe
 from standin.spec import SPOKEN, Scenario
+from standin.store import DailySpend, Store
 
 load_dotenv()
 ROOT = Path(__file__).parent
@@ -42,7 +44,7 @@ SAVE = ROOT / "runs" / "web"
 SAVE.mkdir(parents=True, exist_ok=True)
 ART = ROOT / "runs" / "art"  # images made for custom scenes
 ART.mkdir(parents=True, exist_ok=True)
-WORLDS = ROOT / "runs" / "worlds"
+WORLDS = ROOT / "runs" / "worlds"  # where worlds were kept before the store; moved in once at start
 WORLDS.mkdir(parents=True, exist_ok=True)
 TTS = ROOT / "runs" / "tts"
 TTS.mkdir(parents=True, exist_ok=True)
@@ -52,7 +54,11 @@ ACTOR_MODEL = "muse-spark-1.3"
 CHECK_MODEL = "muse-spark-1.3"
 IMAGE_MODEL = "muse-image-1.0"
 
-spend = Spend(float(os.getenv("STANDIN_SERVER_BUDGET", "3.0")))
+store = Store(ROOT / "runs" / "standin.db")  # accounts, today's usage and spend, worlds: what must outlive a restart
+moved = store.import_world_files(WORLDS)
+if moved:
+    print(f"moved {moved} saved worlds into the store", flush=True)
+spend = DailySpend(store, float(os.getenv("STANDIN_SERVER_BUDGET", "3.0")), who=admin.current.get)  # dollars per UTC day
 cache = ROOT / "runs" / "cache"
 env = os.getenv
 writer = LLM(env("STANDIN_WRITER_MODEL", WRITER_MODEL), spend, cache, 0.7, "writer")
@@ -67,7 +73,8 @@ whisper = LLM(env("STANDIN_ACTOR_MODEL", ACTOR_MODEL), spend, cache, 0.3, "live_
 
 class Session:
     def __init__(self, scenario: Scenario, preset: str | None, reveal: str, ui: str, owner: str):
-        self.id = uuid.uuid4().hex[:10]
+        self.id = secrets.token_urlsafe(12)  # 96 random bits; the owner check below is what actually guards a scene
+        self.touched = time.time()
         self.scene: Scene = open_scene(scenario)
         self.preset = preset
         self.reveal = reveal  # how much of the cast the user chose to see beforehand
@@ -76,11 +83,22 @@ class Session:
         self.assets: dict = {}
         self.owner = owner
         self.history: list[tuple] = []  # state before each turn, for "say that again"
+        self.voiceable: set[tuple[str, str]] = set()  # (speaker, sentence) as streamed: the only text /api/speak will voice
         self.turn = 0
         self.lock = threading.Lock()
 
 
 sessions: dict[str, Session] = {}
+SESSIONS_PER_OWNER = 5  # opening a sixth scene lets the oldest one go
+
+
+def own_session(sid: str, request: Request) -> Session:
+    """The caller's own scene, or 404: knowing a scene's id is not enough to act on someone else's."""
+    s = sessions.get(sid)
+    if not s or (auth.on() and s.owner != visitor(request)):
+        raise HTTPException(404, "unknown session")
+    s.touched = time.time()
+    return s
 
 
 def versioned(url: str) -> str:
@@ -131,7 +149,14 @@ def draft(scenario: Scenario, assets: dict, preset: str | None, gate1=None) -> d
             "background_prompt": background_prompt(scenario)}
 
 
-app = FastAPI()
+if os.getenv("STANDIN_REQUIRE_LOGIN") and (not auth.on() or len(os.getenv("STANDIN_SESSION_SECRET", "")) < 32):
+    # on the public site a missing key must stop the server, not quietly open it to anyone
+    raise SystemExit("STANDIN_REQUIRE_LOGIN is set, but GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET or a 32+ character STANDIN_SESSION_SECRET is missing")
+
+app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+app.include_router(auth.router)  # Google sign-in; does nothing until its keys are set
+app.include_router(admin.router(store, spend, lambda: {"scenes": len(sessions), "worlds_open": len(builds)}))
+gate = admin.Gate(store)  # each account's daily allowance, on top of the per-address limit below
 
 
 # per visitor address, per hour: enough for real use, not enough to drain the credits
@@ -156,15 +181,48 @@ def over_limit(request: Request) -> bool:
 
 
 def visitor(request: Request) -> str:
-    """A random id kept in the visitor's browser, so each person sees only their own worlds and runs."""
+    """Whose worlds and runs these are: the Google account (`auth.user(request)`) when sign-in is on,
+    else a random id kept in the browser."""
+    if auth.on():
+        account = auth.user(request)
+        return account["sub"] if account else "!signed-out"  # matches no owner
     return request.headers.get("x-visitor", "")[:40]
+
+
+BODY_LIMIT = {"/api/episode": 4_000_000, "/api/start": 256_000}  # a photo; a whole scenario; everything else is small
+swept = 0.0
+
+
+def sweep() -> None:
+    """Scenes and worlds nobody has touched for six hours leave memory (worlds stay in the store)."""
+    global swept
+    now = time.time()
+    if now - swept < 300:
+        return
+    swept = now
+    for sid in [k for k, s in sessions.items() if now - s.touched > 6 * 3600]:
+        sessions.pop(sid, None)
+    for bid in [k for k, b in builds.items() if now - b.touched > 6 * 3600]:
+        builds.pop(bid, None)
 
 
 @app.middleware("http")
 async def guard(request, call_next):
+    if request.method == "POST" and request.url.path.startswith(("/api/", "/auth/")):
+        size = request.headers.get("content-length")
+        if size is None or not size.isdigit() or int(size) > BODY_LIMIT.get(request.url.path, 64_000):
+            return JSONResponse({"detail": "That request is too large."}, status_code=413)
+    sweep()
+    if auth.on() and request.method == "POST" and request.url.path.startswith("/api/") and not auth.user(request):
+        return JSONResponse({"detail": "Sign in with Google first."}, status_code=401)
     if over_limit(request):
         return JSONResponse({"detail": "Too many requests for now. Please try again in a while."}, status_code=429)
+    stop = gate.check(request)  # also marks whose request this is, so its spend lands on that account
+    if stop:
+        return stop
     response = await call_next(request)
+    gate.settle(request, response.status_code)
+    spend.flush()  # voices add to the total without a model call; write them now
     # Portraits keep their file names when remade, so the browser must check for a new version.
     response.headers["Cache-Control"] = "no-cache"
     return response
@@ -201,14 +259,21 @@ class Build:
         self.background = ""
         self.extras: dict = {}  # a template's clues and what it's based on
         self.extras_place = ""
+        self.shots_for = ""  # the world as it was when the photos and clues were made for it
         self.faces: dict[str, dict] = {}  # name -> that person's reactions in the same photograph
         self.drawn: dict[str, str] = {}  # what each image was drawn from, to redraw only on a real change
         self.prepared: dict[str, Future] = {}  # world as JSON -> its scene, written before the user asks
+        self.touched = time.time()
 
     def save(self) -> None:
-        (WORLDS / f"{self.id}.json").write_text(json.dumps({
-            "id": self.id, "owner": self.owner, "ready": self.ready, "world": self.world.model_dump(), "talk": self.talk, "background": self.background,
-            "faces": self.faces, "drawn": self.drawn}, ensure_ascii=False))
+        """Into the store, with the hidden side once it is written, so a reopened story keeps its secrets, photos and clues."""
+        key = self.world.model_dump_json()
+        done = self.prepared.get(key)
+        scenario = done.result().model_dump() if done and done.done() and not done.exception() else None
+        store.save_world(self.id, self.owner, {
+            "id": self.id, "owner": self.owner, "ready": self.ready, "ui": self.ui, "world": self.world.model_dump(), "talk": self.talk,
+            "background": self.background, "faces": self.faces, "drawn": self.drawn, "shots": self.shots, "extras": self.extras,
+            "extras_place": self.extras_place, "shots_for": self.shots_for, "scenario": scenario, "scenario_for": key if scenario else ""})
 
 
 builds: dict[str, Build] = {}
@@ -216,14 +281,15 @@ easel = ThreadPoolExecutor(6)
 
 
 def find_build(bid: str, owner: str) -> Build | None:
-    """Worlds live on disk, so leaving or restarting never loses one. Only their maker can open them."""
+    """Worlds live in the store, so leaving or restarting never loses one. Only their maker can open them."""
     if bid in builds:
-        return builds[bid] if builds[bid].owner == owner else None
-    path = WORLDS / f"{Path(bid).name}.json"
-    if not bid or not path.exists():
-        return None
-    data = json.loads(path.read_text())
-    if data.get("owner", "") != owner:
+        b = builds[bid]
+        if b.owner != owner:
+            return None
+        b.touched = time.time()
+        return b
+    data = store.load_world(bid, owner) if bid else None
+    if not data:
         return None
     b = Build()
     b.owner = owner
@@ -231,6 +297,13 @@ def find_build(bid: str, owner: str) -> Build | None:
                                                      data["faces"], data["drawn"])
     b.talk = [tuple(x) for x in data["talk"]]
     b.ready = data.get("ready", False)
+    b.ui = data.get("ui", b.ui)
+    b.shots, b.extras = data.get("shots", {}), data.get("extras", {})
+    b.extras_place, b.shots_for = data.get("extras_place", ""), data.get("shots_for", "")
+    if data.get("scenario"):  # the hidden side it was written with, so secrets and turning points stay the same
+        done: Future = Future()
+        done.set_result(Scenario.model_validate(data["scenario"]))
+        b.prepared[data["scenario_for"]] = done
     builds[b.id] = b
     draw_changes(b, b.world)  # worlds saved before they had a photograph get one now
     return b
@@ -243,6 +316,7 @@ def prepare(b: Build) -> Future:
         world = b.world.model_copy(deep=True)
         b.prepared[key] = easel.submit(lambda: lock(compile_scenario(
             quick_writer, checker, as_situation(world), ui=b.ui, locked=True, repairs=1, log=lambda _: None)[0], world))
+        b.prepared[key].add_done_callback(lambda _: b.save())  # keep the hidden side with the world
     return b.prepared[key]
 
 
@@ -292,10 +366,10 @@ START_OVER = re.compile(r"^\s*(다시 만들|처음부터|새로 만들|다시 �
 
 
 class BuildReq(BaseModel):
-    id: str = ""
-    message: str
-    ui: str = "en"
-    name: str = ""
+    id: str = Field("", max_length=64)
+    message: str = Field(max_length=2000)
+    ui: str = Field("en", max_length=8)
+    name: str = Field("", max_length=80)
     kickoff: bool = False
 
 
@@ -312,7 +386,7 @@ def build(req: BuildReq, request: Request):
     reply = build_turn(interviewer, b.world, b.talk, message, req.ui, req.name)
     if not req.kickoff and (reply.reset or START_OVER.search(message)):  # they said to start over, so this world is gone
         builds.pop(b.id, None)
-        (WORLDS / f"{b.id}.json").unlink(missing_ok=True)
+        store.delete_world(b.id, b.owner)
         return {"reset": True, "say": reply.say}
     reply.world = others(reply.world)
     b.talk += ([] if req.kickoff else [("User", message)]) + [("You", reply.say)]
@@ -331,10 +405,9 @@ def build(req: BuildReq, request: Request):
 def history(request: Request):
     """This visitor's worlds to pick up again and past rehearsals, newest first."""
     me, worlds, runs = visitor(request), [], []
-    for path in sorted(WORLDS.glob("*.json"), key=lambda x: x.stat().st_mtime, reverse=True)[:12]:
-        d = json.loads(path.read_text())
-        if d["talk"] and d.get("owner", "") == me:
-            worlds.append({"id": d["id"], "title": d["world"]["title"] or d["talk"][0][1][:40], "when": path.stat().st_mtime})
+    for d in store.worlds_of(me, 12):
+        if d["talk"]:
+            worlds.append({"id": d["id"], "title": d["world"]["title"] or d["talk"][0][1][:40], "when": d["_updated"]})
     for path in sorted(SAVE.glob("*.json"), key=lambda x: x.stat().st_mtime, reverse=True)[:30]:
         d = json.loads(path.read_text())
         if d.get("owner", "") != me:
@@ -363,8 +436,8 @@ def build_art(bid: str, request: Request):
 
 
 class FinishReq(BaseModel):
-    id: str
-    ui: str = "en"
+    id: str = Field(max_length=64)
+    ui: str = Field("en", max_length=8)
 
 
 @app.post("/api/build/finish")
@@ -374,13 +447,15 @@ def build_finish(req: FinishReq, request: Request):
     if not b:
         raise HTTPException(404, "unknown build")
     b.ui = req.ui
-    key_was_edited = b.world.model_dump_json() not in b.prepared
-    if b.extras and b.world.place == b.extras_place:  # talking on a template's page must not rewrite the story
-        scenario, key_was_edited = next(iter(b.prepared.values())).result(), False
-    else:
-        scenario = prepare(b).result()
-    return draft(scenario, {"background": b.background, "scene": {}, "shots": {} if key_was_edited else b.shots,
-                            **({} if key_was_edited else b.extras)}, None)
+    try:
+        if b.extras and b.world.place == b.extras_place:  # talking on a template's page must not rewrite the story
+            scenario, rewritten = next(iter(b.prepared.values())).result(timeout=180), False
+        else:  # a story rewritten around the user's changes: the old turning points' photos and clues would show the wrong people
+            scenario, rewritten = prepare(b).result(timeout=180), b.world.model_dump_json() != b.shots_for
+    except TimeoutError:
+        raise HTTPException(503, "The story is taking too long to write. Please try again.")
+    return draft(scenario, {"background": b.background, "scene": {}, "shots": {} if rewritten else b.shots,
+                            **({} if rewritten else b.extras)}, None)
 
 
 def load_scene(b: Build, s: Scenario) -> None:
@@ -390,14 +465,15 @@ def load_scene(b: Build, s: Scenario) -> None:
                             for c in s.cast if not c.enters_at])
     done: Future = Future()
     done.set_result(s)
-    b.prepared[b.world.model_dump_json()] = done
+    b.shots_for = b.world.model_dump_json()
+    b.prepared[b.shots_for] = done
 
 
 class EpisodeReq(BaseModel):
-    idea: str
-    genre: str = ""
-    image: str = ""  # a picture the user attached, as a data URL
-    ui: str = "en"
+    idea: str = Field(max_length=2000)
+    genre: str = Field("", max_length=80)
+    image: str = Field("", max_length=4_000_000)  # a picture the user attached, as a data URL
+    ui: str = Field("en", max_length=8)
 
 
 @app.post("/api/episode")
@@ -443,8 +519,8 @@ def episode(req: EpisodeReq, request: Request):
 
 
 class TemplateReq(BaseModel):
-    id: str
-    ui: str = "en"
+    id: str = Field(max_length=64)
+    ui: str = Field("en", max_length=8)
 
 
 @app.post("/api/template")
@@ -469,9 +545,9 @@ def template(req: TemplateReq, request: Request):
 class StartReq(BaseModel):
     scenario: dict  # possibly edited by the user on the briefing screen
     assets: dict = {}
-    preset: str | None = None
-    reveal: str = "profile"  # names | profile | all
-    ui: str = "en"
+    preset: str | None = Field(None, max_length=64)
+    reveal: str = Field("profile", max_length=16)  # names | profile | all
+    ui: str = Field("en", max_length=8)
 
 
 @app.post("/api/start")
@@ -485,6 +561,9 @@ def start(req: StartReq, request: Request):
         raise HTTPException(400, "; ".join(problems))
     s = Session(scenario, req.preset, req.reveal, req.ui, visitor(request))
     s.assets = req.assets
+    mine = sorted((x for x in sessions.values() if x.owner == s.owner), key=lambda x: x.touched)
+    for old in mine[:max(0, len(mine) - SESSIONS_PER_OWNER + 1)]:
+        sessions.pop(old.id, None)
     sessions[s.id] = s
     print(f"start {s.id}: {scenario.title} (reveal={req.reveal}) | {spend.summary()}", flush=True)
     return {"id": s.id, "scenario": public_scenario(scenario), "assets": req.assets,
@@ -492,11 +571,11 @@ def start(req: StartReq, request: Request):
 
 
 class TurnReq(BaseModel):
-    id: str
-    say: str
+    id: str = Field(max_length=64)
+    say: str = Field(max_length=2000)
     signals: Signals = Signals()
     auto: bool = False
-    evidence: str = ""  # whose clue the player laid on the table
+    evidence: str = Field("", max_length=80)  # whose clue the player laid on the table
 
 
 def take_back(s, index: int) -> None:
@@ -510,10 +589,8 @@ def take_back(s, index: int) -> None:
 
 
 @app.post("/api/turn")
-def turn(req: TurnReq):
-    s = sessions.get(req.id)
-    if not s:
-        raise HTTPException(404, "unknown session")
+def turn(req: TurnReq, request: Request):
+    s = own_session(req.id, request)
     if not req.say.strip():
         raise HTTPException(400, "empty line")
 
@@ -533,6 +610,8 @@ def turn(req: TurnReq):
             try:
                 for ev in stream_step(s.scene, s.turn, req.say.strip(), actor, cues=cues,
                                       signals=req.signals.model_dump(), auto=req.auto, shown=shown):  # raw numbers kept for the debrief
+                    if ev["type"] == "sentence":
+                        s.voiceable.add((ev["speaker"], ev["text"].strip()))  # before the page can ask for its voice
                     if first and ev["type"] == "sentence":
                         spend.seconds.setdefault("first_sentence", []).append(time.time() - t0)
                         first = False
@@ -548,15 +627,13 @@ def turn(req: TurnReq):
 
 
 class CoachReq(BaseModel):
-    id: str
-    say: str
+    id: str = Field(max_length=64)
+    say: str = Field(max_length=2000)
 
 
 @app.post("/api/coach")
-def live_coach(req: CoachReq):
-    s = sessions.get(req.id)
-    if not s:
-        raise HTTPException(404, "unknown session")
+def live_coach(req: CoachReq, request: Request):
+    s = own_session(req.id, request)
     c = coach_turn(whisper, s.scene, req.say, s.goals, s.ui)
     for i, g in enumerate(c.goals[:len(s.goals)]):  # progress only moves forward
         if s.goals[i] != "done" and not (s.goals[i] == "partial" and g.status == "todo"):
@@ -566,16 +643,16 @@ def live_coach(req: CoachReq):
 
 
 class RewindReq(BaseModel):
-    id: str
+    id: str = Field(max_length=64)
     turn: int | None = None  # go back to just before this user turn; default is the latest one
 
 
 @app.post("/api/rewind")
-def rewind(req: RewindReq):
+def rewind(req: RewindReq, request: Request):
     """Take back the last line, or return to any earlier moment and play it differently."""
-    s = sessions.get(req.id)
-    index = len(s.history) - 1 if s and req.turn is None else (req.turn or 0) - 1
-    if not s or not 0 <= index < len(s.history):
+    s = own_session(req.id, request)
+    index = len(s.history) - 1 if req.turn is None else (req.turn or 0) - 1
+    if not 0 <= index < len(s.history):
         raise HTTPException(400, "nothing to take back")
     with s.lock:
         take_back(s, index)
@@ -583,40 +660,41 @@ def rewind(req: RewindReq):
     beats = sorted(sc.scenario.events, key=lambda e: e.at_turn)
     said = next((ln for ln in reversed(sc.lines) if ln.speaker not in ("user", "narration")), None)
     return {"turn": s.turn, "goals": s.goals, "found": len(sc.revealed), "shot": beats[sc.beat - 1].at_turn if sc.beat else 0,
-            "last": {"speaker": said.speaker, "say": said.say} if said else None}
+            "last": {"speaker": said.speaker, "say": said.say, "expression": said.expression} if said else None}
 
 
 class SpeakReq(BaseModel):
-    id: str
-    speaker: str
-    text: str
+    id: str = Field(max_length=64)
+    speaker: str = Field(max_length=80)
+    text: str = Field(max_length=600)
 
 
 @app.post("/api/speak")
-def speak(req: SpeakReq):
-    s = sessions.get(req.id)
-    if not s:
-        raise HTTPException(404, "unknown session")
+def speak(req: SpeakReq, request: Request):
+    s = own_session(req.id, request)
     scenario = s.scene.scenario
     c = next((c for c in scenario.cast if c.name == req.speaker), None)
-    if not c or not req.text.strip():
+    text = req.text.strip()
+    if not c or not text:
         raise HTTPException(400, "unknown speaker or empty text")
+    # only what this person said in this scene gets a voice, so the endpoint can't be used to voice anything else
+    said = (c.name, text) in s.voiceable or any(ln.speaker == c.name and text in ln.say for ln in s.scene.lines)
+    if not said:
+        raise HTTPException(400, "only lines this person said can be voiced")
     if not voice.available():
         raise HTTPException(503, "no speech key")  # the page falls back to the browser voice
-    return Response(voice.synthesize(req.text.strip(), voice.voice_for(scenario, c), spend, TTS), media_type="audio/mpeg")
+    return Response(voice.synthesize(text, voice.voice_for(scenario, c), spend, TTS), media_type="audio/mpeg")
 
 
 class AutoReq(BaseModel):
-    id: str
-    tone: str = ""  # how this person likes to talk, set in onboarding
+    id: str = Field(max_length=64)
+    tone: str = Field("", max_length=400)  # how this person likes to talk, set in onboarding
 
 
 @app.post("/api/auto")
-def autopilot(req: AutoReq):
+def autopilot(req: AutoReq, request: Request):
     """Autopilot: a stand-in speaks for the user until they take over."""
-    s = sessions.get(req.id)
-    if not s:
-        raise HTTPException(404, "unknown session")
+    s = own_session(req.id, request)
     mine = [ln.say for ln in s.scene.lines if ln.speaker == "user"]
     persona = (f"Speak in very short lines of a few words, the way this person really would, working toward: {s.scene.scenario.user_goal}. "
                f"How they talk: {req.tone or 'casual'}. Fit the time and place of the setting. "
@@ -631,11 +709,9 @@ class Replies(BaseModel):
 
 
 @app.post("/api/replies")
-def replies(req: AutoReq):
+def replies(req: AutoReq, request: Request):
     """Three things the user could say next, for when finding the words is the hard part."""
-    s = sessions.get(req.id)
-    if not s:
-        raise HTTPException(404, "unknown session")
+    s = own_session(req.id, request)
     sc = s.scene.scenario
     got = actor.ask(
         Replies, "You suggest what a person could say next in a live conversation. Reply with a single JSON object.",
@@ -659,14 +735,12 @@ def replies(req: AutoReq):
 
 
 class EndReq(BaseModel):
-    id: str
+    id: str = Field(max_length=64)
 
 
 @app.post("/api/ending")
-def closing_page(req: EndReq):
-    s = sessions.get(req.id)
-    if not s:
-        raise HTTPException(404, "unknown session")
+def closing_page(req: EndReq, request: Request):
+    s = own_session(req.id, request)
     sc = s.scene
     e, verdict = ending(quick_writer, sc, s.ui)
     found = sc.revealed | ({c.name for c in sc.scenario.cast} & set(verdict.came_out))
@@ -682,10 +756,8 @@ def closing_page(req: EndReq):
 
 
 @app.post("/api/end")
-def end(req: EndReq):
-    s = sessions.get(req.id)
-    if not s:
-        raise HTTPException(404, "unknown session")
+def end(req: EndReq, request: Request):
+    s = own_session(req.id, request)
     with s.lock:
         sc = s.scene
         sc.ended = sc.ended or "user ended the scene"
@@ -702,7 +774,7 @@ def end(req: EndReq):
         }
     slug = re.sub(r"\W+", "_", sc.scenario.title)[:40]
     (SAVE / f"{s.id}_{slug}.json").write_text(json.dumps(
-        {**result, "owner": s.owner, "scenario": sc.scenario.model_dump(), "assets": s.assets, "spend": spend.summary(), "latency": spend.latency()},
+        {**result, "owner": s.owner, "scenario": sc.scenario.model_dump(), "assets": s.assets},
         indent=2, ensure_ascii=False))
     print(f"end {s.id} | {spend.summary()}", flush=True)
     return result

@@ -4,8 +4,10 @@ primary_region = "nrt"
 [build]
 
 [env]
-  # The site is public with no login: model calls stop once the server has spent this many dollars since it started.
+  # Model calls stop once the server has spent this many dollars in a UTC day (kept in the store, so restarts don't reset it).
   STANDIN_SERVER_BUDGET = "15"
+  # The public site needs Google sign-in: without its keys the server refuses to start instead of opening up.
+  STANDIN_REQUIRE_LOGIN = "1"
 
 # Scenes live in memory, so one machine stays up and never sleeps mid-rehearsal.
 [http_service]
