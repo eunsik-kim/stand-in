@@ -122,6 +122,20 @@
       "2": "/presets/img/en_apartment_2_scene.jpg",
       "4": "/presets/img/en_apartment_4_scene.jpg",
       "6": "/presets/img/en_apartment_6_scene.jpg"
+    },
+    "clues": {
+      "Maya Chen": {
+        "img": "/presets/img/clue_en_apartment_0.jpg",
+        "name": "Frank's text to the agent"
+      },
+      "Frank Delaney": {
+        "img": "/presets/img/clue_en_apartment_1.jpg",
+        "name": "The Tampa deposit notice"
+      },
+      "Sofia Delaney": {
+        "img": "/presets/img/clue_en_apartment_2.jpg",
+        "name": "The movers' receipt"
+      }
     }
   }
 }

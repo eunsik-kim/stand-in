@@ -122,6 +122,20 @@
       "2": "/presets/img/ko_reunion_2_scene.jpg",
       "4": "/presets/img/ko_reunion_4_scene.jpg",
       "6": "/presets/img/ko_reunion_6_scene.jpg"
+    },
+    "clues": {
+      "윤채영": {
+        "img": "/presets/img/clue_ko_reunion_0.jpg",
+        "name": "청첩장"
+      },
+      "오민규": {
+        "img": "/presets/img/clue_ko_reunion_1.jpg",
+        "name": "단골 쿠폰"
+      },
+      "신지현": {
+        "img": "/presets/img/clue_ko_reunion_2.jpg",
+        "name": "같은 사원증"
+      }
     }
   }
 }

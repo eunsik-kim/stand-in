@@ -122,6 +122,20 @@
       "4": "/presets/img/en_detective_4_scene.jpg",
       "2": "/presets/img/en_detective_2_scene.jpg",
       "6": "/presets/img/en_detective_6_scene.jpg"
+    },
+    "clues": {
+      "Eleanor Vance": {
+        "img": "/presets/img/clue_en_detective_0.jpg",
+        "name": "A claim ticket for the boot room"
+      },
+      "Marcus Webb": {
+        "img": "/presets/img/clue_en_detective_1.jpg",
+        "name": "Footprints by the door"
+      },
+      "Priya Desai": {
+        "img": "/presets/img/clue_en_detective_2.jpg",
+        "name": "A recording at 2:47"
+      }
     }
   }
 }

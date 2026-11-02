@@ -125,6 +125,20 @@
       "2": "/presets/img/en_exit_2_scene.jpg",
       "4": "/presets/img/en_exit_4_scene.jpg",
       "6": "/presets/img/en_exit_6_scene.jpg"
+    },
+    "clues": {
+      "Marcus Hale": {
+        "img": "/presets/img/clue_en_exit_0.jpg",
+        "name": "The team's group chat"
+      },
+      "Priya Desai": {
+        "img": "/presets/img/clue_en_exit_1.jpg",
+        "name": "The notice policy"
+      },
+      "Dana Whitaker": {
+        "img": "/presets/img/clue_en_exit_2.jpg",
+        "name": "A transfer draft"
+      }
     }
   }
 }

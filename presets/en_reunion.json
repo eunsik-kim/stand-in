@@ -122,6 +122,20 @@
       "2": "/presets/img/en_reunion_2_scene.jpg",
       "4": "/presets/img/en_reunion_4_scene.jpg",
       "6": "/presets/img/en_reunion_6_scene.jpg"
+    },
+    "clues": {
+      "Elena": {
+        "img": "/presets/img/clue_en_reunion_0.jpg",
+        "name": "A silver ring"
+      },
+      "Theo": {
+        "img": "/presets/img/clue_en_reunion_1.jpg",
+        "name": "The rent reminder"
+      },
+      "Priya": {
+        "img": "/presets/img/clue_en_reunion_2.jpg",
+        "name": "An old voicemail"
+      }
     }
   }
 }

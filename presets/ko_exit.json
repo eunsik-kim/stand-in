@@ -128,6 +128,20 @@
       "2": "/presets/img/ko_exit_2_scene.jpg",
       "4": "/presets/img/ko_exit_4_scene.jpg",
       "6": "/presets/img/ko_exit_6_scene.jpg"
+    },
+    "clues": {
+      "박도현": {
+        "img": "/presets/img/clue_ko_exit_0.jpg",
+        "name": "본부 보고서"
+      },
+      "이수빈": {
+        "img": "/presets/img/clue_ko_exit_1.jpg",
+        "name": "릴리즈 일정표"
+      },
+      "한영철": {
+        "img": "/presets/img/clue_ko_exit_2.jpg",
+        "name": "인사팀 메모"
+      }
     }
   }
 }

@@ -122,6 +122,20 @@
       "2": "/presets/img/en_dinner_2_scene.jpg",
       "4": "/presets/img/en_dinner_4_scene.jpg",
       "6": "/presets/img/en_dinner_6_scene.jpg"
+    },
+    "clues": {
+      "Diane": {
+        "img": "/presets/img/clue_en_dinner_0.jpg",
+        "name": "A second bankbook"
+      },
+      "Frank": {
+        "img": "/presets/img/clue_en_dinner_1.jpg",
+        "name": "An old county badge"
+      },
+      "Josh": {
+        "img": "/presets/img/clue_en_dinner_2.jpg",
+        "name": "The promotion email"
+      }
     }
   }
 }
