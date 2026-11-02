@@ -223,7 +223,7 @@ def _their_last_lines(scene: Scene, names: list[str]) -> str:
     return "Each person's last lines; do not repeat their structure, opening or complaint:\n" + "\n".join(lines) + "\n\n" if lines else ""
 
 
-def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: str | None = None) -> str:
+def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: str | None = None, shown: str = "") -> str:
     s = scene.scenario
     names = present(scene, turn)
     moods = "\n".join(
@@ -233,6 +233,8 @@ def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: str
     coming = next_beat(scene)
     return (
         (f"This just happened: {happened.description} People react to it, and it does not happen again.\n\n" if happened else "")
+        + (f"The user has just laid evidence on the table: {shown}. Everyone sees it. This is the big moment of the turn: "
+           "whoever it touches reacts at once, and what it proves comes out now.\n\n" if shown else "")
         + f"Turn {turn} of at most {s.max_turns}. Mood now:\n{moods}\n\n"
         + (f"Not in the room yet, so they cannot speak and nobody mentions them: {', '.join(absent)}.\n\n" if absent else "")
         + f"Transcript:\n{scene.public(viewer='*')}\n\n" + _their_last_lines(scene, names)
@@ -311,7 +313,7 @@ def open_scene(scenario: Scenario) -> Scene:
 
 
 def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
-                signals: dict | None = None, out: list[Line] | None = None, auto: bool = False) -> Iterator[dict]:
+                signals: dict | None = None, out: list[Line] | None = None, auto: bool = False, shown: str = "") -> Iterator[dict]:
     """One user turn as events for the stage; sets scene.ended when the scene is over."""
     s = scene.scenario
     out = [] if out is None else out
@@ -341,7 +343,7 @@ def stream_step(scene: Scene, turn: int, said: str, actor: LLM, cues: str = "",
             won = earned(scene, actor)
         except Exception:
             won = "partial" if scene.revealed else "lost"
-    prompt = take_prompt(scene, turn, happened, won)
+    prompt = take_prompt(scene, turn, happened, won, shown)
     stream = actor.stream(_bible(s), prompt)
 
     def who(i: int, raw: str) -> Character:

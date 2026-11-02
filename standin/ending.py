@@ -11,6 +11,7 @@ class Ending(BaseModel):
     title: str
     story: str
     best_line: str = ""
+    pivot_turn: int = 0
 
 
 class Truth(BaseModel):
@@ -53,7 +54,8 @@ def written(writer: LLM, scene: Scene, ui: str, met: list[bool]) -> Ending:
         "then what that leads to. Name the central event. Never praise the player, end on no moral, and do not list where people are. "
         "Invent no facts, names or objects, give no advice, and do not quote lines inside the sentences. Write 'you', never 'user'.\n"
         "best_line: the player's own line that changed things most, copied exactly, never one marked (auto); empty if none did.\n"
-        'Return {"title": "...", "story": "...", "best_line": "..."}',
+        "pivot_turn: the number in brackets of the player's turn where a different move would have changed the most.\n"
+        'Return {"title": "...", "story": "...", "best_line": "...", "pivot_turn": 3}',
     )
 
 

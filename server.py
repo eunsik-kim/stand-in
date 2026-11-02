@@ -491,6 +491,7 @@ class TurnReq(BaseModel):
     say: str
     signals: Signals = Signals()
     auto: bool = False
+    evidence: str = ""  # whose clue the player laid on the table
 
 
 def take_back(s, index: int) -> None:
@@ -499,7 +500,7 @@ def take_back(s, index: int) -> None:
     sc = s.scene
     del sc.lines[size:]
     sc.moods, sc.revealed, sc.left, sc.ended = moods, revealed, left, ""
-    sc.arrived, sc.beat, sc.advance = arrived, beat, advance
+    sc.arrived, sc.beat, sc.advance, sc.verdict = arrived, beat, advance, None
     s.turn, s.goals = turn, goals
 
 
@@ -522,9 +523,11 @@ def turn(req: TurnReq):
             s.turn += 1
             cues = describe(req.signals, s.ui)
             t0, first = time.time(), True
+            clue = s.assets.get("clues", {}).get(req.evidence)
+            shown = f"{clue['name']} (it proves: {sc.scenario.character(req.evidence).secret})" if clue else ""
             try:
                 for ev in stream_step(s.scene, s.turn, req.say.strip(), actor, cues=cues,
-                                      signals=req.signals.model_dump(), auto=req.auto):  # raw numbers kept for the debrief
+                                      signals=req.signals.model_dump(), auto=req.auto, shown=shown):  # raw numbers kept for the debrief
                     if first and ev["type"] == "sentence":
                         spend.seconds.setdefault("first_sentence", []).append(time.time() - t0)
                         first = False
@@ -571,7 +574,11 @@ def rewind(req: RewindReq):
         raise HTTPException(400, "nothing to take back")
     with s.lock:
         take_back(s, index)
-    return {"turn": s.turn, "goals": s.goals, "found": len(s.scene.revealed)}
+    sc = s.scene
+    beats = sorted(sc.scenario.events, key=lambda e: e.at_turn)
+    said = next((ln for ln in reversed(sc.lines) if ln.speaker not in ("user", "narration")), None)
+    return {"turn": s.turn, "goals": s.goals, "found": len(sc.revealed), "shot": beats[sc.beat - 1].at_turn if sc.beat else 0,
+            "last": {"speaker": said.speaker, "say": said.say} if said else None}
 
 
 class SpeakReq(BaseModel):
@@ -657,7 +664,10 @@ def closing_page(req: EndReq):
     sc = s.scene
     e, verdict = ending(quick_writer, sc, s.ui)
     found = sc.revealed | ({c.name for c in sc.scenario.cast} & set(verdict.came_out))
+    pivot = next((ln.say for ln in sc.lines if ln.speaker == "user" and ln.turn == e.pivot_turn), "")
     return {"title": e.title, "story": e.story, "best_line": e.best_line, "found": sorted(found),
+            "outcome": "won" if all(verdict.met) else "partial" if any(verdict.met) else "lost",
+            "pivot": {"turn": e.pivot_turn, "line": pivot} if pivot else None,
             "missed": [x.line for x in verdict.truths if x.name not in found],
             "goals": [{"text": c, "met": i < len(verdict.met) and verdict.met[i]} for i, c in enumerate(sc.scenario.success_criteria)]}
 
