@@ -252,7 +252,8 @@ def take_prompt(scene: Scene, turn: int, happened: Event | None = None, won: str
         + ("You are also the director. Set advance=true only when this moment has truly peaked and something new should happen. "
            "Do not invent that something yourself.\n" if coming else
            "No planned events remain, so someone must make a move that changes things.\n" if turn < s.max_turns else "")
-        + "clock: only when story time has really moved, a few words in the language of the scene saying what time it is now, "
+        + ("clock is required this turn. " if happened or turn >= s.max_turns - 2 else "")
+        + "clock: when story time has moved, a few words in the language of the scene saying what time it is now, "
         "concrete to this place, like a low candle, the last train, the light going. It only moves forward and tightens towards the end. Otherwise empty.\n"
         + f"speaker must be one of {names}. Keep exactly this key order:\n"
         '{"lines": [{"speaker": "...", "expression": "neutral|pleased|skeptical|annoyed", '
