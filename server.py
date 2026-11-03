@@ -27,6 +27,7 @@ from pydantic import BaseModel, Field
 from standin import admin, auth, voice
 from standin.ending import ending
 from standin.art import background, background_prompt, portraits, scene, scene_edit, scene_from
+from standin.briefing import briefing
 from standin.builder import Person, World, as_situation, build_turn, lock, others
 from standin.coach import coach_turn
 from standin.compiler import compile_scenario, structural_problems
@@ -454,7 +455,12 @@ def build_finish(req: FinishReq, request: Request):
             scenario, rewritten = prepare(b).result(timeout=180), b.world.model_dump_json() != b.shots_for
     except TimeoutError:
         raise HTTPException(503, "The story is taking too long to write. Please try again.")
-    return draft(scenario, {"background": b.background, "scene": {}, "shots": {} if rewritten else b.shots,
+    try:  # the few friendly lines that walk the player in; the scene can start without them
+        brief = briefing(quick_writer, scenario, req.ui)
+    except Exception as e:
+        print(f"briefing failed for {b.id}: {e!r:.160}", flush=True)
+        brief = []
+    return draft(scenario, {"background": b.background, "scene": {}, "briefing": brief, "shots": {} if rewritten else b.shots,
                             **({} if rewritten else b.extras)}, None)
 
 

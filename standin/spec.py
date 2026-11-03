@@ -13,13 +13,16 @@ Expression = Literal["neutral", "pleased", "skeptical", "annoyed"]
 
 # every line anyone says aloud follows this
 SPOKEN = (
-    "Spoken lines sound like real speech overheard, never written text. Short, unfinished, reacting in the moment: people restart, "
-    "interrupt and answer sideways. No explaining, no formal connectors, no summarising what was just said. "
+    "Spoken lines sound like a real person talking, never written text: natural sentences someone would actually say out loud, "
+    "with the endings and small words real speech has, reacting in the moment and answering sideways when that person would. "
+    "Don't chop a line into telegraphic fragments or bare words strung together with commas; a broken-off sentence is rare and "
+    "only when someone is cut off or overwhelmed. No explaining, no formal connectors, no summarising what was just said. "
     "Each person speaks as their own age, era, class and relationship to the listener, and keeps the same level of politeness unless something changes it. "
     "Someone from another century has no modern slang, a child speaks as a child, a formal person stays formal. Give each person their own rhythm "
     "and use the talking style written for them. Never lean on the same filler or tag twice, and use an ellipsis rarely. "
-    "In Korean use natural 구어체 with the honorific level the relationship really has; avoid written 문어체 unless the person is truly that formal. "
-    "In English use contractions and fragments. In Japanese use spoken forms that fit the relationship."
+    "In Korean use natural 구어체 sentences with the endings the relationship calls for (say '알았어, 영화는 다음에 보자', not '알아, 영화.'); "
+    "avoid written 문어체 unless the person is truly that formal. "
+    "In English use contractions and everyday phrasing. In Japanese use spoken forms that fit the relationship."
 )
 
 

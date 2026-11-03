@@ -194,11 +194,10 @@ def enter_scene(r: Rec):
     r.mark("scene")
     deadline = time.time() + 120
     while time.time() < deadline and not p.evaluate(LISTENING):
-        if p.is_visible("#intro"):
-            r.box("intro", "#intro")
-            r.wait(3000)
-            if p.is_visible("#intro"):
-                p.click("#intro")
+        if p.is_visible("#introGo"):  # the briefing card waits for "Let's begin"
+            r.box("intro", "#intro .icard")
+            r.wait(4500)
+            p.click("#introGo")
         if p.is_visible("#tourOk"):
             r.wait(1500)
             p.click("#tourOk")
